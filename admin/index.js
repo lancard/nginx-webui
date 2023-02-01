@@ -1,24 +1,61 @@
+const fs = require('fs');
 const express = require('express');
 const session = require('express-session');
 const MemoryStore = require('memorystore')(session);
+const { exec } = require('child_process');
 
 const app = express();
 const port = 3000;
+const sessionTime = 1000 * 60 * 5;
 
+var config;
+
+
+function loadConfig() {
+    try {
+        config = JSON.parse(fs.readFileSync('/config/config.json'));
+    }
+    catch (e) {
+        config = {
+            adminPassword: "changeme!"
+        };
+    }
+}
 
 const sessionObj = {
     secret: 'nginxuisession',
     resave: false,
     saveUninitialized: true,
-    store: new MemoryStore({ checkPeriod: 1000 * 60 * 5 }),
+    store: new MemoryStore({ checkPeriod: sessionTime }),
     cookie: {
-        maxAge: 1000 * 60 * 5
-    },
+        maxAge: sessionTime
+    }
 };
 
-app.use(session(sessionObj)); 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
+
+loadConfig();
+
+app.use(session(sessionObj));
+
+app.use(express.static('static'));
+
+app.get('/api/login', (req, res) => {
+    req.session.userName = "admin";
+    req.session.save();
+    res.send("OK");
+});
+
+app.get('/api/test', (req, res) => {
+    console.dir(req.session);
+    exec("ls -la", (error, stdout, stderr) => {
+        var obj = {
+            error,
+            stdout,
+            stderr
+        };
+        // res.send(JSON.stringify(obj));
+        res.send(JSON.stringify(req.session));
+    });
 });
 
 app.listen(port, () => {
