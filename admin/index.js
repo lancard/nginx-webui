@@ -105,6 +105,15 @@ app.get('/api/getNginxStatus', (req, res) => {
     });
 });
 
+app.post('/api/uploadCertification', (req, res) => {
+    if (isUnauthroizedRequest(req, res)) return;
+
+    fs.writeFileSync('/cert/ssl.crt', req.body.cert);
+    fs.writeFileSync('/cert/ssl.key', req.body.key);
+
+    res.end("Upload OK");
+});
+
 app.get('/api/getSystemInformation', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 

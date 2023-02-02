@@ -185,6 +185,17 @@ function applyConfig() {
     });
 }
 
+function uploadCert() {
+    $.ajax({
+        type: "POST",
+        url: '/api/uploadCertification',
+        data: { cert: $("#certFile").val(), key: $("#keyFile").val() },
+        success: (ret) => {
+            alert(ret);
+        }
+    });
+}
+
 function showPanel(selectedId) {
     $("div.container-fluid").hide();
     $("#" + selectedId).show();
@@ -237,8 +248,14 @@ function updateStatus() {
     $.getJSON('/api/getSystemInformation', (ret) => {
         var arr = ret.filter(e => e.protocol == "tcp");
         arr = arr.filter(e => e.state != "LISTEN");
-        arr = arr.filter(e => e.localAddress != "0.0.0.0");
-        arr = arr.filter(e => e.localAddress != "127.0.0.1");
+        arr = arr.filter(e => e.localPort == "80" || e.localPort == "443");
+
+        var retLine = [];
+        arr.forEach(e => {
+            retLine.push(`${e.peerAddress}:${e.peerPort} - ${e.state}`);
+        })
+
+        $("#osConnections").text(retLine.join("\n"));
     });
 }
 

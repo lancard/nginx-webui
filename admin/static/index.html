@@ -108,7 +108,7 @@
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link" href="javascript:void(0)" onclick="showPanel('site')">
+                <a class="nav-link" href="javascript:void(0)" onclick="showPanel('uploadCert')">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Upload Cert</span>
                 </a>
@@ -186,6 +186,36 @@
 
                 </nav>
                 <!-- End of Topbar -->
+
+                <div class="container-fluid collapse" id="uploadCert">
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Upload Cert</h1>
+                        <a href="javascript: void(0)" onclick="uploadCert()" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                            <i class="fas fa-upload fa-sm text-white-50"></i> Upload Cert
+                        </a>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            Cert File Contents: 
+                            <textarea class="form-control" rows="20" id="certFile">-----BEGIN CERTIFICATE-----
+ABCDEFGSAMPLE...
+-----END CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
+ABCDEFGSAMPLE...
+-----END CERTIFICATE-----</textarea>
+                        </div>
+                        <div class="col-6">
+                            Key File Contents: 
+                            <textarea class="form-control" rows="20" id="keyFile">-----BEGIN RSA PRIVATE KEY-----
+ABCDEFGSAMPLE...
+-----END RSA PRIVATE KEY-----</textarea>
+                        </div>
+                    </div>
+
+                </div>
+
 
                 <div class="container-fluid collapse" id="upstream">
                     <textarea id="upstreamTextarea"></textarea>
@@ -282,7 +312,6 @@
                     </div>
 
                     <!-- Content Row -->
-
                     <div class="row">
 
                         <div class="col-4">
@@ -325,6 +354,21 @@
                             </div>
                         </div>
 
+                    </div>
+                    <!-- Content Row -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card shadow mb-4">
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-secondary">OS Network Connections</h6>
+                                </div>
+                                <div class="card-body">
+                                    <pre id="osConnections"
+                                        style="background-color: black; color: white; height: 300px;"></pre>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
 
