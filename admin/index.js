@@ -7,7 +7,7 @@ const FileStore = require("session-file-store")(session);
 const { exec } = require('child_process');
 
 const port = 3000;
-const sessionTime = 1000 * 60 * 5;
+const sessionTime = 30 * 60;
 const configFile = '/data/config.json';
 
 function loadConfig() {
@@ -16,8 +16,7 @@ function loadConfig() {
     }
     catch (e) {
         return {
-            upstream:
-                `upstream backend {
+            upstream: `upstream test_service {
     server backend1.example.com weight=5;
     server backend2.example.com;
     server 192.0.0.1 backup;
@@ -45,8 +44,8 @@ const sessionObj = {
     secret: 'nginxuisession',
     resave: true,
     saveUninitialized: false,
-    store: new FileStore({ checkPeriod: sessionTime }),
-    cookie: { maxAge: sessionTime }
+    store: new FileStore({ ttl: sessionTime, path: '/tmp' }),
+    cookie: { maxAge: sessionTime * 1000 }
 };
 
 
@@ -125,7 +124,7 @@ app.get('/api/getConfig', (req, res) => {
     res.send(JSON.stringify(loadConfig()));
 });
 
-app.get('/api/saveConfig', (req, res) => {
+app.post('/api/saveConfig', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
     if (!req.body.config) {
@@ -138,23 +137,41 @@ app.get('/api/saveConfig', (req, res) => {
     res.send("OK");
 });
 
-app.get('/api/testAndApplyConfig', (req, res) => {
+app.post('/api/testConfig', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
-    var nginxConfig = fs.readFileSync('/nginx_config_backup/nginx.conf').toString();
+    var nginxConfig = fs.readFileSync('/nginx_config/default_nginx.conf').toString();
 
     nginxConfig = nginxConfig.split("#[replaced_location]").join(req.body.nginxConfig);
 
-    fs.writeFileSync('/nginx_config_backup/nginx.conf', nginxConfig);
+    fs.writeFileSync('/nginx_config/nginx.conf', nginxConfig);
 
-    exec("nginx -t -c /nginx_config_backup/nginx.conf", (error, stdout, stderr) => {
+    exec("nginx -t -c /nginx_config/nginx.conf", (error, stdout, stderr) => {
         var obj = {
             error,
             stdout,
             stderr
         };
-        // res.send(JSON.stringify(obj));
-        res.send(JSON.stringify(req.session));
+        res.send(JSON.stringify(obj));
+    });
+});
+
+app.post('/api/applyConfig', (req, res) => {
+    if (isUnauthroizedRequest(req, res)) return;
+
+    var nginxConfig = fs.readFileSync('/nginx_config/default_nginx.conf').toString();
+
+    nginxConfig = nginxConfig.split("#[replaced_location]").join(req.body.nginxConfig);
+
+    fs.writeFileSync('/etc/nginx/nginx.conf', nginxConfig);
+
+    exec("nginx -s reload", (error, stdout, stderr) => {
+        var obj = {
+            error,
+            stdout,
+            stderr
+        };
+        res.send(JSON.stringify(obj));
     });
 });
 

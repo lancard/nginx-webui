@@ -140,17 +140,59 @@ function logout() {
     });
 }
 
+function saveConfig() {
+    // write to back config
+    config.upstream = upstreamTextareaEditor.getValue();
+
+    $.ajax({
+        type: "POST",
+        url: '/api/saveConfig',
+        data: { config: JSON.stringify(config) },
+        success: (ret) => {
+            alert(ret);
+        }
+    });
+}
+
+
 function loadConfig() {
     $.getJSON('/api/getConfig', (ret) => {
         config = ret;
 
-        $("#upstreamTextarea").val(config.upstream);
+        upstreamTextareaEditor.setValue(config.upstream);
+    });
+}
+
+function testConfig() {
+    $.ajax({
+        type: "POST",
+        url: '/api/testConfig',
+        data: { nginxConfig: upstreamTextareaEditor.getValue() },
+        success: (ret) => {
+            alert(ret);
+        }
+    });
+}
+
+function applyConfig() {
+    $.ajax({
+        type: "POST",
+        url: '/api/applyConfig',
+        data: { nginxConfig: upstreamTextareaEditor.getValue() },
+        success: (ret) => {
+            alert(ret);
+        }
     });
 }
 
 function showPanel(selectedId) {
-    $("div.container-fluid").hide(300);
-    $("#" + selectedId).show(300);
+    $("div.container-fluid").hide();
+    $("#" + selectedId).show();
+
+    // Refresh CodeMirror
+    $('.CodeMirror').each(function (i, el) {
+        el.CodeMirror.refresh();
+    });
 }
 
 function addData(chart, label, data) {
@@ -197,8 +239,6 @@ function updateStatus() {
         arr = arr.filter(e => e.state != "LISTEN");
         arr = arr.filter(e => e.localAddress != "0.0.0.0");
         arr = arr.filter(e => e.localAddress != "127.0.0.1");
-
-        console.dir(arr);
     });
 }
 

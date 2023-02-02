@@ -20,6 +20,23 @@
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
+    <!-- code mirror -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"
+        integrity="sha512-8RnEqURPUc5aqFEN04aQEiPlSAdE0jlFS/9iGgUyNtwFnSKCXhmB6ZTNl7LnDtDWKabJIASzXrzD0K+LYexU9g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css"
+        integrity="sha512-uf06llspW44/LZpHzHT6qBOIVODjWtv4MxCricRxkzvopAlSWnTf6hpZTFxuuZcuNE9CBQhqE0Seu1CoRk84nQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/nginx/nginx.min.js"
+        integrity="sha512-kgLrmRot2x/yBR/HMHKt1S1Q0gIFOt6JGwAqrowCFxtal0MLUrqwzOu1YUA59Uds85K/1dnw9xZrXCs/5FAFJQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        .CodeMirror {
+            border: 1px solid #888;
+            height: 80vh;
+        }
+    </style>
+
 </head>
 
 <body id="page-top">
@@ -125,9 +142,23 @@
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto align-items-center">
                         <div class="col text-end">
-                            <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" disabled
-                                id="applyButton">
-                                <i class="fas fa-download fa-sm text-white-50"></i> Test And Apply
+                            <button class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"
+                                onclick="loadConfig()">
+                                <i class="fas fa-download fa-sm text-white-50"></i> Reload from disk
+                            </button>
+                            <button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"
+                                onclick="saveConfig()">
+                                <i class="fas fa-download fa-sm text-white-50"></i> Temp save to disk
+                            </button>
+                            <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                                onclick="testConfig()">
+                                <i class="fas fa-download fa-sm text-white-50"></i>
+                                Test nginx config
+                            </button>
+                            <button class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"
+                                onclick="applyConfig()">
+                                <i class="fas fa-download fa-sm text-white-50"></i>
+                                Apply nginx config
                             </button>
                         </div>
 
@@ -138,7 +169,8 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="loginUser">administrator</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"
+                                    id="loginUser">administrator</span>
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -156,7 +188,7 @@
                 <!-- End of Topbar -->
 
                 <div class="container-fluid collapse" id="upstream">
-                    <textarea class="form-control" rows="30" id="upstreamTextarea"></textarea>
+                    <textarea id="upstreamTextarea"></textarea>
                 </div>
 
 
@@ -354,7 +386,15 @@
     <script src="js/index.js"></script>
 
     <script>
-        $(function() {
+        $(function () {
+            window.upstreamTextareaEditor = CodeMirror.fromTextArea(document.getElementById("upstreamTextarea"), {
+                lineNumbers: true,
+                extraKeys: { "Ctrl-Space": "autocomplete" },
+                tabSize: 8,
+                indentUnit: 8,
+                smartIndent: false,
+                indentWithTabs: true
+            });
             loadConfig();
         });
     </script>
