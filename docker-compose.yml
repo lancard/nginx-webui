@@ -17,6 +17,7 @@ services:
         # memory: 1024M
     ports:
       - 80:80
+      - 81:81
       - 443:443
     volumes:
       - ./conf.d:/etc/nginx/conf.d
