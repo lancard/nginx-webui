@@ -140,6 +140,14 @@ function logout() {
     });
 }
 
+function loadConfig() {
+    $.getJSON('/api/getConfig', (ret) => {
+        config = ret;
+
+        $("#upstreamTextarea").val(config.upstream);
+    });
+}
+
 function showPanel(selectedId) {
     $("div.container-fluid").hide(300);
     $("#" + selectedId).show(300);
@@ -162,7 +170,7 @@ function removeData(chart) {
 }
 
 function updateStatus() {
-    $.get('/api/status', (ret) => {
+    $.get('/api/getNginxStatus', (ret) => {
         ret = ret.split("\n");
         const status = {
             activeConnections: +ret[0].split("Active connections: ").join(""),
@@ -182,6 +190,15 @@ function updateStatus() {
         addData(readingConnectionsChart, dayjs().format("HH:mm:ss"), status.readingConnections);
         addData(writingConnectionsChart, dayjs().format("HH:mm:ss"), status.writingConnections);
         addData(waitingConnectionsChart, dayjs().format("HH:mm:ss"), status.waitingConnections);
+    });
+
+    $.getJSON('/api/getSystemInformation', (ret) => {
+        var arr = ret.filter(e => e.protocol == "tcp");
+        arr = arr.filter(e => e.state != "LISTEN");
+        arr = arr.filter(e => e.localAddress != "0.0.0.0");
+        arr = arr.filter(e => e.localAddress != "127.0.0.1");
+
+        console.dir(arr);
     });
 }
 

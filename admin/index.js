@@ -1,24 +1,34 @@
 const fs = require('fs');
 const http = require('http');
+const si = require('systeminformation');
 const express = require('express');
 const session = require('express-session');
-const MemoryStore = require('memorystore')(session);
+const FileStore = require("session-file-store")(session);
 const { exec } = require('child_process');
 
 const port = 3000;
 const sessionTime = 1000 * 60 * 5;
-
-var config;
+const configFile = '/data/config.json';
 
 function loadConfig() {
     try {
-        config = JSON.parse(fs.readFileSync('/data/config.json'));
+        return JSON.parse(fs.readFileSync(configFile));
     }
     catch (e) {
-        config = {
-            adminPassword: "changeme!"
+        return {
+            upstream:
+                `upstream backend {
+    server backend1.example.com weight=5;
+    server backend2.example.com;
+    server 192.0.0.1 backup;
+}
+`
         };
     }
+}
+
+function saveConfig(configText) {
+    fs.writeFileSync(configFile, configText);
 }
 
 function isUnauthroizedRequest(req, res) {
@@ -33,12 +43,10 @@ function isUnauthroizedRequest(req, res) {
 
 const sessionObj = {
     secret: 'nginxuisession',
-    resave: false,
-    saveUninitialized: true,
-    store: new MemoryStore({ checkPeriod: sessionTime }),
-    cookie: {
-        maxAge: sessionTime
-    }
+    resave: true,
+    saveUninitialized: false,
+    store: new FileStore({ checkPeriod: sessionTime }),
+    cookie: { maxAge: sessionTime }
 };
 
 
@@ -79,7 +87,7 @@ app.post('/api/logout', (req, res) => {
     res.send("OK");
 });
 
-app.get('/api/status', (req, res) => {
+app.get('/api/getNginxStatus', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
     http.get('http://localhost:5000/status', function (apiRes) {
@@ -98,22 +106,46 @@ app.get('/api/status', (req, res) => {
     });
 });
 
+app.get('/api/getSystemInformation', (req, res) => {
+    if (isUnauthroizedRequest(req, res)) return;
+
+    si.networkConnections()
+        .then(data => {
+            res.send(JSON.stringify(data));
+        })
+        .catch(error => {
+            res.send("ERROR");
+            console.error(error)
+        });
+});
+
 app.get('/api/getConfig', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
-    exec("nginx -t -c /nginx_config_backup/nginx.conf", (error, stdout, stderr) => {
-        var obj = {
-            error,
-            stdout,
-            stderr
-        };
-        // res.send(JSON.stringify(obj));
-        res.send(JSON.stringify(req.session));
-    });
+    res.send(JSON.stringify(loadConfig()));
 });
 
-app.get('/api/testConfig', (req, res) => {
+app.get('/api/saveConfig', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
+
+    if (!req.body.config) {
+        res.sendStatus(500);
+        return;
+    }
+
+    saveConfig(req.body.config);
+
+    res.send("OK");
+});
+
+app.get('/api/testAndApplyConfig', (req, res) => {
+    if (isUnauthroizedRequest(req, res)) return;
+
+    var nginxConfig = fs.readFileSync('/nginx_config_backup/nginx.conf').toString();
+
+    nginxConfig = nginxConfig.split("#[replaced_location]").join(req.body.nginxConfig);
+
+    fs.writeFileSync('/nginx_config_backup/nginx.conf', nginxConfig);
 
     exec("nginx -t -c /nginx_config_backup/nginx.conf", (error, stdout, stderr) => {
         var obj = {
