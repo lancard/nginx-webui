@@ -37,7 +37,11 @@ loadConfig();
 
 app.use(session(sessionObj));
 
-app.use(express.static('static'));
+app.use('/static', express.static('static'));
+
+app.get('/', (req, res) => {
+    res.redirect('/static/index.html');
+});
 
 app.get('/api/login', (req, res) => {
     req.session.userName = "admin";
@@ -46,7 +50,6 @@ app.get('/api/login', (req, res) => {
 });
 
 app.get('/api/test', (req, res) => {
-    console.dir(req.session);
     exec("ls -la", (error, stdout, stderr) => {
         var obj = {
             error,

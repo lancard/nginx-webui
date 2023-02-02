@@ -20,3 +20,4 @@ services:
       - 443:443
     volumes:
       - ./conf.d:/etc/nginx/conf.d
+      - ./admin:/admin
