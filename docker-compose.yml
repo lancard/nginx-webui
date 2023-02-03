@@ -22,8 +22,10 @@ services:
     volumes:
       - nginx-ui-data:/data
       - nginx-ui-cert:/cert
+      - nginx-ui-log:/var/log/nginx
       # - ./admin:/admin
 
 volumes:
   nginx-ui-data:
   nginx-ui-cert:
+  nginx-ui-log:

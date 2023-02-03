@@ -148,6 +148,9 @@ function addUpstreamService() {
     $clonedObject.removeClass("collapse").appendTo("div[upstream-body]");
 }
 function deleteUpstreamService(element) {
+    if (!confirm('delete?'))
+        return;
+
     $(element).parents("[upstream-service]").remove();
 }
 
@@ -162,6 +165,9 @@ function addBackendServer(element) {
 }
 
 function deleteBackendServer(element) {
+    if (!confirm('delete?'))
+        return;
+
     $(element).parents("[upstream-node-div]").remove();
 }
 
@@ -185,6 +191,9 @@ server_name test.com;`
 }
 
 function deleteSite(element) {
+    if (!confirm('delete?'))
+        return;
+
     $(element).parents("[site-service]").remove();
 }
 
@@ -217,6 +226,9 @@ send_timeout 900;`);
 }
 
 function deleteLocation(element) {
+    if (!confirm('delete?'))
+        return;
+
     $(element).parents("[site-node-div]").remove();
 }
 
@@ -380,18 +392,21 @@ function testConfig() {
         url: '/api/testConfig',
         data: { nginxConfig: configToNginxConfig() },
         success: (ret) => {
-            alert(ret);
+            alert(JSON.parse(ret).stderr);
         }
     });
 }
 
 function applyConfig() {
+    if (!confirm('apply to nginx? (will try to gracefully restart)'))
+        return;
+
     $.ajax({
         type: "POST",
         url: '/api/applyConfig',
         data: { nginxConfig: configToNginxConfig() },
         success: (ret) => {
-            alert(ret);
+            alert(JSON.parse(ret).stderr);
         }
     });
 }
@@ -403,6 +418,9 @@ function loadCertList() {
 }
 
 function uploadCert() {
+    if (!confirm('Are you sure you want to upload? (If file exists, it will be overwritten)'))
+        return;
+
     $.ajax({
         type: "POST",
         url: '/api/uploadCertification',
