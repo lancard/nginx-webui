@@ -22,7 +22,7 @@ services:
     volumes:
       - nginx-ui-data:/data
       - nginx-ui-cert:/cert
-      - ./admin:/admin
+      # - ./admin:/admin
 
 volumes:
   nginx-ui-data:

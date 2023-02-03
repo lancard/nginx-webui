@@ -33,7 +33,7 @@
     <style>
         .CodeMirror {
             border: 1px solid #888;
-            height: 80vh;
+            height: 60vh;
         }
     </style>
 
@@ -227,7 +227,7 @@
                     <div class="row">
                         <div class="col-6">
                             Cert File Contents:
-                            <textarea class="form-control" rows="20" id="certFile">-----BEGIN CERTIFICATE-----
+                            <textarea class="form-control" rows="10" id="certFile">-----BEGIN CERTIFICATE-----
 ABCDEFGSAMPLE...
 -----END CERTIFICATE-----
 -----BEGIN CERTIFICATE-----
@@ -236,7 +236,7 @@ ABCDEFGSAMPLE...
                         </div>
                         <div class="col-6">
                             Key File Contents:
-                            <textarea class="form-control" rows="20" id="keyFile">-----BEGIN RSA PRIVATE KEY-----
+                            <textarea class="form-control" rows="10" id="keyFile">-----BEGIN RSA PRIVATE KEY-----
 ABCDEFGSAMPLE...
 -----END RSA PRIVATE KEY-----</textarea>
                         </div>
@@ -245,15 +245,20 @@ ABCDEFGSAMPLE...
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mt-4">
                         <h1 class="h3 mb-0 text-gray-800">Uploaded Cert List</h1>
-                        <a href="javascript: void(0)" onclick="uploadCert()"
-                            class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                            <i class="fas fa-upload fa-sm text-white-50"></i> Upload Cert
-                        </a>
+                        <i>(in /cert directory)</i>
+                    </div>
+                    <div>
+                        <pre id="certList" class="bg-dark text-white" style="height: 300px;"></pre>
                     </div>
 
                 </div>
 
                 <div class="container-fluid collapse" id="common">
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Edit directives in nginx.conf 'http' section</h1>
+                    </div>
+
                     <textarea id="commonTextarea"></textarea>
                 </div>
 
@@ -321,7 +326,7 @@ ABCDEFGSAMPLE...
 
                         <button class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"
                             onclick="deleteBackendServer(this)">
-                            <i class="fas fa-download fa-sm text-white-50"></i>
+                            <i class="fas fa-trash fa-sm text-white-50"></i>
                             Delete
                         </button>
                     </div>
@@ -547,8 +552,7 @@ ABCDEFGSAMPLE...
                                     <h6 class="m-0 font-weight-bold text-secondary">OS Network Connections</h6>
                                 </div>
                                 <div class="card-body">
-                                    <pre id="osConnections"
-                                        style="background-color: black; color: white; height: 300px;"></pre>
+                                    <pre id="osConnections" class="bg-dark text-white" style="height: 200px;"></pre>
                                 </div>
                             </div>
                         </div>

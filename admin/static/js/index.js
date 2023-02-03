@@ -398,7 +398,7 @@ function applyConfig() {
 
 function loadCertList() {
     $.getJSON('/api/getCertificationList', (ret) => {
-        console.dir(ret);
+        $("#certList").text(ret.join("\n"));
     });
 }
 
@@ -472,7 +472,7 @@ function updateStatus() {
             retLine.push(`${e.peerAddress}:${e.peerPort} - ${e.state}`);
         })
 
-        $("#osConnections").text(retLine.join("\n"));
+        $("#osConnections").text(retLine.join("\t"));
     });
 }
 
