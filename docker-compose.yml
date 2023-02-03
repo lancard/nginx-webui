@@ -20,5 +20,9 @@ services:
       - 81:81
       - 443:443
     volumes:
-      - ./conf.d:/etc/nginx/conf.d
-      - ./admin:/admin
+      - nginx-ui-data:/data
+      - nginx-ui-cert:/cert
+
+volumes:
+  nginx-ui-data:
+  nginx-ui-cert:

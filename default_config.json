@@ -1,3 +1,30 @@
 {
-    "upstream": "# http section setting\nclient_max_body_size 10G;\nresolver 127.0.0.11 valid=1s;\n\n# upstream (nodes)\nupstream test_service {\n\tserver naver.com;\n\tserver google.com;\n}\n# server (services)\nserver {\n\tlisten 80;\n\t# listen 443 ssl;\n\n\t# ssl_certificate     /cert/ssl.crt;\n\t# ssl_certificate_key /cert/ssl.key;\n\n\tserver_name 172.24.188.173;\n\n\tlocation / {\n\t\tset $test               http://test_service;\n\t\tproxy_pass              $test;\n\n\t\tproxy_set_header        Host $host:$server_port;\n\t\tproxy_set_header        X-Real-IP $remote_addr;\n\t\tproxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;\n\t\tproxy_set_header        X-Forwarded-Proto $scheme;\n\n\t\t# Required for new HTTP-based CLI\n\t\tproxy_http_version 1.1;\n\t\tproxy_request_buffering off;\n\t\tproxy_buffering off; # Required for HTTP-based CLI to work over SSL\n\n\t\t# timeout\n\t\tproxy_connect_timeout 900;      \n\t\tproxy_send_timeout 900;      \n\t\tproxy_read_timeout 900;      \n\t\tsend_timeout 900;   \n\t}\n}"
+    "upstream": [],
+    "common": "# http section setting\nclient_max_body_size 10G;\nresolver 127.0.0.11 valid=1s;\n",
+    "site": [
+            {
+                    "siteName": "test_site",
+                    "siteConfig": "listen 80;\n# listen 443 ssl;\n\n# ssl_certificate     /cert/ssl.crt;\n# ssl_certificate_key /cert/ssl.key;\n\nserver_name test.com;",
+                    "locations": [
+                            {
+                                    "address": "/",
+                                    "config": "set $test                  http://127.0.0.1:3000;\nproxy_pass              $test;\n\nproxy_set_header        Host $host:$server_port;\nproxy_set_header        X-Real-IP $remote_addr;\nproxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;\nproxy_set_header        X-Forwarded-Proto $scheme;\n\n# Required for new HTTP-based CLI\nproxy_http_version 1.1;\nproxy_request_buffering off;\nproxy_buffering off; # Required for HTTP-based CLI to work over SSL\n\n# timeout\nproxy_connect_timeout 900;      \nproxy_send_timeout 900;      \nproxy_read_timeout 900;      \nsend_timeout 900;"
+                            },
+                            {
+                                    "address": "/api",
+                                    "config": "set $test2                  http://127.0.0.1:2000;\nproxy_pass                $test2;\n\nproxy_set_header        Host $host:$server_port;\nproxy_set_header        X-Real-IP $remote_addr;\nproxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;\nproxy_set_header        X-Forwarded-Proto $scheme;\n\n# Required for new HTTP-based CLI\nproxy_http_version 1.1;\nproxy_request_buffering off;\nproxy_buffering off; # Required for HTTP-based CLI to work over SSL\n\n# timeout\nproxy_connect_timeout 900;      \nproxy_send_timeout 900;      \nproxy_read_timeout 900;      \nsend_timeout 900;"
+                            }
+                    ]
+            },
+            {
+                    "siteName": "test_site2",
+                    "siteConfig": "listen 80;\n# listen 443 ssl;\n\n# ssl_certificate     /cert/ssl.crt;\n# ssl_certificate_key /cert/ssl.key;\n\nserver_name test.net;",
+                    "locations": [
+                            {
+                                    "address": "/",
+                                    "config": "set $test                  http://127.0.0.1:4000;\nproxy_pass              $test;\n\nproxy_set_header        Host $host:$server_port;\nproxy_set_header        X-Real-IP $remote_addr;\nproxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;\nproxy_set_header        X-Forwarded-Proto $scheme;\n\n# Required for new HTTP-based CLI\nproxy_http_version 1.1;\nproxy_request_buffering off;\nproxy_buffering off; # Required for HTTP-based CLI to work over SSL\n\n# timeout\nproxy_connect_timeout 900;      \nproxy_send_timeout 900;      \nproxy_read_timeout 900;      \nsend_timeout 900;"
+                            }
+                    ]
+            }
+    ]
 }
