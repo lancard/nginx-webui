@@ -25,9 +25,9 @@ main goal is management for 'upstream' / 'server' / certificates nginx configura
 ```yml
 version: '3.7'
 services:
-  nginx-ui:
-    image: lancard/nginx-ui
-    container_name: nginx-ui
+  nginx-webui:
+    image: lancard/nginx-webui
+    container_name: nginx-webui
     environment:
       - TZ=Asia/Seoul
     ulimits:
@@ -40,15 +40,15 @@ services:
       - 81:81
       - 443:443
     volumes:
-      - nginx-ui-data:/data
-      - nginx-ui-cert:/cert
-      - nginx-ui-log:/var/log/nginx
+      - nginx-webui-data:/data
+      - nginx-webui-cert:/cert
+      - nginx-webui-log:/var/log/nginx
 
 volumes:
-  nginx-ui-data:
-  nginx-ui-cert:
-  nginx-ui-log:
-```
+  nginx-webui-data:
+  nginx-webui-cert:
+  nginx-webui-log:
+  ```
 
 3. Run docker-compose
 
