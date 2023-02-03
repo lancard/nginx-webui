@@ -396,11 +396,17 @@ function applyConfig() {
     });
 }
 
+function loadCertList() {
+    $.getJSON('/api/getCertificationList', (ret) => {
+        console.dir(ret);
+    });
+}
+
 function uploadCert() {
     $.ajax({
         type: "POST",
         url: '/api/uploadCertification',
-        data: { name: $("certName").val(), cert: $("#certFile").val(), key: $("#keyFile").val() },
+        data: { name: $("#certName").val(), cert: $("#certFile").val(), key: $("#keyFile").val() },
         success: (ret) => {
             alert(ret);
         }

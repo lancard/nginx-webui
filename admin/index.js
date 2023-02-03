@@ -9,6 +9,7 @@ const { exec } = require('child_process');
 const port = 3000;
 const sessionTime = 30 * 60;
 const configFile = '/data/config.json';
+const certFileRegex = /^[0-9a-zA-Z\-_]+$/;
 
 function loadConfig() {
     try {
@@ -103,8 +104,19 @@ app.get('/api/getNginxStatus', (req, res) => {
     });
 });
 
+app.get('/api/getCertificationList', (req, res) => {
+    if (isUnauthroizedRequest(req, res)) return;
+
+    res.end(JSON.stringify(fs.readdirSync('/cert')));
+});
+
 app.post('/api/uploadCertification', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
+
+    if (!certFileRegex.test(req.body.name)) {
+        res.end("Filename invalid");
+        return;
+    }
 
     fs.writeFileSync(`/cert/${req.body.name}.crt`, req.body.cert);
     fs.writeFileSync(`/cert/${req.body.name}.key`, req.body.key);

@@ -94,7 +94,7 @@
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link" href="javascript:void(0)" onclick="showPanel('upstream')">
-                    <i class="fas fa-fw fa-table"></i>
+                    <i class="fas fa-fw fa-cog"></i>
                     <span>Manage</span>
                 </a>
             </li>
@@ -110,7 +110,7 @@
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link" href="javascript:void(0)" onclick="showPanel('site')">
-                    <i class="fas fa-fw fa-table"></i>
+                    <i class="fas fa-fw fa-cog"></i>
                     <span>Manage</span>
                 </a>
             </li>
@@ -167,16 +167,16 @@
                             -->
                             <button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"
                                 onclick="saveConfig()">
-                                <i class="fas fa-download fa-sm text-white-50"></i> 1. All save to disk
+                                <i class="fas fa-save fa-sm text-white-50"></i> 1. All save to disk
                             </button>
                             <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
                                 onclick="testConfig()">
-                                <i class="fas fa-download fa-sm text-white-50"></i>
+                                <i class="fas fa-microscope fa-sm text-white-50"></i>
                                 2. Test nginx config
                             </button>
                             <button class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"
                                 onclick="applyConfig()">
-                                <i class="fas fa-download fa-sm text-white-50"></i>
+                                <i class="fas fa-check fa-sm text-white-50"></i>
                                 3. Apply nginx config
                             </button>
                         </div>
@@ -242,6 +242,15 @@ ABCDEFGSAMPLE...
                         </div>
                     </div>
 
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mt-4">
+                        <h1 class="h3 mb-0 text-gray-800">Uploaded Cert List</h1>
+                        <a href="javascript: void(0)" onclick="uploadCert()"
+                            class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                            <i class="fas fa-upload fa-sm text-white-50"></i> Upload Cert
+                        </a>
+                    </div>
+
                 </div>
 
                 <div class="container-fluid collapse" id="common">
@@ -293,13 +302,16 @@ ABCDEFGSAMPLE...
                         </span>
 
                         <span class="text-secondary">WEIGHT</span>
-                        <input type="number" min="0" max="999" value="1" upstream-node-weight>
+                        <input type="number" class="form-control col-1 d-inline-block" min="0" max="999" value="1"
+                            upstream-node-weight>
 
                         <span class="text-secondary">MAX_FAILS</span>
-                        <input type="number" min="0" max="9" value="1" upstream-node-maxfails>
+                        <input type="number" class="form-control col-1 d-inline-block" min="0" max="9" value="1"
+                            upstream-node-maxfails>
 
                         <span class="text-secondary">FAIL_TIMEOUT</span>
-                        <input type="number" min="1" max="999" value="10" upstream-node-failtimeout>
+                        <input type="number" class="form-control col-1 d-inline-block" min="1" max="999" value="10"
+                            upstream-node-failtimeout>
 
                         <span class="text-secondary">IS_BACKUP</span>
                         <input type="checkbox" upstream-node-backup>
@@ -611,6 +623,7 @@ ABCDEFGSAMPLE...
                 indentWithTabs: true
             });
             loadConfig();
+            loadCertList();
             createChart();
         });
     </script>
