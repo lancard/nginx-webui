@@ -81,6 +81,30 @@ id: administrator
 password: (get it from docker-compose logs)
 ```
 
+
+### Built With
+
+- nodejs
+- express
+- sbadmin2 (bootstrap)
+- jquery
+- dayjs
+- codemirror
+- chart.js
+
+
+## Contributing
+
+Feel free to make PR!
+Don't forget to give the project a star! Thank you!
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+
 ## License
 
 MIT License
