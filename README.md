@@ -1,6 +1,11 @@
 This project aims to create a UI that wrap nginx.
 We developed a program that makes it easy for companies and people with multiple domains to manage nginx through UI.
 
+## Screenshot
+![screenshot1](./screenshot/screenshot1.png)
+![screenshot2](./screenshot/screenshot2.png)
+![screenshot3](./screenshot/screenshot3.png)
+
 ## Project Goal
 
 Basically, a program was written to make it easy to use reverse proxy.
