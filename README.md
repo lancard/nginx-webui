@@ -26,7 +26,7 @@ main goal is management for 'upstream' / 'server' / certificates nginx configura
 version: '3.7'
 services:
   nginx-ui:
-    build: .
+    image: lancard/nginx-ui
     container_name: nginx-ui
     environment:
       - TZ=Asia/Seoul
