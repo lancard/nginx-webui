@@ -1,8 +1,8 @@
 version: '3.7'
 services:
-  nginx-ui:
+  nginx-webui:
     build: .
-    container_name: nginx-ui
+    container_name: nginx-webui
     environment:
       - TZ=Asia/Seoul
     ulimits:
@@ -20,12 +20,12 @@ services:
       - 81:81
       - 443:443
     volumes:
-      - nginx-ui-data:/data
-      - nginx-ui-cert:/cert
-      - nginx-ui-log:/var/log/nginx
+      - nginx-webui-data:/data
+      - nginx-webui-cert:/cert
+      - nginx-webui-log:/var/log/nginx
       - ./admin:/admin
 
 volumes:
-  nginx-ui-data:
-  nginx-ui-cert:
-  nginx-ui-log:
+  nginx-webui-data:
+  nginx-webui-cert:
+  nginx-webui-log:
