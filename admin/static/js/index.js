@@ -1,132 +1,130 @@
-// Set new default font family and font color to mimic Bootstrap's default styling
-Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-Chart.defaults.global.defaultFontColor = '#858796';
+function createChart() {
+    // Set new default font family and font color to mimic Bootstrap's default styling
+    Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+    Chart.defaults.global.defaultFontColor = '#858796';
 
-const defaultOptions = {
-    maintainAspectRatio: false,
-    layout: {
-        padding: {
-            left: 10,
-            right: 25,
-            top: 25,
-            bottom: 0
-        }
-    },
-    scales: {
-        xAxes: [{
-            time: {
-                unit: 'date'
-            },
-            gridLines: {
-                display: false,
-                drawBorder: false
-            },
-            ticks: {
-                maxTicksLimit: 7
+    const defaultOptions = {
+        maintainAspectRatio: false,
+        layout: {
+            padding: {
+                left: 10,
+                right: 25,
+                top: 25,
+                bottom: 0
             }
-        }],
-        yAxes: [{
-            ticks: {
-                beginAtZero: true,
-                userCallback: function (label, index, labels) {
-                    if (Math.floor(label) === label) {
-                        return label;
+        },
+        scales: {
+            xAxes: [{
+                time: {
+                    unit: 'date'
+                },
+                gridLines: {
+                    display: false,
+                    drawBorder: false
+                },
+                ticks: {
+                    maxTicksLimit: 7
+                }
+            }],
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                    userCallback: function (label, index, labels) {
+                        if (Math.floor(label) === label) {
+                            return label;
+                        }
                     }
                 }
-            }
-        }]
-    },
-    legend: {
-        display: false
-    },
-    tooltips: {
-        backgroundColor: "rgb(255,255,255)",
-        bodyFontColor: "#858796",
-        titleMarginBottom: 10,
-        titleFontColor: '#6e707e',
-        titleFontSize: 14,
-        borderColor: '#dddfeb',
-        borderWidth: 1,
-        xPadding: 15,
-        yPadding: 15,
-        displayColors: false,
-        intersect: false,
-        mode: 'index',
-        caretPadding: 10
-    }
-};
+            }]
+        },
+        legend: {
+            display: false
+        },
+        tooltips: {
+            backgroundColor: "rgb(255,255,255)",
+            bodyFontColor: "#858796",
+            titleMarginBottom: 10,
+            titleFontColor: '#6e707e',
+            titleFontSize: 14,
+            borderColor: '#dddfeb',
+            borderWidth: 1,
+            xPadding: 15,
+            yPadding: 15,
+            displayColors: false,
+            intersect: false,
+            mode: 'index',
+            caretPadding: 10
+        }
+    };
 
 
-
-
-
-var readingConnectionsChart = new Chart(document.getElementById("readingConnectionsChart"), {
-    type: 'line',
-    data: {
-        labels: [],
-        datasets: [{
-            label: "Reading Connections",
-            lineTension: 0.3,
-            backgroundColor: "rgba(78, 115, 223, 0.05)",
-            borderColor: "rgba(78, 115, 223, 1)",
-            pointRadius: 3,
-            pointBackgroundColor: "rgba(78, 115, 223, 1)",
-            pointBorderColor: "rgba(78, 115, 223, 1)",
-            pointHoverRadius: 3,
-            pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-            pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-            pointHitRadius: 10,
-            pointBorderWidth: 2,
-            data: [],
-        }],
-    },
-    options: defaultOptions
-});
-var writingConnectionsChart = new Chart(document.getElementById("writingConnectionsChart"), {
-    type: 'line',
-    data: {
-        labels: [],
-        datasets: [{
-            label: "Reading Connections",
-            lineTension: 0.3,
-            backgroundColor: "rgba(78, 115, 223, 0.05)",
-            borderColor: "rgba(78, 115, 223, 1)",
-            pointRadius: 3,
-            pointBackgroundColor: "rgba(78, 115, 223, 1)",
-            pointBorderColor: "rgba(78, 115, 223, 1)",
-            pointHoverRadius: 3,
-            pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-            pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-            pointHitRadius: 10,
-            pointBorderWidth: 2,
-            data: [],
-        }],
-    },
-    options: defaultOptions
-});
-var waitingConnectionsChart = new Chart(document.getElementById("waitingConnectionsChart"), {
-    type: 'line',
-    data: {
-        labels: [],
-        datasets: [{
-            label: "Reading Connections",
-            lineTension: 0.3,
-            backgroundColor: "rgba(78, 115, 223, 0.05)",
-            borderColor: "rgba(78, 115, 223, 1)",
-            pointRadius: 3,
-            pointBackgroundColor: "rgba(78, 115, 223, 1)",
-            pointBorderColor: "rgba(78, 115, 223, 1)",
-            pointHoverRadius: 3,
-            pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-            pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-            pointHitRadius: 10,
-            pointBorderWidth: 2,
-            data: [],
-        }],
-    },
-    options: defaultOptions
-});
-
+    window.readingConnectionsChart = new Chart(document.getElementById("readingConnectionsChart"), {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: "Reading Connections",
+                lineTension: 0.3,
+                backgroundColor: "rgba(78, 115, 223, 0.05)",
+                borderColor: "rgba(78, 115, 223, 1)",
+                pointRadius: 3,
+                pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                pointBorderColor: "rgba(78, 115, 223, 1)",
+                pointHoverRadius: 3,
+                pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                pointHitRadius: 10,
+                pointBorderWidth: 2,
+                data: [],
+            }],
+        },
+        options: defaultOptions
+    });
+    window.writingConnectionsChart = new Chart(document.getElementById("writingConnectionsChart"), {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: "Reading Connections",
+                lineTension: 0.3,
+                backgroundColor: "rgba(78, 115, 223, 0.05)",
+                borderColor: "rgba(78, 115, 223, 1)",
+                pointRadius: 3,
+                pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                pointBorderColor: "rgba(78, 115, 223, 1)",
+                pointHoverRadius: 3,
+                pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                pointHitRadius: 10,
+                pointBorderWidth: 2,
+                data: [],
+            }],
+        },
+        options: defaultOptions
+    });
+    window.waitingConnectionsChart = new Chart(document.getElementById("waitingConnectionsChart"), {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: "Reading Connections",
+                lineTension: 0.3,
+                backgroundColor: "rgba(78, 115, 223, 0.05)",
+                borderColor: "rgba(78, 115, 223, 1)",
+                pointRadius: 3,
+                pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                pointBorderColor: "rgba(78, 115, 223, 1)",
+                pointHoverRadius: 3,
+                pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                pointHitRadius: 10,
+                pointBorderWidth: 2,
+                data: [],
+            }],
+        },
+        options: defaultOptions
+    });
+}
 
 function logout() {
     $.ajax({
@@ -140,34 +138,216 @@ function logout() {
     });
 }
 
+function addUpstreamService() {
+    var serviceName = prompt('enter service name', 'test_service');
+    if (!serviceName || serviceName == '')
+        return;
+
+    $clonedObject = $("div[upstream-service].collapse").clone();
+    $clonedObject.find('[upstream-service-name]').text(serviceName);
+    $clonedObject.removeClass("collapse").appendTo("div[upstream-body]");
+}
+function deleteUpstreamService(element) {
+    $(element).parents("[upstream-service]").remove();
+}
+
+function addBackendServer(element) {
+    var backendServer = prompt('enter backend server address:port', '127.0.0.1:8080');
+    if (!backendServer || backendServer == '')
+        return;
+
+    $clonedObject = $("div[upstream-node-div].collapse").clone();
+    $clonedObject.find('[upstream-node-address]').text(backendServer);
+    $clonedObject.removeClass("collapse").appendTo($(element).parents("div[upstream-service]").find("[upstream-node-body]"));
+}
+
+function deleteBackendServer(element) {
+    $(element).parents("[upstream-node-div]").remove();
+}
+
+// sites
+function addSite() {
+    var siteName = prompt('enter site name', 'test_site');
+    if (!siteName || siteName == '')
+        return;
+
+    $clonedObject = $("div[site-service].collapse").clone();
+    $clonedObject.find('[site-service-name]').text(siteName);
+    $clonedObject.find('[site-config]').val(`listen 80;
+# listen 443 ssl;
+
+# ssl_certificate     /cert/ssl.crt;
+# ssl_certificate_key /cert/ssl.key;
+
+server_name test.com;`
+    );
+    $clonedObject.removeClass("collapse").appendTo("div[site-body]");
+}
+
+function deleteSite(element) {
+    $(element).parents("[site-service]").remove();
+}
+
+function addLocation(element) {
+    var locationDirective = prompt('enter location', '/api');
+    if (!locationDirective || locationDirective == '')
+        return;
+
+    $clonedObject = $("div[site-node-div].collapse").clone();
+    $clonedObject.find('[site-node-address]').text(locationDirective);
+    $clonedObject.find('[site-node-config]').val(`set $test               http://127.0.0.1:3000;
+proxy_pass              $test;
+
+proxy_set_header        Host $host:$server_port;
+proxy_set_header        X-Real-IP $remote_addr;
+proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+proxy_set_header        X-Forwarded-Proto $scheme;
+
+# Required for new HTTP-based CLI
+proxy_http_version 1.1;
+proxy_request_buffering off;
+proxy_buffering off; # Required for HTTP-based CLI to work over SSL
+
+# timeout
+proxy_connect_timeout 900;      
+proxy_send_timeout 900;      
+proxy_read_timeout 900;      
+send_timeout 900;`);
+    $clonedObject.removeClass("collapse").appendTo($(element).parents("div[site-service]").find("[site-node-body]"));
+}
+
+function deleteLocation(element) {
+    $(element).parents("[site-node-div]").remove();
+}
+
+// --------------------------------------------------
+function upstreamDomToConfig() {
+
+    // common
+    config.common = commonTextareaEditor.getValue();
+
+    // upstream
+    var upstream = [];
+    $("[upstream-service]:visible").each((idx, e) => {
+        var obj = {
+            upstreamName: $(e).find("[upstream-service-name]").text(),
+            nodes: []
+        };
+
+        $(e).find("[upstream-node-div").each((i, el) => {
+            obj.nodes.push({
+                address: $(el).find("[upstream-node-address]").text(),
+                weight: +$(el).find("[upstream-node-weight]").val(),
+                maxFails: +$(el).find("[upstream-node-maxfails]").val(),
+                failTimeout: +$(el).find("[upstream-node-failtimeout]").val(),
+                backup: $(el).find("[upstream-node-backup]").is(":checked"),
+                disable: $(el).find("[upstream-node-disable]").is(":checked")
+            });
+        });
+
+        upstream.push(obj);
+    });
+    config.upstream = upstream;
+
+    // sites
+    var site = [];
+    $("[site-service]:visible").each((idx, e) => {
+        var obj = {
+            siteName: $(e).find("[site-service-name]").text(),
+            siteConfig: $(e).find("[site-config]").val(),
+            locations: []
+        };
+
+        $(e).find("[site-node-div").each((i, el) => {
+            obj.locations.push({
+                address: $(el).find("[site-node-address]").text(),
+                config: $(el).find("[site-node-config]").val()
+            });
+        });
+
+        site.push(obj);
+    });
+    config.site = site;
+
+}
+
+function configToUpstreamDOM() {
+
+    // common
+    commonTextareaEditor.setValue(config.common);
+
+    // upstream
+    $("[upstream-body]").empty();
+    config.upstream.forEach(e => {
+        $clonedObject = $("div[upstream-service].collapse").clone();
+        $clonedObject.find('[upstream-service-name]').text(e.upstreamName);
+        $clonedObject.removeClass("collapse").appendTo("div[upstream-body]");
+
+        e.nodes.forEach(ee => {
+            $clonedObjectNode = $("div[upstream-node-div].collapse").clone();
+            $clonedObjectNode.find('[upstream-node-address]').text(ee.address);
+            $clonedObjectNode.find('[upstream-node-weight]').val(ee.weight);
+            $clonedObjectNode.find('[upstream-node-maxfails]').val(ee.maxFails);
+            $clonedObjectNode.find('[upstream-node-failtimeout]').val(ee.failTimeout);
+            if (ee.backup) {
+                $clonedObjectNode.find('[upstream-node-backup]').attr('checked', 'true');
+            }
+            if (ee.disable) {
+                $clonedObjectNode.find('[upstream-node-disable]').attr('checked', 'true');
+            }
+            $clonedObjectNode.removeClass("collapse").appendTo($clonedObject.find("[upstream-node-body]"));
+        });
+    });
+
+    // sites
+    $("[site-body]").empty();
+    config.site.forEach(e => {
+        $clonedObject = $("div[site-service].collapse").clone();
+        $clonedObject.find('[site-service-name]').text(e.siteName);
+        $clonedObject.find('[site-config]').val(e.siteConfig);
+        $clonedObject.removeClass("collapse").appendTo("div[site-body]");
+
+        e.locations.forEach(ee => {
+            $clonedObjectNode = $("div[site-node-div].collapse").clone();
+            $clonedObjectNode.find('[site-node-address]').text(ee.address);
+            $clonedObjectNode.find('[site-node-config]').val(ee.config);
+            $clonedObjectNode.removeClass("collapse").appendTo($clonedObject.find("[site-node-body]"));
+        });
+    });
+
+}
+
 function saveConfig() {
     // write to back config
-    config.upstream = upstreamTextareaEditor.getValue();
+    upstreamDomToConfig();
 
     $.ajax({
         type: "POST",
         url: '/api/saveConfig',
-        data: { config: JSON.stringify(config) },
+        data: { config: JSON.stringify(config, null, '\t') },
         success: (ret) => {
             alert(ret);
         }
     });
 }
 
-
 function loadConfig() {
     $.getJSON('/api/getConfig', (ret) => {
         config = ret;
 
-        upstreamTextareaEditor.setValue(config.upstream);
+        configToUpstreamDOM();
     });
+}
+
+function configToNginxConfig() {
+    return `${config.common}`;
 }
 
 function testConfig() {
     $.ajax({
         type: "POST",
         url: '/api/testConfig',
-        data: { nginxConfig: upstreamTextareaEditor.getValue() },
+        data: { nginxConfig: configToNginxConfig() },
         success: (ret) => {
             alert(ret);
         }
@@ -178,7 +358,7 @@ function applyConfig() {
     $.ajax({
         type: "POST",
         url: '/api/applyConfig',
-        data: { nginxConfig: upstreamTextareaEditor.getValue() },
+        data: { nginxConfig: configToNginxConfig() },
         success: (ret) => {
             alert(ret);
         }
@@ -189,7 +369,7 @@ function uploadCert() {
     $.ajax({
         type: "POST",
         url: '/api/uploadCertification',
-        data: { cert: $("#certFile").val(), key: $("#keyFile").val() },
+        data: { name: $("certName").val(), cert: $("#certFile").val(), key: $("#keyFile").val() },
         success: (ret) => {
             alert(ret);
         }

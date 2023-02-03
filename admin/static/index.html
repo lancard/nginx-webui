@@ -71,6 +71,23 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
+                HTTP directive
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link" href="javascript:void(0)" onclick="showPanel('common')">
+                    <i class="fas fa-fw fa-edit"></i>
+                    <span>Modify</span>
+                </a>
+            </li>
+
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
                 Upstreams
             </div>
 
@@ -78,7 +95,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="javascript:void(0)" onclick="showPanel('upstream')">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Setting</span>
+                    <span>Manage</span>
                 </a>
             </li>
 
@@ -94,7 +111,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="javascript:void(0)" onclick="showPanel('site')">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Setting</span>
+                    <span>Manage</span>
                 </a>
             </li>
 
@@ -109,8 +126,8 @@
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link" href="javascript:void(0)" onclick="showPanel('uploadCert')">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Upload Cert</span>
+                    <i class="fas fa-fw fa-upload"></i>
+                    <span>Upload</span>
                 </a>
             </li>
 
@@ -150,17 +167,17 @@
                             -->
                             <button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"
                                 onclick="saveConfig()">
-                                <i class="fas fa-download fa-sm text-white-50"></i> Temp save to disk
+                                <i class="fas fa-download fa-sm text-white-50"></i> 1. All save to disk
                             </button>
                             <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
                                 onclick="testConfig()">
                                 <i class="fas fa-download fa-sm text-white-50"></i>
-                                Test nginx config
+                                2. Test nginx config
                             </button>
                             <button class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"
                                 onclick="applyConfig()">
                                 <i class="fas fa-download fa-sm text-white-50"></i>
-                                Apply nginx config
+                                3. Apply nginx config
                             </button>
                         </div>
 
@@ -193,14 +210,23 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Upload Cert</h1>
-                        <a href="javascript: void(0)" onclick="uploadCert()" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                        <a href="javascript: void(0)" onclick="uploadCert()"
+                            class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
                             <i class="fas fa-upload fa-sm text-white-50"></i> Upload Cert
                         </a>
                     </div>
 
+                    <div>
+                        <strong class="text-danger">
+                            will upload /cert/<input type="text" class="form-control col-2 d-inline-block" id="certName"
+                                value="ssl">.crt and .key and it will be overwritten if exist.
+                        </strong>
+                        <i>ex) /cert/ssl.crt, /cert/ssl.key</i>
+                    </div>
+
                     <div class="row">
                         <div class="col-6">
-                            Cert File Contents: 
+                            Cert File Contents:
                             <textarea class="form-control" rows="20" id="certFile">-----BEGIN CERTIFICATE-----
 ABCDEFGSAMPLE...
 -----END CERTIFICATE-----
@@ -209,7 +235,7 @@ ABCDEFGSAMPLE...
 -----END CERTIFICATE-----</textarea>
                         </div>
                         <div class="col-6">
-                            Key File Contents: 
+                            Key File Contents:
                             <textarea class="form-control" rows="20" id="keyFile">-----BEGIN RSA PRIVATE KEY-----
 ABCDEFGSAMPLE...
 -----END RSA PRIVATE KEY-----</textarea>
@@ -218,9 +244,152 @@ ABCDEFGSAMPLE...
 
                 </div>
 
+                <div class="container-fluid collapse" id="common">
+                    <textarea id="commonTextarea"></textarea>
+                </div>
+
 
                 <div class="container-fluid collapse" id="upstream">
-                    <textarea id="upstreamTextarea"></textarea>
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Upstream</h1>
+                        <button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm ml-2"
+                            onclick="addUpstreamService()">
+                            <i class="fas fa-plus fa-sm text-white-50"></i>
+                            Add Upstream Service
+                        </button>
+                    </div>
+
+                    <div upstream-body></div>
+
+                    <!-- templates -->
+                    <div class="collapse card border-left-primary shadow m-2" upstream-service>
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="font-weight-bold text-primary mb-1">
+                                        <span upstream-service-name>test_service</span>
+                                        <button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm ml-2"
+                                            onclick="addBackendServer(this)">
+                                            <i class="fas fa-plus fa-sm text-white-50"></i>
+                                            Add Backend Server
+                                        </button>
+                                        <button class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm ml-2"
+                                            onclick="deleteUpstreamService(this)">
+                                            <i class="fas fa-trash fa-sm text-white-50"></i>
+                                            Delete This Upstream Service
+                                        </button>
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800" upstream-node-body>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="collapse" upstream-node-div>
+                        <span class="text-success" upstream-node-status>●</span>
+                        <span class="text-primary" upstream-node-address>192.168.0.1:8081
+                        </span>
+
+                        <span class="text-secondary">WEIGHT</span>
+                        <input type="number" min="0" max="999" value="1" upstream-node-weight>
+
+                        <span class="text-secondary">MAX_FAILS</span>
+                        <input type="number" min="0" max="9" value="1" upstream-node-maxfails>
+
+                        <span class="text-secondary">FAIL_TIMEOUT</span>
+                        <input type="number" min="1" max="999" value="10" upstream-node-failtimeout>
+
+                        <span class="text-secondary">IS_BACKUP</span>
+                        <input type="checkbox" upstream-node-backup>
+
+                        <span class="text-secondary">IS_DISABLE</span>
+                        <input type="checkbox" upstream-node-disable>
+
+                        <button class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"
+                            onclick="deleteBackendServer(this)">
+                            <i class="fas fa-download fa-sm text-white-50"></i>
+                            Delete
+                        </button>
+                    </div>
+                </div>
+
+                <div class="container-fluid collapse" id="site">
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Site Management</h1>
+                        <button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm ml-2"
+                            onclick="addSite()">
+                            <i class="fas fa-plus fa-sm text-white-50"></i>
+                            Add Site
+                        </button>
+                    </div>
+
+                    <div site-body></div>
+
+                    <!-- templates -->
+                    <div class="collapse card border-left-primary shadow m-2" site-service>
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="font-weight-bold text-primary mb-1">
+                                                <span site-service-name>test_service</span>
+                                                <button
+                                                    class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm ml-2"
+                                                    onclick="addLocation(this)">
+                                                    <i class="fas fa-plus fa-sm text-white-50"></i>
+                                                    Add Location
+                                                </button>
+                                                <button
+                                                    class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm ml-2"
+                                                    onclick="deleteSite(this)">
+                                                    <i class="fas fa-trash fa-sm text-white-50"></i>
+                                                    Delete This Site
+                                                </button>
+                                            </div>
+                                            <div class="card shadow my-2">
+                                                <!-- Card Header - Accordion -->
+                                                <a href="javascript: void(0)" class="d-block card-header bg-dark py-3">
+                                                    <h6 class="m-0 font-weight-bold text-white">configuration in server
+                                                        directive</h6>
+                                                </a>
+                                                <div class="show bg-secondary">
+                                                    <div class="card-body">
+                                                        <textarea class="form-control" style="height: 200px;"
+                                                            site-config></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" site-node-body>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="collapse" site-node-div>
+                        <div class="card shadow my-2">
+                            <div class="card-header py-3">
+                                <span class="text-primary" site-node-address>/api</span>
+                                <button class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"
+                                    onclick="deleteLocation(this)">
+                                    <i class="fas fa-download fa-sm text-white-50"></i>
+                                    Delete
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                configuration:
+                                <textarea class="form-control" style="height: 200px;" site-node-config></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
 
@@ -433,7 +602,7 @@ ABCDEFGSAMPLE...
 
     <script>
         $(function () {
-            window.upstreamTextareaEditor = CodeMirror.fromTextArea(document.getElementById("upstreamTextarea"), {
+            window.commonTextareaEditor = CodeMirror.fromTextArea(document.getElementById("commonTextarea"), {
                 lineNumbers: true,
                 extraKeys: { "Ctrl-Space": "autocomplete" },
                 tabSize: 8,
@@ -442,6 +611,7 @@ ABCDEFGSAMPLE...
                 indentWithTabs: true
             });
             loadConfig();
+            createChart();
         });
     </script>
 

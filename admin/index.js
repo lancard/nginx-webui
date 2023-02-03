@@ -69,8 +69,6 @@ app.post('/api/login', (req, res) => {
         return;
     }
 
-    console.log(fs.readFileSync("/data/password.txt").toString());
-
     if (req.body.password != fs.readFileSync("/data/password.txt").toString()) {
         res.send("username or password invalid");
         return;
@@ -108,8 +106,8 @@ app.get('/api/getNginxStatus', (req, res) => {
 app.post('/api/uploadCertification', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
-    fs.writeFileSync('/cert/ssl.crt', req.body.cert);
-    fs.writeFileSync('/cert/ssl.key', req.body.key);
+    fs.writeFileSync(`/cert/${req.body.name}.crt`, req.body.cert);
+    fs.writeFileSync(`/cert/${req.body.name}.key`, req.body.key);
 
     res.end("Upload OK");
 });
