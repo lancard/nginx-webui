@@ -351,7 +351,7 @@ function configToNginxConfig() {
         nginxConfig += `upstream ${e.upstreamName} {\n`;
 
         e.nodes.forEach(ee => {
-            nginxConfig += `  ${ee.address} ${ee.backup ? "backup" : ""} ${ee.disable ? "down" : ""} weight=${ee.weight} max_fails=${ee.maxFails} fail_timeout=${ee.failTimeout};\n`;
+            nginxConfig += `  server ${ee.address} ${ee.backup ? "backup" : ""} ${ee.disable ? "down" : ""} weight=${ee.weight} max_fails=${ee.maxFails} fail_timeout=${ee.failTimeout};\n`;
         });
 
         nginxConfig += `\n}\n`;
@@ -362,7 +362,7 @@ function configToNginxConfig() {
     // sites
     config.site.forEach(e => {
         nginxConfig += `# ${e.siteName}\nserver { \n`;
-        nginxConfig += e.siteConfig;
+        nginxConfig += e.siteConfig + "\n";
 
         e.locations.forEach(ee => {
             nginxConfig += `  location ${ee.address} { \n ${ee.config} \n }\n`;
