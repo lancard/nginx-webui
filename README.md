@@ -1,7 +1,6 @@
 [![build](https://github.com/lancard/nginx-webui/actions/workflows/build-docker.yml/badge.svg)](https://github.com/lancard/nginx-webui/actions/workflows/build-docker.yml)
 ![GitHub repo size](https://img.shields.io/github/repo-size/lancard/nginx-webui)
 ![GitHub repo file count](https://img.shields.io/github/directory-file-count/lancard/nginx-webui)
-![GitHub all releases](https://img.shields.io/github/downloads/lancard/nginx-webui/total)
 
 This project aims to create a UI that wrap nginx.
 We developed a program that makes it easy for companies and people with multiple domains to manage nginx through UI.
