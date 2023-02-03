@@ -13,7 +13,7 @@ RUN echo "net.ipv4.tcp_fin_timeout=3" >> /etc/sysctl.conf
 
 # copy and config
 COPY default_nginx.conf /nginx_config/default_nginx.conf
-COPY default_config.json /data/config.json
+COPY default_config.json /nginx_config/default_config.json
 RUN cp /nginx_config/default_nginx.conf /etc/nginx/nginx.conf
 COPY admin /admin
 COPY run.sh /run.sh

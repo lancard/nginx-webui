@@ -228,7 +228,7 @@ function upstreamDomToConfig() {
 
     // upstream
     var upstream = [];
-    $("[upstream-service]:visible").each((idx, e) => {
+    $("[upstream-body] [upstream-service]").each((idx, e) => {
         var obj = {
             upstreamName: $(e).find("[upstream-service-name]").text(),
             nodes: []
@@ -251,7 +251,7 @@ function upstreamDomToConfig() {
 
     // sites
     var site = [];
-    $("[site-service]:visible").each((idx, e) => {
+    $("[site-body] [site-service]").each((idx, e) => {
         var obj = {
             siteName: $(e).find("[site-service-name]").text(),
             siteConfig: $(e).find("[site-config]").val(),
@@ -340,7 +340,38 @@ function loadConfig() {
 }
 
 function configToNginxConfig() {
-    return `${config.common}`;
+
+    // common
+    var nginxConfig = config.common + "\n";
+
+    nginxConfig += `\n\n\n`;
+
+    // upstream
+    config.upstream.forEach(e => {
+        nginxConfig += `upstream ${e.upstreamName} {\n`;
+
+        e.nodes.forEach(ee => {
+            nginxConfig += `  ${ee.address} ${ee.backup ? "backup" : ""} ${ee.disable ? "down" : ""} weight=${ee.weight} max_fails=${ee.maxFails} fail_timeout=${ee.failTimeout};\n`;
+        });
+
+        nginxConfig += `\n}\n`;
+    });
+
+    nginxConfig += `\n\n\n`;
+
+    // sites
+    config.site.forEach(e => {
+        nginxConfig += `# ${e.siteName}\nserver { \n`;
+        nginxConfig += e.siteConfig;
+
+        e.locations.forEach(ee => {
+            nginxConfig += `  location ${ee.address} { \n ${ee.config} \n }\n`;
+        });
+
+        nginxConfig += `\n}\n`;
+    });
+
+    return nginxConfig;
 }
 
 function testConfig() {
