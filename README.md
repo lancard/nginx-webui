@@ -51,11 +51,13 @@ services:
     volumes:
       - nginx-webui-data:/data
       - nginx-webui-cert:/cert
+      - nginx-webui-session:/session
       - nginx-webui-log:/var/log/nginx
 
 volumes:
   nginx-webui-data:
   nginx-webui-cert:
+  nginx-webui-session:
   nginx-webui-log:
   ```
 
