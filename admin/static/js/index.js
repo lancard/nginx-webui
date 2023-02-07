@@ -207,6 +207,10 @@ function addLocation(element) {
     $clonedObject.find('[site-node-config]').val(`set $test               http://127.0.0.1:3000;
 proxy_pass              $test;
 
+# static resources
+# root   /usr/share/nginx/html;
+# index  index.html index.htm;
+
 proxy_set_header        Host $host:$server_port;
 proxy_set_header        X-Real-IP $remote_addr;
 proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
