@@ -20,6 +20,7 @@ COPY run.sh /run.sh
 RUN chmod +x /run.sh
 RUN mkdir -p /cert
 RUN mkdir -p /data
+RUN mkdir -p /session
 RUN rm -f /var/log/nginx/*
 
 # change to node folder

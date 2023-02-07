@@ -45,7 +45,7 @@ const sessionObj = {
     secret: 'nginxuisession',
     resave: true,
     saveUninitialized: false,
-    store: new FileStore({ ttl: sessionTime, path: '/tmp' }),
+    store: new FileStore({ ttl: sessionTime, path: '/session' }),
     cookie: { maxAge: sessionTime * 1000 }
 };
 
