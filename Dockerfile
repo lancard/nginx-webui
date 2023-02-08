@@ -12,12 +12,12 @@ RUN apt-get upgrade -y
 RUN echo "net.ipv4.tcp_fin_timeout=3" >> /etc/sysctl.conf
 
 # copy and config
-COPY default_nginx.conf /nginx_config/default_nginx.conf
-COPY default_config.json /nginx_config/default_config.json
+COPY container_files/default_nginx.conf /nginx_config/default_nginx.conf
+COPY container_files/default_config.json /nginx_config/default_config.json
 RUN cp /nginx_config/default_nginx.conf /etc/nginx/nginx.conf
 COPY admin /admin
-COPY run.sh /run.sh
-RUN chmod +x /run.sh
+COPY container_files/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 RUN mkdir -p /cert
 RUN mkdir -p /data
 RUN mkdir -p /session
@@ -28,4 +28,4 @@ WORKDIR /admin
 
 RUN npm install
 
-ENTRYPOINT ["/run.sh"]
+ENTRYPOINT ["/entrypoint.sh"]

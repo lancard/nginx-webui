@@ -392,11 +392,12 @@ function configToNginxConfig() {
 
 function testConfig() {
     $.ajax({
+        dataType: "json",
         type: "POST",
         url: '/api/testConfig',
         data: { nginxConfig: configToNginxConfig() },
         success: (ret) => {
-            alert(JSON.parse(ret).stderr);
+            alert(ret.stderr);
         }
     });
 }
@@ -406,16 +407,23 @@ function applyConfig() {
         return;
 
     $.ajax({
+        dataType: "json",
         type: "POST",
         url: '/api/applyConfig',
         data: { nginxConfig: configToNginxConfig() },
         success: (ret) => {
-            alert(JSON.parse(ret).stderr);
+            if (ret.error == null && ret.stdout == "" && ret.stderr == "") {
+                alert("success");
+            }
+            else {
+                alert(ret.stderr);
+            }
         }
     });
 }
 
 function loadCertList() {
+    $("#certList").text("");
     $.getJSON('/api/getCertificationList', (ret) => {
         $("#certList").text(ret.join("\n"));
     });
@@ -430,6 +438,7 @@ function uploadCert() {
         url: '/api/uploadCertification',
         data: { name: $("#certName").val(), cert: $("#certFile").val(), key: $("#keyFile").val() },
         success: (ret) => {
+            loadCertList();
             alert(ret);
         }
     });

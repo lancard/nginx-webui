@@ -10,11 +10,6 @@ services:
         soft: -1
         hard: -1
     restart: always
-  # deploy:
-    # resources:
-      # limits:
-        # cpus: '0.5'
-        # memory: 1024M
     ports:
       - 80:80
       - 81:81
@@ -24,7 +19,6 @@ services:
       - nginx-webui-cert:/cert
       - nginx-webui-session:/session
       - nginx-webui-log:/var/log/nginx
-      - ./admin:/admin
 
 volumes:
   nginx-webui-data:

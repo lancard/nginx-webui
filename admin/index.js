@@ -11,6 +11,11 @@ const sessionTime = 30 * 60;
 const configFile = '/data/config.json';
 const certFileRegex = /^[0-9a-zA-Z\-_]+$/;
 
+
+process.once('SIGTERM', (code) => {
+    process.exit(0);
+});
+
 function loadConfig() {
     try {
         return JSON.parse(fs.readFileSync(configFile));
