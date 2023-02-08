@@ -14,7 +14,7 @@ then
     cp /nginx_config/default_config.json /data/config.json
 
     # generate self-signed
-    openssl req -x509 -nodes -days 36500 -subj "/C=CA/ST=QC/O=Company Inc/CN=localhost" -newkey rsa:2048 -keyout /cert/selfsigned.key -out /cert/selfsigned.crt
+    openssl req -x509 -nodes -days 36500 -subj "/C=CA/ST=QC/O=Company Inc/CN=localhost" -newkey rsa:2048 -keyout /cert/nginx_webui_cert.key -out /cert/nginx_webui_cert.crt
 fi
 
 /docker-entrypoint.sh
