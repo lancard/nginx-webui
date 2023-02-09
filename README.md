@@ -111,7 +111,7 @@ Don't forget to give the project a star! Thank you!
 
 ## Contributor License Agreement
 
-For easy license management and legal dispute avoidance, the contributing codes are attributed to the author and all rights are attributed to the author. In addition, the MIT license is maintained. If you don't want it, please don't ask for PR.
+For easy license management and legal dispute avoidance, the contributing codes are attributed to the author and all rights are attributed to the author. In addition, the MIT license is maintained. If you don't want it, please don't make PR.
 
 ## License
 
