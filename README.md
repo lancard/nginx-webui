@@ -109,6 +109,9 @@ Don't forget to give the project a star! Thank you!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+## Contributor License Agreement
+
+For easy license management and legal dispute avoidance, the contributing codes are attributed to the author and all rights are attributed to the author. In addition, the MIT license is maintained. If you don't want it, please don't ask for PR.
 
 ## License
 
