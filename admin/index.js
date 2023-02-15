@@ -112,7 +112,7 @@ app.get('/api/getNginxStatus', (req, res) => {
 app.get('/api/getCertificationList', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
-    res.end(JSON.stringify(fs.readdirSync('/cert')));
+    res.end(JSON.stringify(fs.readdirSync('/etc/letsencrypt/live')));
 });
 
 app.post('/api/uploadCertification', (req, res) => {
@@ -123,8 +123,12 @@ app.post('/api/uploadCertification', (req, res) => {
         return;
     }
 
-    fs.writeFileSync(`/cert/${req.body.name}.crt`, req.body.cert);
-    fs.writeFileSync(`/cert/${req.body.name}.key`, req.body.key);
+    const dir = `/etc/letsencrypt/live/${req.body.domain}`;
+    if(!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+    }
+    fs.writeFileSync(`${dir}/fullchain.pem`, req.body.cert);
+    fs.writeFileSync(`${dir}/privkey.pem`, req.body.key);
 
     res.end("Upload OK");
 });
