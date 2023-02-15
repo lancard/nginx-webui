@@ -199,6 +199,32 @@ app.post('/api/applyConfig', (req, res) => {
     });
 });
 
+app.post('/api/generateCert', (req, res) => {
+    if (isUnauthroizedRequest(req, res)) return;
+
+    exec(`certbot certonly --nginx -n --agree-tos -d ${req.body.domain} -m ${req.body.email}`, (error, stdout, stderr) => {
+        var obj = {
+            error,
+            stdout,
+            stderr
+        };
+        res.send(JSON.stringify(obj));
+    });
+});
+
+app.post('/api/renewCert', (req, res) => {
+    if (isUnauthroizedRequest(req, res)) return;
+
+    exec(`certbot renew --dry-run --nginx -n --agree-tos -d ${req.body.domain} -m ${req.body.email}`, (error, stdout, stderr) => {
+        var obj = {
+            error,
+            stdout,
+            stderr
+        };
+        res.send(JSON.stringify(obj));
+    });
+});
+
 app.listen(port, () => {
     console.log(`listening on port ${port}`);
 });
