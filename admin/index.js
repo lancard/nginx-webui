@@ -263,6 +263,7 @@ function renewalCert() {
                 if (statObject != null && statObject.mtime != null)
                     lastTime = dayjs(statObject.mtime);
             } catch (e) {
+                console.log("  - not exist or error");
             }
 
             // don't need to renewal
