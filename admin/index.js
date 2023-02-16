@@ -275,4 +275,5 @@ function renewalCert() {
     }
 }
 
+renewalCert();
 setInterval(renewalCert, 7 * 60 * 60 * 1000); // check cert renewal every 7 hours

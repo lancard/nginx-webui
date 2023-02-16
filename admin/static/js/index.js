@@ -440,7 +440,7 @@ function getOrRenewCertFromLetsencrypt(elem) {
         return;
     }
 
-    var email = $(elem).parents("[site-default-section]").find("[site-email]").val();
+    var email = $(elem).parents("[site-default-section]").find("[site-admin-email]").val();
 
     if (email == '') {
         alert('email field empty');
@@ -450,7 +450,7 @@ function getOrRenewCertFromLetsencrypt(elem) {
     $.ajax({
         type: "POST",
         url: '/api/renewCert',
-        data: { domain: $parent, email: email },
+        data: { domain: domain, email: email },
         success: (ret) => {
             alert(ret);
         }
