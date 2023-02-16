@@ -249,7 +249,7 @@ function renewalCert() {
 
     try {
         config.site.forEach(site => {
-            if (!site.adminEmail || site.adminEmail == "" || !site.serverName || site.serverName == "")
+            if (!site.adminEmail || site.adminEmail == "" || !site.serverName || site.serverName == "" || site.autoRenew != "true")
                 return;
 
             console.log(` - checking: ${site.serverName}`);
@@ -260,7 +260,8 @@ function renewalCert() {
 
             try {
                 statObject = fs.statSync(filename);
-                lastTime = dayjs(statObject.mtime);
+                if (statObject != null && statObject.mtime != null)
+                    lastTime = dayjs(statObject.mtime);
             } catch (e) {
             }
 
