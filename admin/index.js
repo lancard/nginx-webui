@@ -1,5 +1,6 @@
 const fs = require('fs');
 const http = require('http');
+const dayjs = require('dayjs');
 const si = require('systeminformation');
 const express = require('express');
 const session = require('express-session');
@@ -229,7 +230,7 @@ app.post('/api/renewCert', (req, res) => {
 
     var isFirsttime = generateOrRenewCert(req.body.domain, req.body.email);
 
-    if(isFirsttime) {
+    if (isFirsttime) {
         res.end("You have requested a certificate to be generated. (Working in the background)");
     }
     else {
@@ -240,3 +241,38 @@ app.post('/api/renewCert', (req, res) => {
 app.listen(port, () => {
     console.log(`listening on port ${port}`);
 });
+
+function renewalCert() {
+    var config = loadConfig();
+
+    try {
+        config.site.forEach(site => {
+            if (!site.adminEmail || site.adminEmail == "" || !site.serverName || site.serverName == "")
+                return;
+
+            const filename = `/etc/letsencrypt/live/${site.serverName}/fullchain.pem`;
+            var statObject = null;
+            var lastTime = dayjs("1900-01-01", "YYYY-MM-DD");
+            var twoMonthBefore = dayjs().add(-2, 'month');
+
+            try {
+                statObject = fs.statSync(filename);
+                lastTime = dayjs(statObject.mtime);
+            } catch (e) {
+            }
+
+            // don't need to renewal
+            if (lastTime.isAfter(twoMonthBefore))
+                return;
+
+            // progress renewal
+            generateOrRenewCert(site.serverName, site.adminEmail);
+        });
+
+    }
+    catch (e) {
+        console.error(e);
+    }
+}
+
+setInterval(renewalCert, 7 * 60 * 60 * 1000); // check cert renewal every 7 hours

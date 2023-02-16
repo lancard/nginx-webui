@@ -271,6 +271,7 @@ function upstreamDomToConfig() {
             siteName: $(e).find("[site-service-name]").text(),
             siteConfig: $(e).find("[site-config]").val(),
             serverName: $(e).find("[site-server-name]").val(),
+            adminEmail: $(e).find("[site-admin-email]").val(),
             autoRenew: $(e).find("[site-auto-renew]").val(),
             locations: []
         };
@@ -322,6 +323,7 @@ function configToUpstreamDOM() {
         $clonedObject = $("div[site-service].collapse").clone();
         $clonedObject.find('[site-service-name]').text(e.siteName);
         $clonedObject.find('[site-server-name]').val(e.serverName);
+        $clonedObject.find('[site-admin-email]').val(e.adminEmail);
         $clonedObject.find('[site-auto-renew]').val(e.autoRenew);
         $clonedObject.find('[site-config]').val(e.siteConfig);
         $clonedObject.removeClass("collapse").appendTo("div[site-body]");
@@ -438,9 +440,12 @@ function getOrRenewCertFromLetsencrypt(elem) {
         return;
     }
 
-    var email = prompt('enter domain admin email', 'test@test.com');
-    if (!email || email == '')
+    var email = $(elem).parents("[site-default-section]").find("[site-email]").val();
+
+    if (email == '') {
+        alert('email field empty');
         return;
+    }
 
     $.ajax({
         type: "POST",
