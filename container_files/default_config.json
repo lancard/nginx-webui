@@ -27,9 +27,14 @@
                 {
                         "siteName": "test_site",
                         "serverName": "test.com",
+                        "adminEmail": "",
                         "autoRenew": "false",
                         "siteConfig": "listen 80;\n# listen 443 ssl;\n\n",
                         "locations": [
+                                {
+                                        "address": "/.well-known/acme-challenge",
+                                        "config": "# for let's encrypt renewal\nroot /usr/share/nginx/html;"
+                                },
                                 {
                                         "address": "/",
                                         "config": "set $backend            http://backend_upstream;\nproxy_pass              $backend;\n\nproxy_set_header        Host $host:$server_port;\nproxy_set_header        X-Real-IP $remote_addr;\nproxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;\nproxy_set_header        X-Forwarded-Proto $scheme;\n\n# Required for new HTTP-based CLI\nproxy_http_version 1.1;\nproxy_request_buffering off;\nproxy_buffering off; # Required for HTTP-based CLI to work over SSL\n\n# timeout\nproxy_connect_timeout 900;      \nproxy_send_timeout 900;      \nproxy_read_timeout 900;      \nsend_timeout 900;"
@@ -43,9 +48,14 @@
                 {
                         "siteName": "test_site2",
                         "serverName": "test2.com",
+                        "adminEmail": "",
                         "autoRenew": "false",
                         "siteConfig": "listen 80;\n# listen 443 ssl;\n\n",
                         "locations": [
+                                {
+                                        "address": "/.well-known/acme-challenge",
+                                        "config": "# for let's encrypt renewal\nroot /usr/share/nginx/html;"
+                                },
                                 {
                                         "address": "/",
                                         "config": "set $backend            http://backend_upstream;\nproxy_pass              $backend;\n\nproxy_set_header        Host $host:$server_port;\nproxy_set_header        X-Real-IP $remote_addr;\nproxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;\nproxy_set_header        X-Forwarded-Proto $scheme;\n\n# Required for new HTTP-based CLI\nproxy_http_version 1.1;\nproxy_request_buffering off;\nproxy_buffering off; # Required for HTTP-based CLI to work over SSL\n\n# timeout\nproxy_connect_timeout 900;      \nproxy_send_timeout 900;      \nproxy_read_timeout 900;      \nsend_timeout 900;"
