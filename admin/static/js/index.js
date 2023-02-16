@@ -179,14 +179,7 @@ function addSite() {
 
     $clonedObject = $("div[site-service].collapse").clone();
     $clonedObject.find('[site-service-name]').text(siteName);
-    $clonedObject.find('[site-config]').val(`listen 80;
-# listen 443 ssl;
-
-# ssl_certificate     /cert/ssl.crt;
-# ssl_certificate_key /cert/ssl.key;
-
-server_name test.com;`
-    );
+    $clonedObject.find('[site-config]').val(`listen 80;\n# listen 443 ssl;`);
     $clonedObject.removeClass("collapse").appendTo("div[site-body]");
 }
 

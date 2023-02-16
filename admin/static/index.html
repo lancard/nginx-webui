@@ -218,10 +218,10 @@
 
                     <div>
                         <strong class="text-danger">
-                            will upload /cert/<input type="text" class="form-control col-2 d-inline-block" id="certName"
-                                value="ssl">.crt and .key and it will be overwritten if exist.
+                            will upload /etc/letsencrypt/live/<input type="text" class="form-control col-2 d-inline-block" id="certName"
+                                value="ssl">cert and key file will be overwritten if exist.
                         </strong>
-                        <i>ex) /cert/ssl.crt, /cert/ssl.key</i>
+                        <i>ex) /etc/letsencrypt/live/test.com/fullchain.pem, /etc/letsencrypt/live/test.com/privkey.pem</i>
                     </div>
 
                     <div class="row">
@@ -244,7 +244,7 @@ ABCDEFGSAMPLE...
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mt-4">
-                        <h1 class="h3 mb-0 text-gray-800">Uploaded Cert List <i>(in /cert directory)</i></h1>
+                        <h1 class="h3 mb-0 text-gray-800">Uploaded Cert List <i>(in /etc/letsencrypt/live directory)</i></h1>
                         
                     </div>
                     <div>

@@ -26,7 +26,7 @@
         "site": [
                 {
                         "siteName": "test_site",
-                        "siteConfig": "listen 80;\n# listen 443 ssl;\n\n# ssl_certificate     /cert/ssl.crt;\n# ssl_certificate_key /cert/ssl.key;\n\nserver_name test.com;",
+                        "siteConfig": "listen 80;\n# listen 443 ssl;\n\n# ssl_certificate     /etc/letsencrypt/live/test.com/fullchain.pem;\n# ssl_certificate_key /etc/letsencrypt/live/test.com/privkey.pem;\n\nserver_name test.com;",
                         "locations": [
                                 {
                                         "address": "/",
@@ -40,7 +40,7 @@
                 },
                 {
                         "siteName": "test_site2",
-                        "siteConfig": "listen 80;\n# listen 443 ssl;\n\n# ssl_certificate     /cert/ssl.crt;\n# ssl_certificate_key /cert/ssl.key;\n\nserver_name test.net;",
+                        "siteConfig": "listen 80;\n# listen 443 ssl;\n\n# ssl_certificate     /etc/letsencrypt/live/test2.com/fullchain.pem;\n# ssl_certificate_key /etc/letsencrypt/live/test2.com/privkey.pem;\n\nserver_name test.net;",
                         "locations": [
                                 {
                                         "address": "/",

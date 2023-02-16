@@ -13,8 +13,11 @@ then
     # copy default config
     cp /nginx_config/default_config.json /data/config.json
 
+    # make directory
+    mkdir -p /etc/letsencrypt/live/localhost_nginx_webui
+
     # generate self-signed
-    openssl req -x509 -nodes -days 36500 -subj "/C=CA/ST=QC/O=Company Inc/CN=localhost" -newkey rsa:2048 -keyout /cert/nginx_webui_cert.key -out /cert/nginx_webui_cert.crt
+    openssl req -x509 -nodes -days 36500 -subj "/C=CA/ST=QC/O=Company Inc/CN=localhost" -newkey rsa:2048 -keyout /etc/letsencrypt/live/localhost_nginx_webui/privkey.pem -out /etc/letsencrypt/live/localhost_nginx_webui/fullchain.pem
 fi
 
 /docker-entrypoint.sh

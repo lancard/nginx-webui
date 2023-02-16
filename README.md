@@ -52,7 +52,7 @@ services:
       - 443:443
     volumes:
       - nginx-webui-data:/data
-      - nginx-webui-cert:/cert
+      - nginx-webui-cert:/etc/letsencrypt/live
       - nginx-webui-session:/session
       - nginx-webui-log:/var/log/nginx
 

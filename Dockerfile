@@ -18,7 +18,6 @@ RUN cp /nginx_config/default_nginx.conf /etc/nginx/nginx.conf
 COPY admin /admin
 COPY container_files/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-RUN mkdir -p /cert
 RUN mkdir -p /data
 RUN mkdir -p /session
 RUN rm -f /var/log/nginx/*
