@@ -179,7 +179,11 @@ function addSite() {
 
     $clonedObject = $("div[site-service].collapse").clone();
     $clonedObject.find('[site-service-name]').text(siteName);
-    $clonedObject.find('[site-config]').val(`listen 80;\n# listen 443 ssl;`);
+    $clonedObject.find('[site-config]').val(`listen 80;
+# listen 443 ssl;
+# ssl_certificate /etc/letsencrypt/live/(domain_name)/fullchain.pem;
+# ssl_certificate_key /etc/letsencrypt/live/(domain_name)/privkey.pem;
+`);
     $clonedObject.removeClass("collapse").appendTo("div[site-body]");
 
     // add let's encrypt well-known

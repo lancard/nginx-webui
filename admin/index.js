@@ -243,6 +243,8 @@ app.listen(port, () => {
 });
 
 function renewalCert() {
+    console.log("renewal start");
+
     var config = loadConfig();
 
     try {
@@ -250,6 +252,7 @@ function renewalCert() {
             if (!site.adminEmail || site.adminEmail == "" || !site.serverName || site.serverName == "")
                 return;
 
+            console.log(` - checking: ${site.serverName}`);
             const filename = `/etc/letsencrypt/live/${site.serverName}/fullchain.pem`;
             var statObject = null;
             var lastTime = dayjs("1900-01-01", "YYYY-MM-DD");
@@ -273,6 +276,8 @@ function renewalCert() {
     catch (e) {
         console.error(e);
     }
+
+    console.log("renewal end");
 }
 
 renewalCert();

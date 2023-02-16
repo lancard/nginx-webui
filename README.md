@@ -6,6 +6,7 @@
 
 This project aims to create a UI that wrap nginx.
 We developed a program that makes it easy for companies and people with multiple domains to manage nginx through UI.
+And, it implemented a function that easily updates through Let's encrypt.
 
 ## Screenshot
 ![screenshot1](./screenshot/screenshot1.png)
@@ -19,10 +20,11 @@ main goal is management for 'upstream' / 'server' / certificates nginx configura
 
 ## Features
 
+- Auto renewal Let's encrypt cert.
 - modify reverse proxy and multiple upstream settings with web UI.
 - Easily create services and locations.
-- Advanced Nginx configuration available for super users
-- login management
+- Advanced Nginx configuration available for super users.
+- login management.
 
 ## Quick Setup
 
@@ -61,7 +63,7 @@ volumes:
   nginx-webui-cert:
   nginx-webui-session:
   nginx-webui-log:
-  ```
+```
 
 3. Run docker-compose
 
