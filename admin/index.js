@@ -48,10 +48,10 @@ function isUnauthroizedRequest(req, res) {
 
 
 const sessionObj = {
-    secret: 'nginxuisession',
+    secret: 'nginxwebuisession',
     resave: true,
     saveUninitialized: false,
-    store: new FileStore({ ttl: sessionTime, path: '/session' }),
+    store: new FileStore({ ttl: sessionTime, path: '/session', retries: 0 }),
     cookie: { maxAge: sessionTime * 1000 }
 };
 
