@@ -35,6 +35,10 @@
             border: 1px solid #888;
             height: 60vh;
         }
+
+        textarea {
+            font-family: monospace;
+        }
     </style>
 
 </head>
@@ -216,12 +220,23 @@
                         </a>
                     </div>
 
-                    <div>
+                    <div class="mb-2">
                         <strong class="text-danger">
-                            will upload /etc/letsencrypt/live/<input type="text" class="form-control col-2 d-inline-block" id="certName"
-                                value="ssl">cert and key file will be overwritten if exist.
+                            will upload to '/etc/letsencrypt/live/(domain_name)' and will be overwritten if exist.
                         </strong>
-                        <i>ex) /etc/letsencrypt/live/test.com/fullchain.pem, /etc/letsencrypt/live/test.com/privkey.pem</i>
+                        <i>ex) /etc/letsencrypt/live/test.com/fullchain.pem,
+                            /etc/letsencrypt/live/test.com/privkey.pem</i>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-primary" type="button">
+                                <small>
+                                    DOMAIN NAME
+                                </small>
+                            </button>
+                        </div>
+                        <input type="text" class="form-control col-2 d-inline-block" id="domainName" value="test.com">
                     </div>
 
                     <div class="row">
@@ -244,8 +259,9 @@ ABCDEFGSAMPLE...
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mt-4">
-                        <h1 class="h3 mb-0 text-gray-800">Uploaded Cert List <i>(in /etc/letsencrypt/live directory)</i></h1>
-                        
+                        <h1 class="h3 mb-0 text-gray-800">Uploaded Cert List <i>(in /etc/letsencrypt/live directory)</i>
+                        </h1>
+
                     </div>
                     <div>
                         <pre id="certList" class="bg-dark text-white" style="height: 300px;"></pre>
@@ -367,15 +383,55 @@ ABCDEFGSAMPLE...
                                                     Delete This Site
                                                 </button>
                                             </div>
+                                            <div class="mt-2" site-default-section>
+                                                <div class="input-group mt-2 mb-1">
+                                                    <div class="input-group-prepend">
+                                                        <button class="btn btn-primary" type="button">
+                                                            <small>
+                                                                SERVER NAME
+                                                            </small>
+                                                        </button>
+                                                    </div>
+                                                    <input type="text" class="form-control" site-server-name>
+                                                </div>
+                                                <div class="input-group mb-1">
+                                                    <div class="input-group-prepend">
+                                                        <button class="btn btn-primary" type="button">
+                                                            <small>SSL CERTIFICATE FILE EXISTENCE</small>
+                                                        </button>
+                                                    </div>
+                                                    <input type="text" class="form-control col-2" site-ssl-exist
+                                                        readonly value="NO">
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-warning" type="button" onclick="getOrRenewCertFromLetsencrypt(this);">
+                                                            <small>Get/Renew from letsencrypt</small>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <button class="btn btn-primary" type="button">
+                                                            <small>
+                                                                SSL AUTO RENEW FROM LETSENCRYPT
+                                                            </small>
+                                                        </button>
+                                                    </div>
+                                                    <select class="form-control" site-auto-renew>
+                                                        <option value="false">No</option>
+                                                        <option value="true">Yes (letsencrypt)</option>
+                                                    </select>
+                                                </div>
+                                            </div>
                                             <div class="card shadow my-2">
                                                 <!-- Card Header - Accordion -->
                                                 <a href="javascript: void(0)" class="d-block card-header bg-dark py-3">
-                                                    <h6 class="m-0 font-weight-bold text-white">configuration in server
-                                                        directive</h6>
+                                                    <h6 class="m-0 font-weight-bold text-white">
+                                                        configuration in server directive
+                                                    </h6>
                                                 </a>
                                                 <div class="show bg-secondary">
                                                     <div class="card-body">
-                                                        <textarea class="form-control" style="height: 200px;"
+                                                        <textarea class="form-control" style="height: 100px;"
                                                             site-config></textarea>
                                                     </div>
                                                 </div>
@@ -627,7 +683,6 @@ ABCDEFGSAMPLE...
                 indentWithTabs: true
             });
             loadConfig();
-            loadCertList();
             createChart();
         });
     </script>

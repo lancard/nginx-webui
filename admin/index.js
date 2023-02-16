@@ -9,7 +9,7 @@ const { exec } = require('child_process');
 const port = 3000;
 const sessionTime = 30 * 60;
 const configFile = '/data/config.json';
-const certFileRegex = /^[0-9a-zA-Z\-_]+$/;
+const domainNameRegex = /^[0-9a-zA-Z\.]+$/;
 
 
 process.once('SIGTERM', (code) => {
@@ -109,22 +109,22 @@ app.get('/api/getNginxStatus', (req, res) => {
     });
 });
 
-app.get('/api/getCertificationList', (req, res) => {
+app.get('/api/getCertList', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
     res.end(JSON.stringify(fs.readdirSync('/etc/letsencrypt/live')));
 });
 
-app.post('/api/uploadCertification', (req, res) => {
+app.post('/api/uploadCert', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
-    if (!certFileRegex.test(req.body.name)) {
-        res.end("Filename invalid");
+    if (!domainNameRegex.test(req.body.name)) {
+        res.end("domain name invalid");
         return;
     }
 
-    const dir = `/etc/letsencrypt/live/${req.body.domain}`;
-    if(!fs.existsSync(dir)) {
+    const dir = `/etc/letsencrypt/live/${req.body.name}`;
+    if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
     }
     fs.writeFileSync(`${dir}/fullchain.pem`, req.body.cert);
@@ -203,30 +203,38 @@ app.post('/api/applyConfig', (req, res) => {
     });
 });
 
-app.post('/api/generateCert', (req, res) => {
-    if (isUnauthroizedRequest(req, res)) return;
+function generateOrRenewCert(domain, email) {
+    // check domain exist
+    const dir = `/etc/letsencrypt/live/${domain}`;
 
-    exec(`certbot certonly --nginx -n --agree-tos -d ${req.body.domain} -m ${req.body.email}`, (error, stdout, stderr) => {
-        var obj = {
-            error,
-            stdout,
-            stderr
-        };
-        res.send(JSON.stringify(obj));
+    // generate new
+    if (!fs.existsSync(dir)) {
+        exec(`certbot certonly --nginx -n --agree-tos -d ${domain} -m ${email}`, (error, stdout, stderr) => {
+            console.log("new cert", error, stdout, stderr);
+        });
+
+        return true;
+    }
+
+    // renew cert
+    exec(`certbot renew --dry-run --nginx -n --agree-tos -d ${domain} -m ${email}`, (error, stdout, stderr) => {
+        console.log("renew cert", error, stdout, stderr);
     });
-});
+
+    return false;
+}
 
 app.post('/api/renewCert', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
-    exec(`certbot renew --dry-run --nginx -n --agree-tos -d ${req.body.domain} -m ${req.body.email}`, (error, stdout, stderr) => {
-        var obj = {
-            error,
-            stdout,
-            stderr
-        };
-        res.send(JSON.stringify(obj));
-    });
+    var isFirsttime = generateOrRenewCert(req.body.domain, req.body.email);
+
+    if(isFirsttime) {
+        res.end("You have requested a certificate to be generated. (Working in the background)");
+    }
+    else {
+        res.end("You have requested a certificate renewal. (Working in the background)");
+    }
 });
 
 app.listen(port, () => {

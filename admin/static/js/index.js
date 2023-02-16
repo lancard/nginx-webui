@@ -181,6 +181,12 @@ function addSite() {
     $clonedObject.find('[site-service-name]').text(siteName);
     $clonedObject.find('[site-config]').val(`listen 80;\n# listen 443 ssl;`);
     $clonedObject.removeClass("collapse").appendTo("div[site-body]");
+
+    // add let's encrypt well-known
+    $clonedObject2 = $("div[site-node-div].collapse").clone();
+    $clonedObject2.find('[site-node-address]').text('/.well-known/acme-challenge');
+    $clonedObject2.find('[site-node-config]').val(`# for let's encrypt renewal\nroot /usr/share/nginx/html;`);
+    $clonedObject2.removeClass("collapse").appendTo($clonedObject.find("[site-node-body]"));
 }
 
 function deleteSite(element) {
@@ -197,8 +203,8 @@ function addLocation(element) {
 
     $clonedObject = $("div[site-node-div].collapse").clone();
     $clonedObject.find('[site-node-address]').text(locationDirective);
-    $clonedObject.find('[site-node-config]').val(`set $test               http://127.0.0.1:3000;
-proxy_pass              $test;
+    $clonedObject.find('[site-node-config]').val(`set $backend            http://backend_upstream;
+proxy_pass              $backend;
 
 # static resources
 # root   /usr/share/nginx/html;
@@ -264,6 +270,8 @@ function upstreamDomToConfig() {
         var obj = {
             siteName: $(e).find("[site-service-name]").text(),
             siteConfig: $(e).find("[site-config]").val(),
+            serverName: $(e).find("[site-server-name]").val(),
+            autoRenew: $(e).find("[site-auto-renew]").val(),
             locations: []
         };
 
@@ -313,6 +321,8 @@ function configToUpstreamDOM() {
     config.site.forEach(e => {
         $clonedObject = $("div[site-service].collapse").clone();
         $clonedObject.find('[site-service-name]').text(e.siteName);
+        $clonedObject.find('[site-server-name]').val(e.serverName);
+        $clonedObject.find('[site-auto-renew]').val(e.autoRenew);
         $clonedObject.find('[site-config]').val(e.siteConfig);
         $clonedObject.removeClass("collapse").appendTo("div[site-body]");
 
@@ -370,8 +380,13 @@ function configToNginxConfig() {
 
     // sites
     config.site.forEach(e => {
-        nginxConfig += `# ${e.siteName}\nserver { \n`;
-        nginxConfig += e.siteConfig + "\n";
+        nginxConfig += `# ${e.siteName}
+            server { 
+                ${e.siteConfig}
+
+                server_name ${e.serverName};
+                
+                `;
 
         e.locations.forEach(ee => {
             nginxConfig += `  location ${ee.address} { \n ${ee.config} \n }\n`;
@@ -415,10 +430,43 @@ function applyConfig() {
     });
 }
 
+function getOrRenewCertFromLetsencrypt(elem) {
+    var domain = $(elem).parents("[site-default-section]").find("[site-server-name]").val();
+
+    if (domain == '') {
+        alert('domain field empty');
+        return;
+    }
+
+    var email = prompt('enter domain admin email', 'test@test.com');
+    if (!email || email == '')
+        return;
+
+    $.ajax({
+        type: "POST",
+        url: '/api/renewCert',
+        data: { domain: $parent, email: email },
+        success: (ret) => {
+            alert(ret);
+        }
+    });
+}
+
 function loadCertList() {
+    window.certList = {};
     $("#certList").text("");
-    $.getJSON('/api/getCertificationList', (ret) => {
+    $.getJSON('/api/getCertList', (ret) => {
         $("#certList").text(ret.join("\n"));
+
+        // for each site ssl exist status update
+        ret.forEach(domain => {
+            window.certList[domain] = true;
+            $(`input[site-server-name]`).each((a, elem) => {
+                if ($(elem).val() == domain) {
+                    $(elem).parents("[site-default-section]").find("[site-ssl-exist]").val("YES");
+                }
+            })
+        });
     });
 }
 
@@ -428,8 +476,8 @@ function uploadCert() {
 
     $.ajax({
         type: "POST",
-        url: '/api/uploadCertification',
-        data: { name: $("#certName").val(), cert: $("#certFile").val(), key: $("#keyFile").val() },
+        url: '/api/uploadCert',
+        data: { name: $("#domainName").val(), cert: $("#certFile").val(), key: $("#keyFile").val() },
         success: (ret) => {
             loadCertList();
             alert(ret);
@@ -485,6 +533,8 @@ function updateStatus() {
         addData(writingConnectionsChart, dayjs().format("HH:mm:ss"), status.writingConnections);
         addData(waitingConnectionsChart, dayjs().format("HH:mm:ss"), status.waitingConnections);
     });
+
+    loadCertList();
 
     $.getJSON('/api/getSystemInformation', (ret) => {
         var arr = ret.filter(e => e.protocol == "tcp");
