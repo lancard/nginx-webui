@@ -20,6 +20,12 @@ then
     openssl req -x509 -nodes -days 36500 -subj "/C=CA/ST=QC/O=Company Inc/CN=localhost" -newkey rsa:2048 -keyout /etc/letsencrypt/live/localhost_nginx_webui/privkey.pem -out /etc/letsencrypt/live/localhost_nginx_webui/fullchain.pem
 fi
 
+# copy config back to nginx (for update engine)
+if [ -f /data/nginx.conf ]
+then
+    cp /data/nginx.conf /etc/nginx/nginx.conf
+fi
+
 /docker-entrypoint.sh
 
 node index.js &

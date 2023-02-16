@@ -193,6 +193,7 @@ app.post('/api/applyConfig', (req, res) => {
     nginxConfig = nginxConfig.split("#[replaced_location]").join(req.body.nginxConfig);
 
     fs.writeFileSync('/etc/nginx/nginx.conf', nginxConfig);
+    fs.writeFileSync('/data/nginx.conf', nginxConfig);
 
     exec("nginx -s reload", (error, stdout, stderr) => {
         var obj = {
