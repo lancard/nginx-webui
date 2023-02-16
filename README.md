@@ -2,6 +2,7 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/lancard/nginx-webui)
 ![GitHub repo file count](https://img.shields.io/github/directory-file-count/lancard/nginx-webui)
 ![Docker pulls](https://img.shields.io/docker/pulls/lancard/nginx-webui)
+![Docker image size](https://img.shields.io/docker/image-size/lancard/nginx-webui)
 
 
 This project aims to create a UI that wrap nginx.
