@@ -13,7 +13,7 @@ And, it implemented a function that easily updates through Let's encrypt.
 ![screenshot1](./screenshot/screenshot1.png)
 ![screenshot2](./screenshot/screenshot2.png)
 ![screenshot3](./screenshot/screenshot3.png)
-![screenshot4](./screenshot/screenshot3.png)
+![screenshot4](./screenshot/screenshot4.png)
 
 ## Project Goal
 
