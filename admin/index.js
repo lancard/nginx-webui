@@ -205,38 +205,16 @@ app.post('/api/applyConfig', (req, res) => {
     });
 });
 
-function generateOrRenewCert(domain, email) {
-    // check domain exist
-    const dir = `/etc/letsencrypt/live/${domain}`;
-
-    // generate new
-    if (!fs.existsSync(dir)) {
-        exec(`certbot certonly --nginx -n --agree-tos -d ${domain} -m ${email}`, (error, stdout, stderr) => {
-            console.log("new cert", error, stdout, stderr);
-        });
-
-        return true;
-    }
-
-    // renew cert
-    exec(`certbot renew --dry-run --nginx -n --agree-tos -d ${domain} -m ${email}`, (error, stdout, stderr) => {
-        console.log("renew cert", error, stdout, stderr);
+function generateCert(domain, email) {
+    exec(`certbot certonly --nginx -n --agree-tos -d ${domain} -m ${email}`, (error, stdout, stderr) => {
+        console.log("new cert", error, stdout, stderr);
     });
-
-    return false;
 }
 
 app.post('/api/renewCert', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
-    var isFirsttime = generateOrRenewCert(req.body.domain, req.body.email);
-
-    if (isFirsttime) {
-        res.end("You have requested a certificate to be generated. (Working in the background)");
-    }
-    else {
-        res.end("You have requested a certificate renewal. (Working in the background)");
-    }
+    res.end("You have requested a certificate to be generated. (Working in the background)\nIf you want to apply new cert, click 'Apply nginx' button 1min later.");
 });
 
 app.listen(port, () => {
@@ -249,6 +227,8 @@ function renewalCert() {
     var config = loadConfig();
 
     try {
+        var renewExist = false;
+
         config.site.forEach(site => {
             if (!site.adminEmail || site.adminEmail == "" || !site.serverName || site.serverName == "" || site.autoRenew != "true")
                 return;
@@ -272,9 +252,20 @@ function renewalCert() {
                 return;
 
             // progress renewal
-            generateOrRenewCert(site.serverName, site.adminEmail);
+            renewExist = true;
+            generateCert(site.serverName, site.adminEmail);
         });
 
+        // reload nginx
+        if (renewExist) {
+            setTimeout(function () {
+                console.log("apply nginx reload for cert renewal");
+                exec("nginx -s reload", (error, stdout, stderr) => {
+                    console.log("result", error, stdout, stderr);
+                    console.log("apply nginx reload for cert end");
+                });
+            }, 60 * 1000);
+        }
     }
     catch (e) {
         console.error(e);
