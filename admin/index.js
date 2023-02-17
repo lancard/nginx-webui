@@ -214,6 +214,8 @@ function generateCert(domain, email) {
 app.post('/api/renewCert', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
+    generateCert(req.body.domain, req.body.email);
+
     res.end("You have requested a certificate to be generated. (Working in the background)\nIf you want to apply new cert, click 'Apply nginx' button 1min later.");
 });
 
