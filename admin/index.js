@@ -46,6 +46,44 @@ function isUnauthroizedRequest(req, res) {
     return false;
 }
 
+function configToNginxConfig(config) {
+    // common
+    var nginxConfig = config.common + "\n";
+
+    nginxConfig += `\n\n\n`;
+
+    // upstream
+    config.upstream.forEach(e => {
+        nginxConfig += `upstream ${e.upstreamName} {\n`;
+
+        e.nodes.forEach(ee => {
+            nginxConfig += `  server ${ee.address} ${ee.backup ? "backup" : ""} ${ee.disable ? "down" : ""} weight=${ee.weight} max_fails=${ee.maxFails} fail_timeout=${ee.failTimeout};\n`;
+        });
+
+        nginxConfig += `\n}\n`;
+    });
+
+    nginxConfig += `\n\n\n`;
+
+    // sites
+    config.site.forEach(e => {
+        nginxConfig += `# ${e.siteName}
+            server { 
+                ${e.siteConfig}
+
+                server_name ${e.serverName};
+                
+                `;
+
+        e.locations.forEach(ee => {
+            nginxConfig += `  location ${ee.address} { \n ${ee.config} \n }\n`;
+        });
+
+        nginxConfig += `\n}\n`;
+    });
+
+    return nginxConfig;
+}
 
 const sessionObj = {
     secret: 'nginxwebuisession',
@@ -171,7 +209,7 @@ app.post('/api/testConfig', (req, res) => {
 
     var nginxConfig = fs.readFileSync('/nginx_config/default_nginx.conf').toString();
 
-    nginxConfig = nginxConfig.split("#[replaced_location]").join(req.body.nginxConfig);
+    nginxConfig = nginxConfig.split("#[replaced_location]").join(configToNginxConfig(loadConfig()));
 
     fs.writeFileSync('/nginx_config/nginx.conf', nginxConfig);
 
@@ -185,12 +223,11 @@ app.post('/api/testConfig', (req, res) => {
     });
 });
 
-app.post('/api/applyConfig', (req, res) => {
-    if (isUnauthroizedRequest(req, res)) return;
+function applyConfig(callback) {
 
     var nginxConfig = fs.readFileSync('/nginx_config/default_nginx.conf').toString();
 
-    nginxConfig = nginxConfig.split("#[replaced_location]").join(req.body.nginxConfig);
+    nginxConfig = nginxConfig.split("#[replaced_location]").join(configToNginxConfig(loadConfig()));
 
     fs.writeFileSync('/etc/nginx/nginx.conf', nginxConfig);
     fs.writeFileSync('/data/nginx.conf', nginxConfig);
@@ -201,6 +238,17 @@ app.post('/api/applyConfig', (req, res) => {
             stdout,
             stderr
         };
+        if (callback) {
+            callback(obj);
+        }
+    });
+
+}
+
+app.post('/api/applyConfig', (req, res) => {
+    if (isUnauthroizedRequest(req, res)) return;
+
+    applyConfig(obj => {
         res.send(JSON.stringify(obj));
     });
 });
@@ -217,6 +265,49 @@ app.post('/api/renewCert', (req, res) => {
     generateCert(req.body.domain, req.body.email);
 
     res.end("You have requested a certificate to be generated. (Working in the background)\nIf you want to apply new cert, click 'Apply nginx' button 1min later.");
+});
+
+app.get('/api/upstream/:upstream_name/:backend_address/:enable_type', (req, res) => {
+    try {
+        var config = loadConfig();
+
+        var upstream = null;
+        var backend = null;
+
+        for (var a = 0; a < config.upstream.length; a++) {
+            if (config.upstream[a].upstreamName == req.params.upstream_name) {
+                upstream = config.upstream[a];
+                break;
+            }
+        }
+
+        if (!upstream.upstreamAuthKey || upstream.upstreamAuthKey != req.header("Authorization").split(" ")[1]) {
+            throw 'auth fail';
+        }
+
+        for (var a = 0; a < upstream.nodes.length; a++) {
+            if (upstream.nodes[a].address == req.params.backend_address) {
+                backend = upstream.nodes[a];
+                break;
+            }
+        }
+
+        if (req.params.enable_type == "disable") {
+            backend.disable = true;
+            saveConfig(JSON.stringify(config, null, '\t'));
+        }
+        if (req.params.enable_type == "enable") {
+            backend.disable = false;
+            saveConfig(JSON.stringify(config, null, '\t'));
+        }
+
+        applyConfig(obj => {
+            res.send(JSON.stringify(obj));
+        });
+    } catch (e) {
+        res.end("No such upstream or backend address / error occured: " + e);
+
+    }
 });
 
 app.listen(port, () => {

@@ -94,6 +94,13 @@ password: (get it from docker-compose logs)
 
 Refer Screenshot 4
 
+6. Use API for CI/CD
+
+```
+curl --insecure -H "Authorization: Bearer ${token}" "https://localhost:81/api/upstream/${upstream-name}/${backend-address}/enable"
+curl --insecure -H "Authorization: Bearer ${token}" "https://localhost:81/api/upstream/${upstream-name}/${backend-address}/disable"
+```
+
 ## Built With
 
 - nodejs

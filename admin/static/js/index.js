@@ -408,52 +408,11 @@ function loadConfig() {
     });
 }
 
-function configToNginxConfig() {
-
-    // common
-    var nginxConfig = config.common + "\n";
-
-    nginxConfig += `\n\n\n`;
-
-    // upstream
-    config.upstream.forEach(e => {
-        nginxConfig += `upstream ${e.upstreamName} {\n`;
-
-        e.nodes.forEach(ee => {
-            nginxConfig += `  server ${ee.address} ${ee.backup ? "backup" : ""} ${ee.disable ? "down" : ""} weight=${ee.weight} max_fails=${ee.maxFails} fail_timeout=${ee.failTimeout};\n`;
-        });
-
-        nginxConfig += `\n}\n`;
-    });
-
-    nginxConfig += `\n\n\n`;
-
-    // sites
-    config.site.forEach(e => {
-        nginxConfig += `# ${e.siteName}
-            server { 
-                ${e.siteConfig}
-
-                server_name ${e.serverName};
-                
-                `;
-
-        e.locations.forEach(ee => {
-            nginxConfig += `  location ${ee.address} { \n ${ee.config} \n }\n`;
-        });
-
-        nginxConfig += `\n}\n`;
-    });
-
-    return nginxConfig;
-}
-
 function testConfig() {
     $.ajax({
         dataType: "json",
         type: "POST",
         url: '/api/testConfig',
-        data: { nginxConfig: configToNginxConfig() },
         success: (ret) => {
             alert(ret.stderr);
         }
@@ -468,7 +427,6 @@ function applyConfig() {
         dataType: "json",
         type: "POST",
         url: '/api/applyConfig',
-        data: { nginxConfig: configToNginxConfig() },
         success: (ret) => {
             if (ret.error == null && ret.stdout == "" && ret.stderr == "") {
                 alert("success");

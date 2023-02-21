@@ -26,13 +26,13 @@
             <h3 class="text-info">disable one of upstream backend and Apply nginx</h3>
             <p>
                 <strong>
-                    curl -H "Authorization: Bearer ${token}"
+                    curl --insecure -H "Authorization: Bearer ${token}"
                     "https://localhost:81/api/upstream/${upstream-name}/${backend-address}/disable"
                 </strong>
             </p>
             <p>
                 <i>
-                    example) curl -H "Authorization: Bearer 1odNjAI9nqpwQJHTXVjhuhp9QfCPlJHT"
+                    example) curl --insecure -H "Authorization: Bearer 1odNjAI9nqpwQJHTXVjhuhp9QfCPlJHT"
                     "https://localhost:81/api/upstream/test_service/127.0.0.1:8080/disable"
                 </i>
             </p>
@@ -40,13 +40,13 @@
             <h3 class="text-info">enable one of upstream backend and Apply nginx</h3>
             <p>
                 <strong>
-                    curl -H "Authorization: Bearer ${token}"
+                    curl --insecure -H "Authorization: Bearer ${token}"
                     "https://localhost:81/api/upstream/${upstream-name}/${backend-address}/enable"
                 </strong>
             </p>
             <p>
                 <i>
-                    example) curl -H "Authorization: Bearer 1odNjAI9nqpwQJHTXVjhuhp9QfCPlJHT"
+                    example) curl --insecure -H "Authorization: Bearer 1odNjAI9nqpwQJHTXVjhuhp9QfCPlJHT"
                     "https://localhost:81/api/upstream/test_service/127.0.0.1:8080/enable"
                 </i>
             </p>
