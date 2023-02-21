@@ -101,7 +101,6 @@ Refer Screenshot 4
 - sbadmin2 (bootstrap)
 - jquery
 - dayjs
-- codemirror
 - chart.js
 
 

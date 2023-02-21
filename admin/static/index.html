@@ -6,8 +6,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
     <title>Nginx WebUI</title>
 
@@ -20,22 +18,7 @@
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
-    <!-- code mirror -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"
-        integrity="sha512-8RnEqURPUc5aqFEN04aQEiPlSAdE0jlFS/9iGgUyNtwFnSKCXhmB6ZTNl7LnDtDWKabJIASzXrzD0K+LYexU9g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css"
-        integrity="sha512-uf06llspW44/LZpHzHT6qBOIVODjWtv4MxCricRxkzvopAlSWnTf6hpZTFxuuZcuNE9CBQhqE0Seu1CoRk84nQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/nginx/nginx.min.js"
-        integrity="sha512-kgLrmRot2x/yBR/HMHKt1S1Q0gIFOt6JGwAqrowCFxtal0MLUrqwzOu1YUA59Uds85K/1dnw9xZrXCs/5FAFJQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
-        .CodeMirror {
-            border: 1px solid #888;
-            height: 60vh;
-        }
-
         textarea {
             font-family: monospace;
         }
@@ -132,6 +115,22 @@
                 <a class="nav-link" href="javascript:void(0)" onclick="showPanel('uploadCert')">
                     <i class="fas fa-fw fa-upload"></i>
                     <span>Upload</span>
+                </a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Document
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link" href="javascript:void(0)" onclick="window.open('./doc.html');">
+                    <i class="fas fa-fw fa-book"></i>
+                    <span>View</span>
                 </a>
             </li>
 
@@ -275,7 +274,7 @@ ABCDEFGSAMPLE...
                         <h1 class="h3 mb-0 text-gray-800">Edit directives in nginx.conf 'http' section</h1>
                     </div>
 
-                    <textarea id="commonTextarea"></textarea>
+                    <textarea id="commonTextarea" class="form-control" rows="20"></textarea>
                 </div>
 
 
@@ -298,6 +297,7 @@ ABCDEFGSAMPLE...
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="font-weight-bold text-primary mb-1">
+                                        <input type="hidden" upstream-auth-key value="">
                                         <span upstream-service-name>test_service</span>
                                         <button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm ml-2"
                                             onclick="addBackendServer(this)">
@@ -308,6 +308,11 @@ ABCDEFGSAMPLE...
                                             onclick="deleteUpstreamService(this)">
                                             <i class="fas fa-trash fa-sm text-white-50"></i>
                                             Delete This Upstream Service
+                                        </button>
+                                        <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm ml-2"
+                                            data-toggle="modal" data-target="#showAuthKeyModal">
+                                            <i class="fas fa-eye fa-sm text-white-50"></i>
+                                            Show Auth Key
                                         </button>
                                     </div>
                                     <div class="h5 mb-0 font-weight-bold text-gray-800" upstream-node-body>
@@ -413,7 +418,8 @@ ABCDEFGSAMPLE...
                                                     <input type="text" class="form-control col-2" site-ssl-exist
                                                         readonly value="NO">
                                                     <div class="input-group-append">
-                                                        <button class="btn btn-warning" type="button" onclick="getOrRenewCertFromLetsencrypt(this);">
+                                                        <button class="btn btn-warning" type="button"
+                                                            onclick="getOrRenewCertFromLetsencrypt(this);">
                                                             <small>Get/Renew from letsencrypt</small>
                                                         </button>
                                                     </div>
@@ -647,13 +653,38 @@ ABCDEFGSAMPLE...
     </div>
     <!-- End of Page Wrapper -->
 
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <!-- Authkey Modal-->
+    <div class="modal fade" id="showAuthKeyModal" tabindex="-1" role="dialog" aria-labelledby="authKeyModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <h5 class="modal-title" id="authKeyModalLabel">Showing Upstream Auth Key</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-danger" modal-remark></div>
+                    <div modal-key></div>
+                    <div class="mt-2">See the Document section on the left for instructions.</div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-info" type="button" onclick="generateKey(this)">(Re)Generate Key</button>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="javascript: void(0);" onclick="saveKey(this)">Save</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="closeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="closeModalLabel">Ready to Leave?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -684,14 +715,6 @@ ABCDEFGSAMPLE...
 
     <script>
         $(function () {
-            window.commonTextareaEditor = CodeMirror.fromTextArea(document.getElementById("commonTextarea"), {
-                lineNumbers: true,
-                extraKeys: { "Ctrl-Space": "autocomplete" },
-                tabSize: 8,
-                indentUnit: 8,
-                smartIndent: false,
-                indentWithTabs: true
-            });
             loadConfig();
             createChart();
         });

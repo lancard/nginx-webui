@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Document</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="wrapper">
+        <div class="container-fluid">
+            <h1 class="text-primary">How to use upstream API</h1>
+
+            <h3 class="text-info">disable one of upstream backend and Apply nginx</h3>
+            <p>
+                <strong>
+                    curl -H "Authorization: Bearer ${token}"
+                    "https://localhost:81/api/upstream/${upstream-name}/${backend-address}/disable"
+                </strong>
+            </p>
+            <p>
+                <i>
+                    example) curl -H "Authorization: Bearer 1odNjAI9nqpwQJHTXVjhuhp9QfCPlJHT"
+                    "https://localhost:81/api/upstream/test_service/127.0.0.1:8080/disable"
+                </i>
+            </p>
+
+            <h3 class="text-info">enable one of upstream backend and Apply nginx</h3>
+            <p>
+                <strong>
+                    curl -H "Authorization: Bearer ${token}"
+                    "https://localhost:81/api/upstream/${upstream-name}/${backend-address}/enable"
+                </strong>
+            </p>
+            <p>
+                <i>
+                    example) curl -H "Authorization: Bearer 1odNjAI9nqpwQJHTXVjhuhp9QfCPlJHT"
+                    "https://localhost:81/api/upstream/test_service/127.0.0.1:8080/enable"
+                </i>
+            </p>
+
+            <h1 class="text-primary">HTTP directive Examples</h1>
+            <pre>
+# charset
+charset utf-8;
+
+# keep alive timeout
+keepalive_timeout 65;
+
+# gzip on
+gzip on;
+
+# max body size
+client_max_body_size 10G;
+
+# resolver setting (useful in docker)
+resolver 127.0.0.11 8.8.8.8 valid=1s;
+resolver_timeout 2s;
+
+# SSL
+ssl_session_timeout 1d;
+ssl_session_cache shared:SSL:10m;
+ssl_session_tickets off;
+
+# SSL protocols and ciphers
+ssl_protocols TLSv1.2 TLSv1.3;
+ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
+
+# SSL stapling
+ssl_stapling           on;
+ssl_stapling_verify    on;
+            </pre>
+
+            <h1 class="text-primary">SERVER directive Examples</h1>
+            <pre>
+# listen port
+listen 80;
+
+# ssl port
+listen 443 ssl;
+
+# ipv6 and http2
+listen 443 ssl http2;
+listen [::]:443 ssl http2;
+
+# cert location
+ssl_certificate /etc/letsencrypt/live/test.com/fullchain.pem;
+ssl_certificate_key /etc/letsencrypt/live/test.com/privkey.pem;
+
+# security headers
+add_header X-XSS-Protection          "1; mode=block" always;
+add_header X-Content-Type-Options    "nosniff" always;
+add_header Referrer-Policy           "no-referrer-when-downgrade" always;
+add_header Content-Security-Policy   "default-src 'self' http: https: ws: wss: data: blob: 'unsafe-inline'; frame-ancestors 'self';" always;
+add_header Permissions-Policy        "interest-cohort=()" always;
+add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+            </pre>
+
+            <h1 class="text-primary">LOCATION directive Examples</h1>
+            <pre>
+# serve static resource
+root /usr/share/nginx/html;
+
+# allow and deny ip
+allow 111.111.111.11;
+allow 111.111.111.12;
+deny 222.222.222.21;
+deny 222.222.222.22;
+
+# allow deny all
+allow all;
+deny all;
+
+# expire
+expires 7d;
+
+# Access control origin
+add_header Access-Control-Allow-Origin "*";
+            </pre>
+
+        </div>
+    </div>
+</body>
+
+</html>

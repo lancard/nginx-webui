@@ -15,10 +15,11 @@ services:
       - 81:81
       - 443:443
     volumes:
-      - nginx-webui-data:/data
-      - nginx-webui-cert:/etc/letsencrypt
-      - nginx-webui-session:/session
-      - nginx-webui-log:/var/log/nginx
+      # - nginx-webui-data:/data
+      # - nginx-webui-cert:/etc/letsencrypt
+      # - nginx-webui-session:/session
+      # - nginx-webui-log:/var/log/nginx
+      - ./admin:/admin
 
 volumes:
   nginx-webui-data:

@@ -138,6 +138,48 @@ function logout() {
     });
 }
 
+
+function generateRandomString(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        counter += 1;
+    }
+    return result;
+}
+
+function saveKey(elem) {
+    var modal = $(elem).parents("[role=dialog]");
+    var targetUpstream = $(window.authKeyTarget).parents("[upstream-service]");
+    targetUpstream.find("[upstream-auth-key]").val(modal.find('.modal-body [modal-key]').text());
+    modal.modal('hide');
+}
+
+function generateKey(elem) {
+    var modal = $(elem).parents("[role=dialog]");
+    var targetUpstream = $(window.authKeyTarget).parents("[upstream-service]");
+    var key = generateRandomString(32);
+    modal.find('.modal-body [modal-remark]').text("You have to click the save config button at the top to use the key.");
+    modal.find('.modal-body [modal-key]').text(key);
+}
+
+$('#showAuthKeyModal').on('show.bs.modal', function (event) {
+    window.authKeyTarget = event.relatedTarget;
+    var modal = $(this);
+    var targetUpstream = $(window.authKeyTarget).parents("[upstream-service]");
+    var key = targetUpstream.find("[upstream-auth-key]").val();
+    modal.find('.modal-body [modal-remark]').text("");
+    if (key == "") {
+        modal.find('.modal-body [modal-key]').text("(NOT EXIST, CLICK GENERATE BUTTON)");
+    }
+    else {
+        modal.find('.modal-body [modal-key]').text(key);
+    }
+});
+
 function addUpstreamService() {
     var serviceName = prompt('enter service name', 'test_service');
     if (!serviceName || serviceName == '')
@@ -243,13 +285,14 @@ function deleteLocation(element) {
 function upstreamDomToConfig() {
 
     // common
-    config.common = commonTextareaEditor.getValue();
+    config.common = $("#commonTextarea").val();
 
     // upstream
     var upstream = [];
     $("[upstream-body] [upstream-service]").each((idx, e) => {
         var obj = {
             upstreamName: $(e).find("[upstream-service-name]").text(),
+            upstreamAuthKey: $(e).find("[upstream-auth-key]").val(),
             nodes: []
         };
 
@@ -296,13 +339,14 @@ function upstreamDomToConfig() {
 function configToUpstreamDOM() {
 
     // common
-    commonTextareaEditor.setValue(config.common);
+    $("#commonTextarea").val(config.common);
 
     // upstream
     $("[upstream-body]").empty();
     config.upstream.forEach(e => {
         $clonedObject = $("div[upstream-service].collapse").clone();
         $clonedObject.find('[upstream-service-name]').text(e.upstreamName);
+        $clonedObject.find('[upstream-auth-key]').val(e.upstreamAuthKey);
         $clonedObject.removeClass("collapse").appendTo("div[upstream-body]");
 
         e.nodes.forEach(ee => {
@@ -497,11 +541,6 @@ function uploadCert() {
 function showPanel(selectedId) {
     $("div.container-fluid").hide();
     $("#" + selectedId).show();
-
-    // Refresh CodeMirror
-    $('.CodeMirror').each(function (i, el) {
-        el.CodeMirror.refresh();
-    });
 }
 
 function addData(chart, label, data) {
