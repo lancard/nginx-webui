@@ -71,7 +71,7 @@ function configToNginxConfig(config) {
             server { 
                 ${e.siteConfig}
 
-                server_name ${e.serverName};
+                ${e.serverName && e.serverName != "" ? "server_name " + server_name : ""};
                 
                 `;
 
