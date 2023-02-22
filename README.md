@@ -15,7 +15,8 @@ And, it implemented a function that easily updates through Let's encrypt.
 ![screenshot3](./screenshot/screenshot3.png)
 ![screenshot4](./screenshot/screenshot4.png)
 
-# Youtube Setting tutorial
+# Youtube Setting tutorial (Click to watch)
+[![Let's encrypt cert renewal](https://img.youtube.com/vi/O12f2PYPCpU/0.jpg)](https://www.youtube.com/watch?v=O12f2PYPCpU)
 [![Let's encrypt cert renewal](https://img.youtube.com/vi/O12f2PYPCpU/0.jpg)](https://www.youtube.com/watch?v=O12f2PYPCpU)
 
 ## Project Goal
