@@ -18,8 +18,11 @@ And, it implemented a function that easily updates through Let's encrypt.
 # Youtube Setting tutorial (Click to watch)
 - Install process and set load-balancer
 - [![Let's encrypt cert renewal](https://img.youtube.com/vi/3SEdU_Jj5IM/0.jpg)](https://www.youtube.com/watch?v=3SEdU_Jj5IM)
+- Non-disruptive deployment with jenkins
+- [![Let's encrypt cert renewal](https://img.youtube.com/vi/UaJF-s2AuZo/0.jpg)](https://www.youtube.com/watch?v=UaJF-s2AuZo)
 - Let's encrypt cert renewal
 - [![Let's encrypt cert renewal](https://img.youtube.com/vi/O12f2PYPCpU/0.jpg)](https://www.youtube.com/watch?v=O12f2PYPCpU)
+
 
 ## Project Goal
 
