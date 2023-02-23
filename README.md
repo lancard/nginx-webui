@@ -16,9 +16,10 @@ And, it implemented a function that easily updates through Let's encrypt.
 ![screenshot4](./screenshot/screenshot4.png)
 
 # Youtube Setting tutorial (Click to watch)
+- Install process and set load-balancer
+- [![Let's encrypt cert renewal](https://img.youtube.com/vi/3SEdU_Jj5IM/0.jpg)](https://www.youtube.com/watch?v=3SEdU_Jj5IM)
 - Let's encrypt cert renewal
 - [![Let's encrypt cert renewal](https://img.youtube.com/vi/O12f2PYPCpU/0.jpg)](https://www.youtube.com/watch?v=O12f2PYPCpU)
-- e
 
 ## Project Goal
 
