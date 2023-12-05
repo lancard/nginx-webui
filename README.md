@@ -70,12 +70,14 @@ services:
       - nginx-webui-cert:/etc/letsencrypt
       - nginx-webui-session:/session
       - nginx-webui-log:/var/log/nginx
+      - logrotate-config:/etc/logrotate.d
 
 volumes:
   nginx-webui-data:
   nginx-webui-cert:
   nginx-webui-session:
   nginx-webui-log:
+  logrotate-config:
 ```
 
 3. Run docker-compose
