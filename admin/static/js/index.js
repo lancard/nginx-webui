@@ -386,6 +386,23 @@ function configToUpstreamDOM() {
 
 }
 
+function loadLogrotate() {
+    $.get('/api/getLogrotate', (ret) => {
+        $("#logrotate").val(ret);
+    });
+}
+
+function saveLogrotate() {
+    $.ajax({
+        type: "POST",
+        url: '/api/saveLogrotate',
+        data: { logrotate: $("#logrotate").val() },
+        success: (ret) => {
+            alert(ret);
+        }
+    });
+}
+
 function saveConfig() {
     // write to back config
     upstreamDomToConfig();

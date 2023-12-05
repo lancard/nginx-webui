@@ -185,6 +185,20 @@ app.get('/api/getSystemInformation', (req, res) => {
         });
 });
 
+app.get('/api/getLogrotate', (req, res) => {
+    if (isUnauthroizedRequest(req, res)) return;
+
+    res.send(fs.readFileSync('/etc/logrotate.d/nginx').toString());
+});
+
+app.post('/api/saveLogrotate', (req, res) => {
+    if (isUnauthroizedRequest(req, res)) return;
+
+    fs.writeFileSync('/etc/logrotate.d/nginx', req.body.logrotate);
+
+    res.send("OK");
+});
+
 app.get('/api/getConfig', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 

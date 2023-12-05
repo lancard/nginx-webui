@@ -123,6 +123,22 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
+                Logrotate
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link" href="javascript:void(0)" onclick="showPanel('configLogrotate')">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Config</span>
+                </a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
                 Document
             </div>
 
@@ -136,11 +152,6 @@
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
 
         </ul>
         <!-- End of Sidebar -->
@@ -208,6 +219,25 @@
 
                 </nav>
                 <!-- End of Topbar -->
+
+                <div class="container-fluid collapse" id="configLogrotate">
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Config logrotate</h1>
+                        <a href="javascript: void(0)" onclick="saveLogrotate()"
+                            class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                            <i class="fas fa-upload fa-sm text-white-50"></i> Save
+                        </a>
+                    </div>
+
+                    <div class="mb-2">
+                        <strong class="text-danger">
+                            will save to '/etc/logrotate.d/nginx' and will be overwritten if exist.
+                        </strong>
+                    </div>
+
+                    <textarea class="form-control" rows="20" id="logrotate"></textarea>
+                </div>
 
                 <div class="container-fluid collapse" id="uploadCert">
                     <!-- Page Heading -->
@@ -715,6 +745,7 @@ ABCDEFGSAMPLE...
 
     <script>
         $(function () {
+            loadLogrotate();
             loadConfig();
             createChart();
         });
