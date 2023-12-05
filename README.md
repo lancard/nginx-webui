@@ -34,6 +34,7 @@ main goal is management for 'upstream' / 'server' / certificates nginx configura
 - Auto renewal Let's encrypt cert.
 - enable/disable API for backend upstream (useful for CI/CD integration)
 - modify reverse proxy and multiple upstream settings with web UI.
+- modify logrotate config.
 - Easily create services and locations.
 - Advanced Nginx configuration available for super users.
 - login management.
