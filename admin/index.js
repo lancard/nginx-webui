@@ -381,5 +381,22 @@ function renewalCert() {
     console.log("renewal end");
 }
 
+function rotateLog() {
+    console.log("log rotation start");
+
+    try {
+        exec("/etc/cron.daily/logrotate", (error, stdout, stderr) => {
+            console.log("result", error, stdout, stderr);
+        });
+    }
+    catch (e) {
+        console.error(e);
+    }
+
+    console.log("log rotation end");
+}
+
 renewalCert();
 setInterval(renewalCert, 7 * 60 * 60 * 1000); // check cert renewal every 7 hours
+rotateLog();
+setInterval(rotateLog, 24 * 60 * 60 * 1000); // check cert renewal every 24 hours
