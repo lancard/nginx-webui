@@ -13,7 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
+      - name: Extract version and set it to TAG env var
+        run: echo "TAG=$(jq -r '.version' package.json)" >> $GITHUB_ENV
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
         
@@ -31,4 +34,6 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: lancard/nginx-webui
-          labels: latest
+          labels: |
+            latest
+            ${{ env.TAG }}
