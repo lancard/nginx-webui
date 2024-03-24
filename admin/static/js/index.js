@@ -569,7 +569,7 @@ function updateStatus() {
             retLine.push(`${e.peerAddress}:${e.peerPort} - ${e.state}`);
         })
 
-        $("#osConnections").text(retLine.join("\t"));
+        $("#osConnections").text(retLine.join("\n"));
     });
 }
 
