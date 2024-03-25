@@ -116,12 +116,8 @@ curl --insecure -H "Authorization: Bearer ${token}" "https://localhost:81/api/up
 
 ## Built With
 
-- nodejs
-- express
-- sbadmin2 (bootstrap)
-- jquery
-- dayjs
-- chart.js
+- server side: npm, nodejs, express
+- client side: bower, sbadmin2 (bootstrap), jquery, moment, chart.js
 
 
 ## Contributing
