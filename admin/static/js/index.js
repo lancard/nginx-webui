@@ -552,9 +552,11 @@ function updateStatus() {
         $("#totalRequests").text(status.totalRequests);
         $("#activeConnections").text(status.activeConnections);
 
-        addData(readingConnectionsChart, dayjs().format("HH:mm:ss"), status.readingConnections);
-        addData(writingConnectionsChart, dayjs().format("HH:mm:ss"), status.writingConnections);
-        addData(waitingConnectionsChart, dayjs().format("HH:mm:ss"), status.waitingConnections);
+	var now = moment().format("HH:mm:ss");
+
+        addData(readingConnectionsChart, now, status.readingConnections);
+        addData(writingConnectionsChart, now, status.writingConnections);
+        addData(waitingConnectionsChart, now, status.waitingConnections);
     });
 
     loadCertList();
