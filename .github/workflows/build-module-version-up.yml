@@ -27,8 +27,7 @@ jobs:
           cd admin/static
           bower install jquery moment fontawesome --save
 
-      - name: commit and push
-        run: |
-          git add .
-          git commit -m "module version up"
-          git push
+      - name: Commit & Push changes
+        uses: actions-js/push@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
