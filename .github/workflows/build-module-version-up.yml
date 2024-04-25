@@ -23,6 +23,7 @@ jobs:
 
       - name: bower update
         run: |
+          npm install -g bower
           cd admin/static
           bower install jquery moment fontawesome --save
 
