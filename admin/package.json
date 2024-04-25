@@ -4,13 +4,12 @@
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "session-file-store": "^1.5.0",
-    "systeminformation": "^5.22.6"
+    "systeminformation": "^5.22.7"
   },
   "name": "nginx-webui",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "nginx webui",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
