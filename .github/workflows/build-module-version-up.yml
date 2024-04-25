@@ -14,21 +14,20 @@ jobs:
         run: |
           cd admin
           npm version patch
-          npm version patch --save
 
       - name: npm update
         run: |
+          cd admin
           npm update
           npm update --save
 
       - name: bower update
         run: |
-          cd static
+          cd admin/static
           bower install jquery moment fontawesome --save
 
       - name: commit and push
         run: |
-          cd ../..
           git add .
           git commit -m "module version up"
           git push
