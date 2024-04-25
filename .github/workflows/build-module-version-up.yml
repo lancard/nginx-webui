@@ -1,0 +1,34 @@
+name: build-module-version-up
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: version up
+        run: |
+          cd admin
+          npm version patch
+          npm version patch --save
+
+      - name: npm update
+        run: |
+          npm update
+          npm update --save
+
+      - name: bower update
+        run: |
+          cd static
+          bower install jquery moment fontawesome --save
+
+      - name: commit and push
+        run: |
+          cd ../..
+          git add .
+          git commit -m "module version up"
+          git push
