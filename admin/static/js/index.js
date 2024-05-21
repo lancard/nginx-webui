@@ -482,19 +482,22 @@ function getOrRenewCertFromLetsencrypt(elem) {
 
 function loadCertList() {
     window.certList = {};
-    $("#certList").text("");
+    $("[certList]").text("");
     $.getJSON('/api/getCertList', (ret) => {
-        $("#certList").text(ret.join("\n"));
+        var text = "";
 
         // for each site ssl exist status update
         ret.forEach(domain => {
-            window.certList[domain] = true;
+            text += `${domain.certName} (${domain.lastModified})\n`;
+            window.certList[domain.certName] = true;
             $(`input[site-server-name]`).each((a, elem) => {
-                if ($(elem).val() == domain) {
+                if ($(elem).val() == domain.certName) {
                     $(elem).parents("[site-default-section]").find("[site-ssl-exist]").val("YES");
                 }
             })
         });
+
+        $("[certList]").text(text);
     });
 }
 
@@ -509,6 +512,23 @@ function uploadCert() {
         success: (ret) => {
             loadCertList();
             alert(ret);
+        }
+    });
+}
+
+function renewCertByDns() {
+    if (!confirm('Are you sure you want to do DNS-challenge?\n(It is recommended that you be prepared to change your DNS TXT record.)'))
+        return;
+
+    alert('Please wait 10 seconds while the certificate is requested to be processed.');
+
+    $.ajax({
+        type: "POST",
+        url: '/api/renewCertByDns',
+        data: { name: $("#challengeDnsDomainName").val(), email: $("#challengeDnsEmail").val() },
+        success: (ret) => {
+            prompt("paste below text to DNS TXT record", ret);
+            alert("request sent. If your request is successful, the cert list below will be updated within a few minutes.");
         }
     });
 }

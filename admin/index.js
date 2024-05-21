@@ -151,7 +151,16 @@ app.get('/api/getNginxStatus', (req, res) => {
 app.get('/api/getCertList', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
-    res.end(JSON.stringify(fs.readdirSync('/etc/letsencrypt/live')));
+    var arr = fs.readdirSync('/etc/letsencrypt/live');
+    var ret = [];
+    arr.forEach(e => {
+        if(e=="README")
+            return;
+
+        ret.push({certName: e, lastModified: fs.statSync(`/etc/letsencrypt/live/${e}/privkey.pem`).mtime});
+    });
+
+    res.end(JSON.stringify(ret));
 });
 
 app.post('/api/uploadCert', (req, res) => {
@@ -170,6 +179,21 @@ app.post('/api/uploadCert', (req, res) => {
     fs.writeFileSync(`${dir}/privkey.pem`, req.body.key);
 
     res.end("Upload OK");
+});
+
+app.post('/api/renewCertByDns', (req, res) => {
+    if (isUnauthroizedRequest(req, res)) return;
+
+    if (!domainNameRegex.test(req.body.name)) {
+        res.end("domain name invalid");
+        return;
+    }
+
+    console.log(`new cert (dns): ${req.body.name}`);
+    exec(`/admin/shell/dns-challenge.sh ${req.body.name} ${req.body.email}`, (error, stdout, stderr) => {
+        res.end(stdout);
+        console.log("result", error, stdout, stderr);
+    });
 });
 
 app.get('/api/getSystemInformation', (req, res) => {

@@ -115,6 +115,13 @@
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="javascript:void(0)" onclick="showPanel('renewCertByDns')">
+                    <i class="fas fa-fw fa-upload"></i>
+                    <span>DNS Challenge</span>
+                </a>
+            </li>
+
             <!-- Divider -->
             <hr class="sidebar-divider">
 
@@ -290,9 +297,59 @@ ABCDEFGSAMPLE...
 
                     </div>
                     <div>
-                        <pre id="certList" class="bg-dark text-white" style="height: 300px;"></pre>
+                        <pre certList class="bg-dark text-white" style="height: 300px;"></pre>
                     </div>
 
+                </div>
+
+                <div class="container-fluid collapse" id="renewCertByDns">
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Get/Renew Cert by DNS Challenge</h1>
+                        <a href="javascript: void(0)" onclick="renewCertByDns()"
+                            class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                            <i class="fas fa-upload fa-sm text-white-50"></i> Start Challenge
+                        </a>
+                    </div>
+
+                    <div class="mb-2">
+                        <strong class="text-danger">
+                            will upload to '/etc/letsencrypt/live/(domain_name)' and will be overwritten if exist.
+                        </strong>
+                        <br>
+                        <i>ex) /etc/letsencrypt/live/test.com/fullchain.pem,
+                            /etc/letsencrypt/live/test.com/privkey.pem</i>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-primary" type="button">
+                                <small>
+                                    DOMAIN NAME
+                                </small>
+                            </button>
+                        </div>
+                        <input type="text" class="form-control col-2 d-inline-block" id="challengeDnsDomainName" value="test.com">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-primary" type="button">
+                                <small>
+                                    ADMIN EMAIL
+                                </small>
+                            </button>
+                        </div>
+                        <input type="text" class="form-control col-2 d-inline-block" id="challengeDnsEmail" value="admin@test.com">
+                    </div>
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mt-4">
+                        <h1 class="h3 mb-0 text-gray-800">Uploaded Cert List <i>(in /etc/letsencrypt/live directory)</i>
+                        </h1>
+
+                    </div>
+                    <div>
+                        <pre certList class="bg-dark text-white" style="height: 300px;"></pre>
+                    </div>
                 </div>
 
                 <div class="container-fluid collapse" id="common">
