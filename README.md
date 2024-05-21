@@ -37,7 +37,7 @@ main goal is management for 'upstream' / 'server' / certificates nginx configura
 - modify logrotate config.
 - Easily create services and locations.
 - Advanced Nginx configuration available for super users.
-- login management.
+- Let's encrypt DNS challenge.
 
 ## Quick Setup
 
