@@ -527,6 +527,10 @@ function renewCertByDns() {
         url: '/api/renewCertByDns',
         data: { name: $("#challengeDnsDomainName").val(), email: $("#challengeDnsEmail").val() },
         success: (ret) => {
+            if(ret == null || ret == "") {
+                alert("certificate not yet due for renewal or error occurred.");
+                return;
+            }
             prompt("paste below text to DNS TXT record", ret);
             alert("request sent. If your request is successful, the cert list below will be updated within a few minutes.");
         }
