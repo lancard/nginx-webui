@@ -4,10 +4,10 @@
     "express": "^4.21.2",
     "express-session": "^1.18.1",
     "session-file-store": "^1.5.0",
-    "systeminformation": "^5.23.5"
+    "systeminformation": "^5.23.17"
   },
   "name": "nginx-webui",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "nginx webui",
   "main": "index.js",
   "scripts": {
