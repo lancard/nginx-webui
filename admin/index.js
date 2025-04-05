@@ -132,7 +132,7 @@ app.post('/api/logout', (req, res) => {
 app.get('/api/getNginxStatus', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
-    http.get('http://localhost:5000/status', function (apiRes) {
+    http.get('http://127.0.0.1:5000/status', function (apiRes) {
         apiRes.setEncoding('utf8');
 
         var resData = '';
