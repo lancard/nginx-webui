@@ -28,6 +28,6 @@ fi
 
 /docker-entrypoint.sh
 
-node index.js &
+node server.js &
 
 nginx -g "daemon off;"

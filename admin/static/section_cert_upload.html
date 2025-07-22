@@ -1,0 +1,48 @@
+<div class="app-content-header">
+    <h3>Upload Cert</h3>
+</div>
+<div class="app-content">
+    <strong class="text-danger">
+        will upload to '/etc/letsencrypt/live/(domain_name)' and will be overwritten if exist.
+    </strong>
+    <i>ex) /etc/letsencrypt/live/test.com/fullchain.pem,
+        /etc/letsencrypt/live/test.com/privkey.pem</i>
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <button class="btn btn-primary" type="button">
+                <small>
+                    DOMAIN NAME
+                </small>
+            </button>
+        </div>
+        <input type="text" class="form-control col-2 d-inline-block" id="domainName" value="test.com">
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            Cert File Contents:
+            <textarea class="form-control" rows="10" id="certFile"></textarea>
+        </div>
+        <div class="col-6">
+            Key File Contents:
+            <textarea class="form-control" rows="10" id="keyFile"></textarea>
+        </div>
+    </div>
+    <button type="button" data-click-function="uploadCert" class="btn btn-sm btn-primary">
+        <i class="fas fa-upload fa-sm text-white-50"></i> Upload
+    </button>
+</div>
+
+<script type="text/plain" data-text-type="certFile">
+-----BEGIN CERTIFICATE-----
+ABCDEFGSAMPLE...
+-----END CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
+ABCDEFGSAMPLE...
+-----END CERTIFICATE-----
+</script>
+<script type="text/plain" data-text-type="keyFile">
+-----BEGIN RSA PRIVATE KEY-----
+ABCDEFGSAMPLE...
+-----END RSA PRIVATE KEY-----
+</script>

@@ -1,4 +1,11 @@
 {
+        "cert": [
+                {
+                        "domain": "localhost_nginx_webui",
+                        "adminEmail": "admin@localhost",
+                        "autoRenewal": "true"
+                }
+        ],
         "upstream": [
                 {
                         "upstreamName": "test_service",

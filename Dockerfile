@@ -22,13 +22,10 @@ RUN mkdir -p /data
 RUN mkdir -p /session
 RUN rm -f /var/log/nginx/*
 
-# install bower components
-WORKDIR /admin/static
-RUN npm install -g bower
-RUN bower install
-
 # change to node folder
 WORKDIR /admin
+RUN npm install -g esbuild
 RUN npm install
+RUN npm run build
 
 ENTRYPOINT ["/entrypoint.sh"]

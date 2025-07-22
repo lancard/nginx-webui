@@ -11,99 +11,47 @@
 
     <title>Nginx WebUI - Login</title>
 
-    <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="dist/index.css" rel="stylesheet">
+    <script type="module" src="dist/index.js"></script>
 
 </head>
 
-<body class="bg-gradient-primary">
-
-    <div class="container">
-
-        <!-- Outer Row -->
-        <div class="row justify-content-center">
-
-            <div class="col-xl-10 col-lg-12 col-md-9">
-
-                <div class="card o-hidden border-0 shadow-lg my-5">
-                    <div class="card-body p-0">
-                        <!-- Nested Row within Card Body -->
-                        <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
-                            <div class="col-lg-6">
-                                <div class="p-5">
-                                    <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Welcome to Nginx WebUI!</h1>
-                                    </div>
-                                    <form class="user">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control form-control-user" id="user"
-                                                aria-describedby="user" value="administrator">
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="password" class="form-control form-control-user" id="password"
-                                                placeholder="Password">
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
-                                                <input type="checkbox" class="custom-control-input" id="customCheck"
-                                                    checked>
-                                                <label class="custom-control-label" for="customCheck">Remember
-                                                    Me</label>
-                                            </div>
-                                        </div>
-                                        <a href="javascript: void(0)" class="btn btn-primary btn-user btn-block"
-                                            onclick="login()">
-                                            Login
-                                        </a>
-                                    </form>
-                                </div>
-                            </div>
+<body id="body-login" class="login-page bg-body-secondary">
+    <div class="login-box">
+        <div class="card card-outline card-primary">
+            <div class="card-header">
+                <h1 class="mb-0 text-center"> Welcome To <b>Nginx WebUI!</b></h1>
+            </div>
+            <div class="card-body login-card-body">
+                <p class="login-box-msg">Sign in to start your session</p>
+                <form id="form-login">
+                    <div class="input-group mb-1">
+                        <div class="form-floating">
+                            <input id="user" type="text" class="form-control " name="user" placeholder="ID" required
+                                value="administrator">
+                            <label for="user">ID</label>
+                        </div>
+                        <div class="input-group-text"> <span class="bi bi-person"></span> </div>
+                    </div>
+                    <div class="input-group mb-1">
+                        <div class="form-floating">
+                            <input id="password" type="password" class="form-control " placeholder="" name="password"
+                                required autocomplete="current-password" autofocus>
+                            <label for="password">Password</label>
+                            <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3"
+                                id="togglePassword" style="cursor: pointer;"></i>
+                        </div>
+                        <div class="input-group-text"> <span class="bi bi-lock-fill"></span> </div>
+                    </div>
+                    <div class="row">
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary" id="button-signin">Sign In</button>
                         </div>
                     </div>
-                </div>
-
+                </form>
             </div>
-
         </div>
-
     </div>
-
-    <!-- Bootstrap core JavaScript-->
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        $(function () {
-            $.ajax({
-                type: "GET",
-                url: '/api/status',
-                success: () => {
-                    location.href = './index.html';
-                },
-                error: () => {
-                    console.log("not auth");
-                }
-            });
-        })
-
-        function login() {
-            $.ajax({
-                type: "POST",
-                url: '/api/login',
-                data: { user: $("#user").val(), password: $("#password").val() },
-                success: (ret) => {
-                    if (ret == "successfully login") {
-                        location.href = './index.html';
-                        return;
-                    }
-
-                    alert(ret);
-                }
-            });
-        }
-    </script>
-
 </body>
 
 </html>

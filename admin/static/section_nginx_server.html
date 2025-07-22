@@ -1,0 +1,83 @@
+<div class="app-content-header">
+    <h3>Site Management</h3>
+    <button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm ml-2" data-click-function="addSite">
+        <i class="fas fa-plus fa-sm text-white-50"></i>
+        Add Site
+    </button>
+</div>
+<div class="app-content">
+    <div site-body></div>
+    <div class="text-end" data-save-test-apply-button-location></div>
+</div>
+
+<!-- templates -->
+<div class="collapse card border-left-primary shadow" site-service>
+    <div class="row">
+        <div class="col-5">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="font-weight-bold text-primary mb-1">
+                            <span site-service-name>test_service</span>
+                            <button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm ml-2"
+                                data-click-function="addLocation">
+                                <i class="fas fa-plus fa-sm text-white-50"></i>
+                                Add Location
+                            </button>
+                            <button class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm ml-2"
+                                data-click-function="deleteSite">
+                                <i class="fas fa-trash fa-sm text-white-50"></i>
+                                Delete This Site
+                            </button>
+                        </div>
+                        <div class="mt-2" site-default-section>
+                            <div class="input-group mt-2 mb-1">
+                                <div class="input-group-prepend">
+                                    <button class="btn btn-primary" type="button">
+                                        <small>
+                                            SERVER NAME (DOMAIN NAME)
+                                        </small>
+                                    </button>
+                                </div>
+                                <input type="text" class="form-control" site-server-name placeholder="test.com">
+                            </div>
+                        </div>
+                        <div class="card shadow my-2">
+                            <!-- Card Header - Accordion -->
+                            <a href="javascript: void(0)" class="d-block card-header bg-dark py-3">
+                                <h6 class="m-0 font-weight-bold text-white">
+                                    configuration in server directive
+                                </h6>
+                            </a>
+                            <div class="show bg-secondary">
+                                <div class="card-body">
+                                    <textarea class="form-control" style="height: 100px;" site-config></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="h5 mb-0 font-weight-bold text-gray-800" site-node-body>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="collapse" site-node-div>
+    <div class="card shadow my-2">
+        <div class="card-header py-3">
+            <span class="text-primary" site-node-address>/api</span>
+            <button class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm" data-click-function="deleteLocation">
+                <i class="fas fa-download fa-sm text-white-50"></i>
+                Delete
+            </button>
+        </div>
+        <div class="card-body">
+            configuration:
+            <textarea class="form-control" style="height: 200px;" site-node-config></textarea>
+        </div>
+    </div>
+</div>

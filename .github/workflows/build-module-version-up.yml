@@ -21,11 +21,12 @@ jobs:
           npm update
           npm update --save
 
-      - name: bower update
-        run: |
-          npm install -g bower
-          cd admin/static
-          bower install jquery moment fontawesome --save
+      # ignore bower due to .gitignore file
+      # - name: bower update
+      #   run: |
+      #     npm install -g bower
+      #     cd admin/static
+      #     bower install jquery moment fontawesome --save
 
       - name: Commit changes
         run: |

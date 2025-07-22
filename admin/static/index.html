@@ -9,758 +9,187 @@
 
     <title>Nginx WebUI</title>
 
-    <!-- Custom fonts for this template-->
-    <link href="bower_components/fontawesome/js-packages/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-
-    <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
-
-    <style>
-        textarea {
-            font-family: monospace;
-        }
-    </style>
+    <link href="dist/index.css" rel="stylesheet">
+    <script type="module" src="dist/index.js"></script>
 
 </head>
 
-<body id="page-top">
-
+<body id="body-index" class="layout-fixed sidebar-expand-lg sidebar-open bg-body-tertiary">
     <!-- Page Wrapper -->
-    <div id="wrapper">
+    <div class="app-wrapper">
+        <nav class="app-header navbar navbar-expand bg-body">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Start Navbar Links-->
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                            <i class="bi bi-list"></i>
+                        </a>
+                    </li>
+                </ul>
+                <!--end::Start Navbar Links-->
 
-        <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
-                </div>
-                <div class="sidebar-brand-text mx-3">Nginx WebUI</div>
-            </a>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-            <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
-                <a class="nav-link" href="javascript:void(0)" onclick="showPanel('dashboard')">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                HTTP directive
-            </div>
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link" href="javascript:void(0)" onclick="showPanel('common')">
-                    <i class="fas fa-fw fa-edit"></i>
-                    <span>Modify</span>
-                </a>
-            </li>
-
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Upstreams
-            </div>
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link" href="javascript:void(0)" onclick="showPanel('upstream')">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Manage</span>
-                </a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Sites
-            </div>
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link" href="javascript:void(0)" onclick="showPanel('site')">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Manage</span>
-                </a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Cert
-            </div>
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link" href="javascript:void(0)" onclick="showPanel('uploadCert')">
-                    <i class="fas fa-fw fa-upload"></i>
-                    <span>Upload</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="javascript:void(0)" onclick="showPanel('renewCertByDns')">
-                    <i class="fas fa-fw fa-upload"></i>
-                    <span>DNS Challenge</span>
-                </a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Logrotate
-            </div>
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link" href="javascript:void(0)" onclick="showPanel('configLogrotate')">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Config</span>
-                </a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Document
-            </div>
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link" href="javascript:void(0)" onclick="window.open('./doc.html');">
-                    <i class="fas fa-fw fa-book"></i>
-                    <span>View</span>
-                </a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
-
-        </ul>
-        <!-- End of Sidebar -->
-
-        <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
-
-            <!-- Main Content -->
-            <div id="content">
-
-                <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
-
-                    <!-- Topbar Navbar -->
-                    <ul class="navbar-nav ml-auto align-items-center">
-                        <div class="col text-end">
-                            <!--
-                            <button class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"
-                                onclick="loadConfig()">
-                                <i class="fas fa-download fa-sm text-white-50"></i> Reload from disk
-                            </button>
-                            -->
-                            <button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"
-                                onclick="saveConfig()">
-                                <i class="fas fa-save fa-sm text-white-50"></i> 1. All save to disk
-                            </button>
-                            <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
-                                onclick="testConfig()">
-                                <i class="fas fa-microscope fa-sm text-white-50"></i>
-                                2. Test nginx config
-                            </button>
-                            <button class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"
-                                onclick="applyConfig()">
-                                <i class="fas fa-check fa-sm text-white-50"></i>
-                                3. Apply nginx config
-                            </button>
-                        </div>
-
-                        <div class="topbar-divider d-none d-sm-block"></div>
-
-                        <!-- Nav Item - User Information -->
-                        <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"
-                                    id="loginUser">administrator</span>
+                <!--begin::End Navbar Links-->
+                <ul class="navbar-nav ms-auto">
+                    <!-- Nav Item - User Information -->
+                    <li class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="bi bi-person mr-2 text-gray-400"></i>
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"
+                                id="loginUser">administrator</span>
+                        </a>
+                        <!-- Dropdown - User Information -->
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                            aria-labelledby="userDropdown">
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Logout
                             </a>
-                            <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
-                                </a>
-                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <!--end::End Navbar Links-->
+            </div>
+            <!--end::Container-->
+        </nav>
+        <!--end::Header-->
+
+        <!--begin::Sidebar-->
+        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+
+            <!--begin::Sidebar Brand-->
+            <div class="sidebar-brand">
+                <!--begin::Brand Link-->
+                <a href="index.html" class="brand-link">
+                    <img src="images/logo.png" width="32" />
+                    <!--begin::Brand Text-->
+                    <span class="brand-text fw-light"> Nginx WebUI </span>
+                    <!--end::Brand Text-->
+                </a>
+                <!--end::Brand Link-->
+            </div>
+            <!--end::Sidebar Brand-->
+
+            <!--begin::Sidebar Wrapper-->
+            <div class="sidebar-wrapper">
+                <nav class="mt-2">
+                    <!--begin::Sidebar Menu-->
+                    <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="navigation"
+                        aria-label="Main navigation" data-accordion="false" id="navigation">
+                        <li class="nav-item">
+                            <a href="javascript:void(0)" class="nav-link" data-show-panel="dashboard">
+                                <i class="nav-icon bi bi-speedometer"></i>
+                                <p>Dashboard</p>
+                            </a>
                         </li>
-
+                        <li class="nav-header">Certifications</li>
+                        <li class="nav-item">
+                            <a href="javascript:void(0)" class="nav-link" data-show-panel="cert">
+                                <i class="nav-icon bi bi-speedometer"></i>
+                                <p>Management</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="javascript:void(0)" class="nav-link" data-show-panel="cert_upload">
+                                <i class="nav-icon bi bi-speedometer"></i>
+                                <p>Manual Upload</p>
+                            </a>
+                        </li>
+                        <li class="nav-header">Nginx</li>
+                        <li class="nav-item">
+                            <a href="javascript:void(0)" class="nav-link" data-show-panel="nginx_common">
+                                <i class="nav-icon bi bi-speedometer"></i>
+                                <p>HTTP Directive</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="javascript:void(0)" class="nav-link" data-show-panel="nginx_upstream">
+                                <i class="nav-icon bi bi-speedometer"></i>
+                                <p>Backend(Origin) Servers</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="javascript:void(0)" class="nav-link" data-show-panel="nginx_server">
+                                <i class="nav-icon bi bi-speedometer"></i>
+                                <p>Domain/URL Handlers</p>
+                            </a>
+                        </li>
+                        <li class="nav-header">System</li>
+                        <li class="nav-item">
+                            <a href="javascript:void(0)" class="nav-link" data-show-panel="logrotate">
+                                <i class="nav-icon bi bi-speedometer"></i>
+                                <p>Logrotate</p>
+                            </a>
+                        </li>
+                        <li class="nav-header">Documents</li>
+                        <li class="nav-item">
+                            <a href="javascript:void(0)" class="nav-link" data-show-panel="document">
+                                <i class="nav-icon bi bi-speedometer"></i>
+                                <p>Manual</p>
+                            </a>
+                        </li>
                     </ul>
-
+                    <!--end::Sidebar Menu-->
                 </nav>
-                <!-- End of Topbar -->
-
-                <div class="container-fluid collapse" id="configLogrotate">
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Config logrotate</h1>
-                        <a href="javascript: void(0)" onclick="saveLogrotate()"
-                            class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                            <i class="fas fa-upload fa-sm text-white-50"></i> Save
-                        </a>
-                    </div>
-
-                    <div class="mb-2">
-                        <strong class="text-danger">
-                            will save to '/etc/logrotate.d/nginx' and will be overwritten if exist.
-                        </strong>
-                    </div>
-
-                    <textarea class="form-control" rows="20" id="logrotate"></textarea>
-                </div>
-
-                <div class="container-fluid collapse" id="uploadCert">
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Upload Cert</h1>
-                        <a href="javascript: void(0)" onclick="uploadCert()"
-                            class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                            <i class="fas fa-upload fa-sm text-white-50"></i> Upload Cert
-                        </a>
-                    </div>
-
-                    <div class="mb-2">
-                        <strong class="text-danger">
-                            will upload to '/etc/letsencrypt/live/(domain_name)' and will be overwritten if exist.
-                        </strong>
-                        <i>ex) /etc/letsencrypt/live/test.com/fullchain.pem,
-                            /etc/letsencrypt/live/test.com/privkey.pem</i>
-                    </div>
-
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <button class="btn btn-primary" type="button">
-                                <small>
-                                    DOMAIN NAME
-                                </small>
-                            </button>
-                        </div>
-                        <input type="text" class="form-control col-2 d-inline-block" id="domainName" value="test.com">
-                    </div>
-
-                    <div class="row">
-                        <div class="col-6">
-                            Cert File Contents:
-                            <textarea class="form-control" rows="10" id="certFile">-----BEGIN CERTIFICATE-----
-ABCDEFGSAMPLE...
------END CERTIFICATE-----
------BEGIN CERTIFICATE-----
-ABCDEFGSAMPLE...
------END CERTIFICATE-----</textarea>
-                        </div>
-                        <div class="col-6">
-                            Key File Contents:
-                            <textarea class="form-control" rows="10" id="keyFile">-----BEGIN RSA PRIVATE KEY-----
-ABCDEFGSAMPLE...
------END RSA PRIVATE KEY-----</textarea>
-                        </div>
-                    </div>
-
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mt-4">
-                        <h1 class="h3 mb-0 text-gray-800">Uploaded Cert List <i>(in /etc/letsencrypt/live directory)</i>
-                        </h1>
-
-                    </div>
-                    <div>
-                        <pre certList class="bg-dark text-white" style="height: 300px;"></pre>
-                    </div>
-
-                </div>
-
-                <div class="container-fluid collapse" id="renewCertByDns">
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Get/Renew Cert by DNS Challenge</h1>
-                        <a href="javascript: void(0)" onclick="renewCertByDns()"
-                            class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                            <i class="fas fa-upload fa-sm text-white-50"></i> Start Challenge
-                        </a>
-                    </div>
-
-                    <div class="mb-2">
-                        <strong class="text-danger">
-                            will upload to '/etc/letsencrypt/live/(domain_name)' and will be overwritten if exist.
-                        </strong>
-                        <br>
-                        <i>ex) /etc/letsencrypt/live/test.com/fullchain.pem,
-                            /etc/letsencrypt/live/test.com/privkey.pem</i>
-                    </div>
-
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <button class="btn btn-primary" type="button">
-                                <small>
-                                    DOMAIN NAME
-                                </small>
-                            </button>
-                        </div>
-                        <input type="text" class="form-control col-2 d-inline-block" id="challengeDnsDomainName" value="test.com">
-                    </div>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <button class="btn btn-primary" type="button">
-                                <small>
-                                    ADMIN EMAIL
-                                </small>
-                            </button>
-                        </div>
-                        <input type="text" class="form-control col-2 d-inline-block" id="challengeDnsEmail" value="admin@test.com">
-                    </div>
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mt-4">
-                        <h1 class="h3 mb-0 text-gray-800">Uploaded Cert List <i>(in /etc/letsencrypt/live directory)</i>
-                        </h1>
-
-                    </div>
-                    <div>
-                        <pre certList class="bg-dark text-white" style="height: 300px;"></pre>
-                    </div>
-                </div>
-
-                <div class="container-fluid collapse" id="common">
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Edit directives in nginx.conf 'http' section</h1>
-                    </div>
-
-                    <textarea id="commonTextarea" class="form-control" rows="20"></textarea>
-                </div>
-
-
-                <div class="container-fluid collapse" id="upstream">
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Upstream</h1>
-                        <button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm ml-2"
-                            onclick="addUpstreamService()">
-                            <i class="fas fa-plus fa-sm text-white-50"></i>
-                            Add Upstream Service
-                        </button>
-                    </div>
-
-                    <div upstream-body></div>
-
-                    <!-- templates -->
-                    <div class="collapse card border-left-primary shadow m-2" upstream-service>
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="font-weight-bold text-primary mb-1">
-                                        <input type="hidden" upstream-auth-key value="">
-                                        <span upstream-service-name>test_service</span>
-                                        <button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm ml-2"
-                                            onclick="addBackendServer(this)">
-                                            <i class="fas fa-plus fa-sm text-white-50"></i>
-                                            Add Backend Server
-                                        </button>
-                                        <button class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm ml-2"
-                                            onclick="deleteUpstreamService(this)">
-                                            <i class="fas fa-trash fa-sm text-white-50"></i>
-                                            Delete This Upstream Service
-                                        </button>
-                                        <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm ml-2"
-                                            data-toggle="modal" data-target="#showAuthKeyModal">
-                                            <i class="fas fa-eye fa-sm text-white-50"></i>
-                                            Show Auth Key
-                                        </button>
-                                    </div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800" upstream-node-body>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="collapse" upstream-node-div>
-                        <span class="text-success" upstream-node-status>●</span>
-                        <span class="text-primary" upstream-node-address>192.168.0.1:8081
-                        </span>
-
-                        <span class="text-secondary">WEIGHT</span>
-                        <input type="number" class="form-control col-1 d-inline-block" min="0" max="999" value="1"
-                            upstream-node-weight>
-
-                        <span class="text-secondary">MAX_FAILS</span>
-                        <input type="number" class="form-control col-1 d-inline-block" min="0" max="9" value="1"
-                            upstream-node-maxfails>
-
-                        <span class="text-secondary">FAIL_TIMEOUT</span>
-                        <input type="number" class="form-control col-1 d-inline-block" min="1" max="999" value="10"
-                            upstream-node-failtimeout>
-
-                        <span class="text-secondary">IS_BACKUP</span>
-                        <input type="checkbox" upstream-node-backup>
-
-                        <span class="text-secondary">IS_DISABLE</span>
-                        <input type="checkbox" upstream-node-disable>
-
-                        <button class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"
-                            onclick="deleteBackendServer(this)">
-                            <i class="fas fa-trash fa-sm text-white-50"></i>
-                            Delete
-                        </button>
-                    </div>
-                </div>
-
-                <div class="container-fluid collapse" id="site">
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Site Management</h1>
-                        <button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm ml-2"
-                            onclick="addSite()">
-                            <i class="fas fa-plus fa-sm text-white-50"></i>
-                            Add Site
-                        </button>
-                    </div>
-
-                    <div site-body></div>
-
-                    <!-- templates -->
-                    <div class="collapse card border-left-primary shadow m-2" site-service>
-                        <div class="row">
-                            <div class="col-5">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="font-weight-bold text-primary mb-1">
-                                                <span site-service-name>test_service</span>
-                                                <button
-                                                    class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm ml-2"
-                                                    onclick="addLocation(this)">
-                                                    <i class="fas fa-plus fa-sm text-white-50"></i>
-                                                    Add Location
-                                                </button>
-                                                <button
-                                                    class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm ml-2"
-                                                    onclick="deleteSite(this)">
-                                                    <i class="fas fa-trash fa-sm text-white-50"></i>
-                                                    Delete This Site
-                                                </button>
-                                            </div>
-                                            <div class="mt-2" site-default-section>
-                                                <div class="input-group mt-2 mb-1">
-                                                    <div class="input-group-prepend">
-                                                        <button class="btn btn-primary" type="button">
-                                                            <small>
-                                                                SERVER NAME
-                                                            </small>
-                                                        </button>
-                                                    </div>
-                                                    <input type="text" class="form-control" site-server-name>
-                                                </div>
-                                                <div class="input-group mt-2 mb-1">
-                                                    <div class="input-group-prepend">
-                                                        <button class="btn btn-primary" type="button">
-                                                            <small>
-                                                                SERVER ADMIN EMAIL
-                                                            </small>
-                                                        </button>
-                                                    </div>
-                                                    <input type="text" class="form-control" site-admin-email>
-                                                </div>
-                                                <div class="input-group mb-1">
-                                                    <div class="input-group-prepend">
-                                                        <button class="btn btn-primary" type="button">
-                                                            <small>SSL CERTIFICATE FILE EXISTENCE</small>
-                                                        </button>
-                                                    </div>
-                                                    <input type="text" class="form-control col-2" site-ssl-exist
-                                                        readonly value="NO">
-                                                    <div class="input-group-append">
-                                                        <button class="btn btn-warning" type="button"
-                                                            onclick="getOrRenewCertFromLetsencrypt(this);">
-                                                            <small>Get/Renew from letsencrypt</small>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <button class="btn btn-primary" type="button">
-                                                            <small>
-                                                                SSL AUTO RENEW FROM LETSENCRYPT
-                                                            </small>
-                                                        </button>
-                                                    </div>
-                                                    <select class="form-control" site-auto-renew>
-                                                        <option value="false">No</option>
-                                                        <option value="true">Yes (letsencrypt)</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="card shadow my-2">
-                                                <!-- Card Header - Accordion -->
-                                                <a href="javascript: void(0)" class="d-block card-header bg-dark py-3">
-                                                    <h6 class="m-0 font-weight-bold text-white">
-                                                        configuration in server directive
-                                                    </h6>
-                                                </a>
-                                                <div class="show bg-secondary">
-                                                    <div class="card-body">
-                                                        <textarea class="form-control" style="height: 100px;"
-                                                            site-config></textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-5">
-                                <div class="h5 mb-0 font-weight-bold text-gray-800" site-node-body>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="collapse" site-node-div>
-                        <div class="card shadow my-2">
-                            <div class="card-header py-3">
-                                <span class="text-primary" site-node-address>/api</span>
-                                <button class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"
-                                    onclick="deleteLocation(this)">
-                                    <i class="fas fa-download fa-sm text-white-50"></i>
-                                    Delete
-                                </button>
-                            </div>
-                            <div class="card-body">
-                                configuration:
-                                <textarea class="form-control" style="height: 200px;" site-node-config></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- Begin Page Content -->
-                <div class="container-fluid" id="dashboard">
-
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                    </div>
-
-                    <!-- Content Row -->
-                    <div class="row">
-
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Accept Requests</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="acceptRequests">
-                                                (LOGIN FIRST)
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-success shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Handled Requests</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="handledRequests">
-                                                (LOGIN FIRST)
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-info shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Total Requests</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalRequests">
-                                                (LOGIN FIRST)
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Pending Requests Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-warning shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Active Connections</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="activeConnections">
-                                                (LOGIN FIRST)
-                                            </div>
-                                        </div>
-                                        <!--
-                                        <div class="col-auto">
-                                            <i class="fas fa-comments fa-2x text-gray-300"></i>
-                                        </div>
-                                        -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Content Row -->
-                    <div class="row">
-
-                        <div class="col-4">
-                            <div class="card shadow mb-4">
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Reading Connections</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="chart-area">
-                                        <canvas id="readingConnectionsChart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="card shadow mb-4">
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Writing Connections</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="chart-area">
-                                        <canvas id="writingConnectionsChart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="card shadow mb-4">
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Waiting Connections</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="chart-area">
-                                        <canvas id="waitingConnectionsChart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <!-- Content Row -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card shadow mb-4">
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-secondary">OS Network Connections</h6>
-                                </div>
-                                <div class="card-body">
-                                    <pre id="osConnections" class="bg-dark text-white" style="height: 200px;"></pre>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                </div>
-                <!-- /.container-fluid -->
-
             </div>
-            <!-- End of Main Content -->
+            <!--end::Sidebar Wrapper-->
+        </aside>
+        <!--end::Sidebar-->
 
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Sungho Kim 2023</span>
-                    </div>
-                </div>
-            </footer>
-            <!-- End of Footer -->
+        <!--begin::App Main-->
+        <main class="app-main">
+            <div class="collapse" data-section="dashboard"></div>
 
+            <div class="collapse" data-section="nginx_common"></div>
+            <div class="collapse" data-section="nginx_upstream"></div>
+            <div class="collapse" data-section="nginx_server"></div>
+
+            <div class="collapse" data-section="cert"></div>
+            <div class="collapse" data-section="cert_upload"></div>
+
+            <div class="collapse" data-section="logrotate"></div>
+            <div class="collapse" data-section="document"></div>
+        </main>
+        <!--end::App Main-->
+
+        <div class="container-fluid collapse" id="site">
         </div>
-        <!-- End of Content Wrapper -->
 
-    </div>
-    <!-- End of Page Wrapper -->
 
-    <!-- Authkey Modal-->
-    <div class="modal fade" id="showAuthKeyModal" tabindex="-1" role="dialog" aria-labelledby="authKeyModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="authKeyModalLabel">Showing Upstream Auth Key</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="text-danger" modal-remark></div>
-                    <div modal-key></div>
-                    <div class="mt-2">See the Document section on the left for instructions.</div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-info" type="button" onclick="generateKey(this)">(Re)Generate Key</button>
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="javascript: void(0);" onclick="saveKey(this)">Save</a>
-                </div>
-            </div>
-        </div>
+        <!--begin::Footer-->
+        <footer class="app-footer">
+            <!--begin::To the end-->
+            <!-- <div class="float-end d-none d-sm-inline">Anything you want</div> -->
+            <!--end::To the end-->
+            <!--begin::Copyright-->
+            <strong>
+                Copyright &copy; 2023-2025&nbsp;
+                Author: 
+                <a href="https://github.com/lancard/nginx-webui" class="text-decoration-none">Sungho Kim</a>.
+            </strong>            
+            <!--end::Copyright-->
+        </footer>
+        <!--end::Footer-->
     </div>
+
+    <!-- +++++++++++++++++++++++++++++++++++++++ templates below +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- save/test/apply button groups -->
+    <div class="btn-group my-2 collapse" role="group" data-save-test-apply-button-group-template>
+        <button class="btn btn-success py-1" data-click-function="saveConfig">
+            <i class="fas fa-save fa-sm text-white-50"></i> 1. All save to disk
+        </button>
+        <button class="btn btn-primary py-1" data-click-function="testConfig">
+            <i class="fas fa-microscope fa-sm text-white-50"></i>
+            2. Test nginx config
+        </button>
+        <button class="btn btn-danger py-1" data-click-function="applyConfig">
+            <i class="fas fa-check fa-sm text-white-50"></i>
+            3. Apply nginx config
+        </button>
+    </div>
+
 
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="closeModalLabel"
@@ -776,31 +205,11 @@ ABCDEFGSAMPLE...
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="javascript: void(0);" onclick="logout()">Logout</a>
+                    <a class="btn btn-primary" href="javascript: void(0);" data-click-function="logout">Logout</a>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Bootstrap core JavaScript-->
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Page level plugins -->
-    <script src="bower_components/chart.js/dist/Chart.min.js"></script>
-    <script src="bower_components/moment/min/moment.min.js"></script>
-
-    <!-- custom all.js -->
-    <script src="js/index.js"></script>
-
-    <script>
-        $(function () {
-            loadLogrotate();
-            loadConfig();
-            createChart();
-        });
-    </script>
-
 </body>
 
 </html>

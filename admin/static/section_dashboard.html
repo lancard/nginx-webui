@@ -1,0 +1,140 @@
+<div class="app-content-header">
+    <h3>Dashboard</h3>
+</div>
+<div class="app-content">
+    <!-- Content Row -->
+    <div class="row">
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Accept Requests</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="acceptRequests">
+                                (LOGIN FIRST)
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Handled Requests</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="handledRequests">
+                                (LOGIN FIRST)
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Total Requests</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalRequests">
+                                (LOGIN FIRST)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Requests Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Active Connections</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="activeConnections">
+                                (LOGIN FIRST)
+                            </div>
+                        </div>
+                        <!--
+                                        <div class="col-auto">
+                                            <i class="fas fa-comments fa-2x text-gray-300"></i>
+                                        </div>
+                                        -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Row -->
+    <div class="row">
+
+        <div class="col-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Reading Connections</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="readingConnectionsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Writing Connections</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="writingConnectionsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Waiting Connections</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="waitingConnectionsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- Content Row -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-secondary">OS Network Connections</h6>
+                </div>
+                <div class="card-body">
+                    <pre id="osConnections" class="bg-dark text-white" style="height: 200px;"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,89 @@
+<div class="app-content-header">
+    <h3>Cert List</h3>
+    <small>Management of Certifications</small>
+</div>
+<div class="app-content">
+    <div class="text-end my-2">
+        <button class="btn btn-outline-success" data-click-function="addCertRecordFromUI">
+            <i class="bi bi-plus"></i> Add Record
+        </button>
+    </div>
+
+    <table class="table table-bordered text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>DOMAIN</th>
+                <th>WILDCARD CERT<br>(ex: *.test.com)</th>
+                <th>ADMIN EMAIL</th>
+                <th>AUTO RENEWAL</th>
+                <th>REGISTERED TIME</th>
+                <th>RECENT RENEWAL TIME</th>
+                <th>RENEWAL TOOLS</th>
+                <th>DELETE</th>
+            </tr>
+        </thead>
+        <tbody cert-body>
+        </tbody>
+    </table>
+
+    <div class="text-end my-2">
+        <button class="btn btn-success py-1" data-click-function="saveConfig">
+            <i class="fas fa-save fa-sm text-white-50"></i> All save to disk
+        </button>
+    </div>
+
+    <div class="callout callout-warning my-2">
+        If the wildcard option is set to YES, the challenge can only be performed using the DNS-01 method, which makes automatic renewal impossible.
+    </div>
+
+    <div class="callout callout-info my-2">
+        Let's Encrypt DNS challenge is a method of domain ownership verification.<br />
+        It requires adding a specific TXT record to your domain's DNS settings.<br />
+        This proves to the Certificate Authority that you control the domain.<br />
+        For more details, refer to Let's Encrypt's official documentation:<br />
+        <a href='https://letsencrypt.org/docs/challenge-types/#dns-01-challenge' target="_blank">
+            https://letsencrypt.org/docs/challenge-types/#dns-01-challenge
+        </a>
+    </div>
+</div>
+
+
+<!-- templates -->
+<table class="collapse">
+    <tr cert-template>
+        <td cert-domain></td>
+        <td>
+            <select cert-wildcard>
+                <option value="false">NO</option>
+                <option value="true">YES</option>
+            </select>
+        </td>
+        <td>
+            <span cert-admin-email></span>
+            <button class="btn btn-outline-primary" data-click-function="changeCertEmail">
+                <i class="bi bi-pencil-square"></i> Change email
+            </button>
+        </td>
+        <td>
+            <select cert-auto-renewal>
+                <option value="false">NO</option>
+                <option value="true">YES</option>
+            </select>
+        </td>
+        <td cert-registered-datetime>-</td>
+        <td cert-renewal-datetime>-</td>
+        <td>
+            <button class="btn btn-outline-primary" data-click-function="renewCertHTTP">
+                <i class="bi bi-refresh"></i> Let's Encrypt (Re)new (HTTP-01)
+            </button>
+            <button class="btn btn-outline-secondary" data-click-function="renewCertDNS">
+                <i class="bi bi-refresh"></i> Let's Encrypt (Re)new (DNS-01)
+            </button>
+        </td>
+        <td>
+            <button class="btn btn-outline-danger" data-click-function="deleteCert">
+                <i class="bi bi-refresh"></i> Delete
+            </button>
+        </td>
+    </tr>
+</table>
