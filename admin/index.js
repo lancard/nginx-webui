@@ -11,11 +11,6 @@ import {
     Legend
 } from 'chart.js';
 import 'chartjs-adapter-dayjs-4/dist/chartjs-adapter-dayjs-4.esm';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import 'admin-lte/dist/js/adminlte.min.js';
-import 'admin-lte/dist/css/adminlte.min.css';
-import './index.css';
 
 const defaultServerDirective = `listen 443 ssl;
 ssl_certificate /etc/letsencrypt/live/(domain_name)/fullchain.pem;
@@ -192,8 +187,7 @@ class NginxWebUI {
             url: '/api/logout',
             success: (ret) => {
                 // alert(ret);
-
-                location.href = './login.html';
+                location.href = 'login.html';
             }
         });
     }
@@ -204,7 +198,7 @@ class NginxWebUI {
         $clonedObject.find('[cert-admin-email]').text(email);
         $clonedObject.find('[cert-auto-renewal]').val(renewal == "true" ? "true" : "false");
         $clonedObject.find('[cert-wildcard]').val(wildcard == "true" ? "true" : "false");
-        $clonedObject.removeAttr('cert-template').removeClass("collapse").appendTo("tbody[cert-body]");
+        $clonedObject.removeAttr('cert-template').appendTo("tbody[cert-body]");
     }
 
     addCertRecordFromUI() {
@@ -237,30 +231,29 @@ class NginxWebUI {
         return result;
     }
 
-    saveKey(elem) {
-        var modal = $(elem).parents("[role=dialog]");
-        var targetUpstream = $(window.authKeyTarget).parents("[upstream-service]");
-        targetUpstream.find("[upstream-auth-key]").val(modal.find('.modal-body [modal-key]').text());
-        modal.modal('hide');
-    }
-
     generateKey(elem) {
-        var modal = $(elem).parents("[role=dialog]");
-        var targetUpstream = $(window.authKeyTarget).parents("[upstream-service]");
-        var key = generateRandomString(32);
-        modal.find('.modal-body [modal-remark]').text("You have to click the save config button at the top to use the key.");
-        modal.find('.modal-body [modal-key]').text(key);
+        var modal = $(elem).parents("dialog");
+        var targetUpstream = $(elem).parents("[upstream-service]");
+        var key = this.generateRandomString(32);
+        modal.find('[modal-remark]').text("You should click save button.");
+        modal.find('[modal-key]').text(key);
     }
 
+    saveKey(elem) {
+        var modal = $(elem).parents("dialog");
+        var targetUpstream = $(elem).parents("[upstream-service]");
+        targetUpstream.find("[upstream-auth-key]").val(modal.find('[modal-key]').text());
+        modal[0].close();
+    }
 
     addUpstreamService() {
         var serviceName = prompt('enter backend server group(service) name', 'test_service');
         if (!serviceName || serviceName == '')
             return;
 
-        let $clonedObject = $("div[upstream-service].collapse").clone();
+        let $clonedObject = $(".template-hidden div[upstream-service]").clone();
         $clonedObject.find('[upstream-service-name]').text(serviceName);
-        $clonedObject.removeClass("collapse").appendTo("div[upstream-body]");
+        $clonedObject.appendTo("div[upstream-body]");
     }
 
     deleteUpstreamService(element) {
@@ -279,20 +272,24 @@ class NginxWebUI {
     }
 
     checkBackendServerStatus(element) {
-        let backendServer = $(element).parents("div[upstream-node-div]").find('[upstream-node-address]').text();
+        let backendServer = $(element).parents("[upstream-node]").find('[upstream-node-address]').text();
+
+        $(element).parents("[upstream-node]").find('[upstream-node-status]').removeClass('status-success');
+        $(element).parents("[upstream-node]").find('[upstream-node-status]').removeClass('status-error');
+        $(element).parents("[upstream-node]").find('[upstream-node-status]').addClass('status-warning');
 
         $.ajax({
             type: "POST",
             url: '/api/checkServerStatus',
             data: { host: backendServer.split(":")[0], port: backendServer.split(":")[1] },
             success: (ret) => {
+                $(element).parents("[upstream-node]").find('[upstream-node-status]').removeClass('status-warning');
+
                 if (ret && ret.success) {
-                    $(element).parents("div[upstream-node-div]").find('[upstream-node-status]').removeClass('text-danger');
-                    $(element).parents("div[upstream-node-div]").find('[upstream-node-status]').addClass('text-success');
+                    $(element).parents("[upstream-node]").find('[upstream-node-status]').addClass('status-success');
                 }
                 else {
-                    $(element).parents("div[upstream-node-div]").find('[upstream-node-status]').removeClass('text-success');
-                    $(element).parents("div[upstream-node-div]").find('[upstream-node-status]').addClass('text-danger');
+                    $(element).parents("[upstream-node]").find('[upstream-node-status]').addClass('status-error');
                 }
             }
         });
@@ -303,16 +300,16 @@ class NginxWebUI {
         if (!backendServer || backendServer == '')
             return;
 
-        let $clonedObject = $("div[upstream-node-div].collapse").clone();
+        let $clonedObject = $(".template-hidden [upstream-node]").clone();
         $clonedObject.find('[upstream-node-address]').text(backendServer);
-        $clonedObject.removeClass("collapse").appendTo($(element).parents("div[upstream-service]").find("[upstream-node-body]"));
+        $clonedObject.appendTo($(element).parents("div[upstream-service]").find("[upstream-node-body]"));
     }
 
     deleteBackendServer(element) {
         if (!confirm('delete?'))
             return;
 
-        $(element).parents("[upstream-node-div]").remove();
+        $(element).parents("[upstream-node]").remove();
     }
 
     // sites
@@ -327,16 +324,16 @@ class NginxWebUI {
 
         }
 
-        let $clonedObject = $("div[site-service].collapse").clone();
+        let $clonedObject = $(".template-hidden div[site-service]").clone();
         $clonedObject.find('[site-service-name]').text(siteName);
         $clonedObject.find('[site-config]').val(answer ? 'listen 80;\n' : defaultServerDirective);
-        $clonedObject.removeClass("collapse").appendTo("div[site-body]");
+        $clonedObject.appendTo("div[site-body]");
 
         // add root
-        let $clonedObject2 = $("div[site-node-div].collapse").clone();
+        let $clonedObject2 = $(".template-hidden div[site-node-div]").clone();
         $clonedObject2.find('[site-node-address]').text('/');
         $clonedObject2.find('[site-node-config]').val(answer ? '# Moved Permanently\nreturn 301 https://$host$request_uri;\n' : defaultServerLocation);
-        $clonedObject2.removeClass("collapse").appendTo($clonedObject.find("[site-node-body]"));
+        $clonedObject2.appendTo($clonedObject.find("[site-node-body]"));
 
         if (answer) {
             alert('generated 80 port redirect site.');
@@ -358,31 +355,10 @@ class NginxWebUI {
         if (!locationDirective || locationDirective == '')
             return;
 
-        let $clonedObject = $("div[site-node-div].collapse").clone();
+        let $clonedObject = $(".template-hidden div[site-node-div]").clone();
         $clonedObject.find('[site-node-address]').text(locationDirective);
-        $clonedObject.find('[site-node-config]').val(`set $backend            http://backend_upstream;
-proxy_pass              $backend;
-
-# static resources
-# root   /usr/share/nginx/html;
-# index  index.html index.htm;
-
-proxy_set_header        Host $host:$server_port;
-proxy_set_header        X-Real-IP $remote_addr;
-proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
-proxy_set_header        X-Forwarded-Proto $scheme;
-
-# Required for new HTTP-based CLI
-proxy_http_version 1.1;
-proxy_request_buffering off;
-proxy_buffering off; # Required for HTTP-based CLI to work over SSL
-
-# timeout
-proxy_connect_timeout 900;      
-proxy_send_timeout 900;      
-proxy_read_timeout 900;      
-send_timeout 900;`);
-        $clonedObject.removeClass("collapse").appendTo($(element).parents("div[site-service]").find("[site-node-body]"));
+        $clonedObject.find('[site-node-config]').val(defaultServerLocation);
+        $clonedObject.appendTo($(element).parents("div[site-service]").find("[site-node-body]"));
     }
 
     deleteLocation(element) {
@@ -417,7 +393,7 @@ send_timeout 900;`);
                 nodes: []
             };
 
-            $(e).find("[upstream-node-div").each((i, el) => {
+            $(e).find("[upstream-node").each((i, el) => {
                 obj.nodes.push({
                     address: $(el).find("[upstream-node-address]").text(),
                     weight: +$(el).find("[upstream-node-weight]").val(),
@@ -468,13 +444,13 @@ send_timeout 900;`);
         // upstream
         $("[upstream-body]").empty();
         this.config.upstream.forEach(e => {
-            let $clonedObject = $("div[upstream-service].collapse").clone();
+            let $clonedObject = $(".template-hidden div[upstream-service]").clone();
             $clonedObject.find('[upstream-service-name]').text(e.upstreamName);
             $clonedObject.find('[upstream-auth-key]').val(e.upstreamAuthKey);
-            $clonedObject.removeClass("collapse").appendTo("div[upstream-body]");
+            $clonedObject.appendTo("div[upstream-body]");
 
             e.nodes.forEach(ee => {
-                let $clonedObjectNode = $("div[upstream-node-div].collapse").clone();
+                let $clonedObjectNode = $(".template-hidden [upstream-node]").clone();
                 $clonedObjectNode.find('[upstream-node-address]').text(ee.address);
                 $clonedObjectNode.find('[upstream-node-weight]').val(ee.weight);
                 $clonedObjectNode.find('[upstream-node-maxfails]').val(ee.maxFails);
@@ -485,27 +461,26 @@ send_timeout 900;`);
                 if (ee.disable) {
                     $clonedObjectNode.find('[upstream-node-disable]').attr('checked', 'true');
                 }
-                $clonedObjectNode.removeClass("collapse").appendTo($clonedObject.find("[upstream-node-body]"));
+                $clonedObjectNode.appendTo($clonedObject.find("[upstream-node-body]"));
             });
         });
 
         // sites
         $("[site-body]").empty();
         this.config.site.forEach(e => {
-            let $clonedObject = $("div[site-service].collapse").clone();
+            let $clonedObject = $(".template-hidden div[site-service]").clone();
             $clonedObject.find('[site-service-name]').text(e.siteName);
             $clonedObject.find('[site-server-name]').val(e.serverName);
             $clonedObject.find('[site-config]').val(e.siteConfig);
-            $clonedObject.removeClass("collapse").appendTo("div[site-body]");
+            $clonedObject.appendTo("div[site-body]");
 
             e.locations.forEach(ee => {
-                let $clonedObjectNode = $("div[site-node-div].collapse").clone();
+                let $clonedObjectNode = $(".template-hidden div[site-node-div]").clone();
                 $clonedObjectNode.find('[site-node-address]').text(ee.address);
                 $clonedObjectNode.find('[site-node-config]').val(ee.config);
-                $clonedObjectNode.removeClass("collapse").appendTo($clonedObject.find("[site-node-body]"));
+                $clonedObjectNode.appendTo($clonedObject.find("[site-node-body]"));
             });
         });
-
     }
 
     loadLogrotate() {
@@ -601,11 +576,15 @@ send_timeout 900;`);
 
         alert("When the certificate issuance/renewal is completed by Let's Encrypt, it will be automatically update renewal date column.");
 
+        $("#alert-challenge").removeClass("hidden");
+
         $.ajax({
             type: "POST",
             url: '/api/renewCertHTTP',
             data: { domain: domain, email: email },
             success: (ret) => {
+                $("#alert-challenge").addClass("hidden");
+
                 alert(ret);
             }
         });
@@ -621,11 +600,15 @@ send_timeout 900;`);
 
         alert("When the certificate issuance/renewal is completed by Let's Encrypt, it will be automatically update renewal date column.");
 
+        $("#alert-challenge").removeClass("hidden");
+
         $.ajax({
             type: "POST",
             url: '/api/renewCertDNS',
             data: { domain: domain, email: email, wildcard: wildcard },
             success: (ret) => {
+                $("#alert-challenge").addClass("hidden");
+
                 if (ret == null || ret.trim() == "") {
                     alert("certificate not yet due for renewal or error occurred.");
                     return;
@@ -701,9 +684,10 @@ send_timeout 900;`);
     }
 
     showPanel(selectedId) {
-        $('[data-show-panel]').parents("li").removeClass("menu-open");
-        $("[data-section]").hide();
-        $(`[data-section="${selectedId}"]`).show();
+        $('[data-show-panel]').removeClass("menu-active");
+        $(`[data-show-panel="${selectedId}"]`).addClass("menu-active");
+        $("[data-section]").addClass("hidden");
+        $(`[data-section="${selectedId}"]`).removeClass("hidden");
     }
 
     addData(chart, label, data) {
@@ -793,11 +777,16 @@ $(function () {
             instance.login();
         });
 
-        $('#togglePassword').on('click', function () {
+        $('#eye-open,#eye-closed').on('click', function () {
             const $input = $('#password');
-            const isPassword = $input.attr('type') === 'password';
-            $input.attr('type', isPassword ? 'text' : 'password');
-            $(this).toggleClass('bi-eye bi-eye-slash');
+            const $eyeOpen = $('#eye-open');
+            const $eyeClosed = $('#eye-closed');
+
+            const isVisible = $input.attr('type') === 'text';
+            $input.attr('type', isVisible ? 'password' : 'text');
+
+            $eyeOpen.toggleClass('hidden', !isVisible);
+            $eyeClosed.toggleClass('hidden', isVisible);
         });
 
         $.ajax({
@@ -825,10 +814,10 @@ $(function () {
 
         $.when(...promises).done(function () {
             // insert save/test/apply button
-            const $template = $('[data-save-test-apply-button-group-template]').clone();
-            $('[data-save-test-apply-button-location]').html($template.removeClass("collapse"));
+            const $template = $('.template-hidden [data-save-test-apply-button-group-template]').clone();
+            $('[data-save-test-apply-button-location]').html($template);
 
-            instance.showPanel('cert');
+            instance.showPanel('nginx_upstream');
 
             // binding
             $(document).on('click', '[data-show-panel]', function (e) {
@@ -837,6 +826,7 @@ $(function () {
             });
             $(document).on('click', '[data-click-function]', function (e) {
                 const func = $(this).data('click-function');
+                $("details.dropdown").prop("open", false);
                 instance[func](this);
             });
 

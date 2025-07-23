@@ -1,125 +1,192 @@
-<div class="app-content-header pb-0">
-    <h3>Backend(Origin) Servers / Groups</h3>
-    <small>nginx upstream directive management</small>
+<h1>
+    Backend(Origin) Servers / Groups
+    <span class="desc-text">nginx upstream directive management</span>
+</h1>
+
+<div class="text-end my-2">
+    <button class="btn btn-xs btn-outline btn-success" data-click-function="addUpstreamService">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 12H3" />
+            <path d="M16 6H3" />
+            <path d="M16 18H3" />
+            <path d="M18 9v6" />
+            <path d="M21 12h-6" />
+        </svg>
+        <p>Add New Backend(Origin) Server Group</p>
+    </button>
 </div>
-<div class="app-content">
-    <div class="text-end my-2">
-        <button class="btn btn-outline-success" data-click-function="addUpstreamService">
-            <i class="bi bi-plus"></i> Add New Backend(Origin) Server Group
-        </button>
-    </div>
-    <div upstream-body></div>
-    <div class="text-end" data-save-test-apply-button-location></div>
-    <div class="callout callout-info my-2">
-        <strong>weight (default 1):</strong> sets the relative load balancing weight for a server in the backend server.
-        Servers with higher weights receive more requests proportionally. This allows you to distribute traffic based on
-        each server's capacity or priority<br />
-        <strong>max_fails (default 1):</strong> is allowed failure count before marking server down<br />
-        <strong>fail_timeout (default 10):</strong> defines time period(seconds) to track failures and exclude failing
-        server temporarily<br />
-        <strong>is_backup_server (default false):</strong> marks server as standby used only if primaries fail;<br />
-        <strong>is_disabled_server (default false):</strong> permanently disables the server.
-    </div>
+
+<div upstream-body></div>
+
+<div class="text-end py-4" data-save-test-apply-button-location></div>
+
+<div class="alert alert-soft alert-info">
+    <ul class="text-base-content">
+        <li>
+            <strong>weight (default 1):</strong> sets the relative load balancing weight for a server in the backend
+            server.
+            Servers with higher weights receive more requests proportionally.
+            This allows you to distribute traffic based on each server's capacity or priority.
+        </li>
+        <li>
+            <strong>max_fails (default 1):</strong> is allowed failure count before marking server down
+        </li>
+        <li>
+            <strong>fail_timeout (default 10):</strong> defines time period(seconds) to track failures and exclude
+            failing
+            server temporarily
+        </li>
+        <li>
+            <strong>is_backup_server (default false):</strong> marks server as standby used only if primaries fail;
+        </li>
+        <li>
+            <strong>is_disabled_server (default false):</strong> permanently disables the server.
+        </li>
+    </ul>
 </div>
 
 <!-- templates -->
-<div class="collapse card border-left-primary shadow my-2" upstream-service>
-    <div class="card-header bg-aqua text-white py-1">
-        <div class="card-title">
+<div class="template-hidden">
+    <div class="card shadow mt-4 not-prose" upstream-service>
+        <div class="card-header bg-base-300 pl-4 flex w-full items-center py-1">
             <input type="hidden" upstream-auth-key value="">
-            <h3 class="card-title fw-bold py-2" upstream-service-name>test_service</h3>
-            <button class="btn bg-purple m-2" data-click-function="addBackendServer">
-                <i class="bi bi-plus"></i>
-                Add Backend Server
+            <div class="card-title text-sm mb-1 mr-4 fw-bold" upstream-service-name>test_service</div>
+            <button class="btn btn-xs btn-soft btn-success" data-click-function="addBackendServer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path
+                        d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" />
+                </svg>
+                <p>Add Backend Server</p>
             </button>
-        </div>
-        <div class="card-tools">
-            <button type="button" class="btn btn-tool" title="upstream-menu" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                <i class="bi bi-list text-white"></i>
-            </button>
-            <ul class="dropdown-menu">
-                <li>
-                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#showAuthKeyModal">
-                        <i class="bi bi-eye"></i> Show Auth Key for this Server Group
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="#" data-click-function="renameUpstreamService">
-                        <i class="bi bi-pencil"></i> Rename Server Group
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="#" data-click-function="deleteUpstreamService">
-                        <i class="bi bi-trash"></i> Delete This Server Group
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="card-body">
-        <div class="row no-gutters align-items-center">
-            <div class="col mr-2">
-                <div class="mb-0 font-weight-bold text-gray-800" upstream-node-body>
-                </div>
+            <div class="ml-auto pr-4 pb-1">
+                <details class="dropdown dropdown-end" upstream-tools>
+                    <summary class="btn btn-xs btn-soft btn-default">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 12h16" />
+                            <path d="M4 18h16" />
+                            <path d="M4 6h16" />
+                        </svg>
+                    </summary>
+                    <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 shadow-lg text-xs">
+                        <li>
+                            <a onclick="this.nextElementSibling.showModal()">
+                                Show Auth Key
+                            </a>
+                            <dialog class="modal fixed inset-0 flex items-center justify-center">
+                                <div class="modal-box">
+                                    <form method="dialog">
+                                        <button
+                                            class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                                    </form>
+                                    <h3 class="text-lg font-bold mb-4">Upstream Auth Key</h3>
+                                    <div class="modal-body">
+                                        <div class="text-lg text-error my-2">KEY: <span modal-key>(NOT EXIST, CLICK
+                                                GENERATE BUTTON)</span></div>
+                                        <div class="text-info my-2">REMARK: <span modal-remark></span></div>
+                                        <div class="mt-2 italic">Refer document section on the left menu.</div>
+                                    </div>
+                                    <div class="modal-action">
+                                        <form method="dialog">
+                                            <button class="btn btn-sm btn-info" type="button"
+                                                data-click-function="generateKey">
+                                                (Re)Generate Key
+                                            </button>
+                                            <button class="btn btn-sm btn-primary" type="button"
+                                                data-click-function="saveKey">
+                                                Save
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </dialog>
+                        </li>
+                        <li>
+                            <a data-click-function="renameUpstreamService">
+                                Rename Server Group
+                            </a>
+                        </li>
+                        <li>
+                            <a data-click-function="deleteUpstreamService">
+                                Delete Server Group
+                            </a>
+                        </li>
+                    </ul>
+                </details>
             </div>
         </div>
+        <div class="card-body bg-base-200/50">
+            <table class="table table-xs text-center not-prose border border-base-content/5">
+                <thead class="bg-base-200 text-base-content text-xs">
+                    <tr>
+                        <th>STATUS</th>
+                        <th>DOMAIN:PORT</th>
+                        <th>WEIGHT</th>
+                        <th>MAX FAILS</th>
+                        <th>FAIL TIMEOUT</th>
+                        <th>IS BACKUP SERVER</th>
+                        <th>IS DISABLED SERVER</th>
+                        <th>DELETE</th>
+                    </tr>
+                </thead>
+                <tbody upstream-node-body>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 
-<div class="collapse" upstream-node-div>
-    <div class="d-flex mx-2">
-        <span>- Backend Server: </span>
-        <button type="button" class="btn btn-outline-primary ms-2 me-1" data-click-function="checkBackendServerStatus">
-            Check Status<i class="bi bi-arrow-right ms-1"></i>
-        </button>
-        <span class="me-2" upstream-node-status>●</span>
-        <span class="text-primary fw-bold" style="width: 200px;" upstream-node-address>192.168.0.1:8081</span>
-
-        <span class="text-secondary">weight: </span>
-        <input type="number" class="form-control w-auto me-2" min="0" max="999" value="1" upstream-node-weight>
-
-        <span class="text-secondary">max_fails: </span>
-        <input type="number" class="form-control w-auto me-2" min="0" max="9" value="1" upstream-node-maxfails>
-
-        <span class="text-secondary">fail_timeout: </span>
-        <input type="number" class="form-control w-auto me-2" min="1" max="999" value="10" upstream-node-failtimeout>
-
-        <span class="text-secondary">is_backup_server: </span>
-        <input class="form-check-input me-2" type="checkbox" upstream-node-backup>
-
-        <span class="text-secondary">is_disabled_server: </span>
-        <input class="form-check-input me-2" type="checkbox" upstream-node-disable>
-
-        <button type="button" class="btn btn-danger shadow-sm" data-click-function="deleteBackendServer">
-            <i class="fas fa-trash fa-sm text-white-50"></i>
-            Delete
-        </button>
-    </div>
-</div>
-
-
-<!-- Authkey Modal-->
-<div class="modal fade" id="showAuthKeyModal" tabindex="-1" role="dialog" aria-labelledby="authKeyModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="authKeyModalLabel">Showing Upstream Auth Key</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
+    <table>
+        <tr upstream-node>
+            <td>
+                <button class="btn btn-xs btn-soft btn-default" data-click-function="checkBackendServerStatus">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4.9 16.1C1 12.2 1 5.8 4.9 1.9" />
+                        <path d="M7.8 4.7a6.14 6.14 0 0 0-.8 7.5" />
+                        <circle cx="12" cy="9" r="2" />
+                        <path d="M16.2 4.8c2 2 2.26 5.11.8 7.47" />
+                        <path d="M19.1 1.9a9.96 9.96 0 0 1 0 14.1" />
+                        <path d="M9.5 18h5" />
+                        <path d="m8 22 4-11 4 11" />
+                    </svg>
+                    <p>Check Status</p>
                 </button>
-            </div>
-            <div class="modal-body">
-                <div class="text-danger" modal-remark></div>
-                <div modal-key></div>
-                <div class="mt-2">See the Document section on the left for instructions.</div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-info" type="button" onclick="generateKey(this)">(Re)Generate Key</button>
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="javascript: void(0);" onclick="saveKey(this)">Save</a>
-            </div>
-        </div>
-    </div>
+                <div aria-label="status"
+                    class="status status-lg mx-2 transition-all duration-300 ease-in-out animate-bounce"
+                    upstream-node-status></div>
+            </td>
+            <td upstream-node-address>192.168.0.1:8081</td>
+            <td>
+                <input type="number" class="input input-xs w-24" min="0" max="999" value="1" upstream-node-weight>
+            </td>
+            <td>
+                <input type="number" class="input input-xs w-24" min="0" max="9" value="1" upstream-node-maxfails>
+            </td>
+            <td>
+                <input type="number" class="input input-xs w-24" min="1" max="999" value="10" upstream-node-failtimeout>
+            </td>
+            <td>
+                <input class="toggle" type="checkbox" upstream-node-backup>
+            </td>
+            <td>
+                <input class="toggle" type="checkbox" upstream-node-disable>
+            </td>
+            <td>
+                <button class="btn btn-xs btn-soft btn-error" data-click-function="deleteBackendServer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10 11v6" />
+                        <path d="M14 11v6" />
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                        <path d="M3 6h18" />
+                        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                    </svg>
+                    <p>Delete</p>
+                </button>
+            </td>
+        </tr>
+    </table>
 </div>

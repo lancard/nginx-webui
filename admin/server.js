@@ -210,6 +210,13 @@ app.post('/api/deleteCert', (req, res) => {
     catch (e) {
     }
 
+    try {
+        const dir = `/etc/letsencrypt/archive/${req.body.domain}`;
+        fs.rmSync(dir, { recursive: true, force: true });
+    }
+    catch (e) {
+    }
+
     res.end("Delete OK");
 });
 

@@ -14,201 +14,365 @@
 
 </head>
 
-<body id="body-index" class="layout-fixed sidebar-expand-lg sidebar-open bg-body-tertiary">
-    <!-- Page Wrapper -->
-    <div class="app-wrapper">
-        <nav class="app-header navbar navbar-expand bg-body">
-            <!--begin::Container-->
-            <div class="container-fluid">
-                <!--begin::Start Navbar Links-->
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
-                            <i class="bi bi-list"></i>
-                        </a>
-                    </li>
-                </ul>
-                <!--end::Start Navbar Links-->
+<body id="body-index" class="text-xs flex h-screen">
+    <aside class="w-64 bg-base-200 flex flex-col h-full bg-hero-topography">
+        <div class="bg-base-100 border-b border-base-100 p-4 pl-6 shadow-xl bg-hero-hideout">
+            <a href="index.html" class="flex text-xl font-bold mb-1">
+                <svg width="32px" height="32px" viewBox="0 0 1024 1024" class="icon" version="1.1"
+                    xmlns="http://www.w3.org/2000/svg" fill="#000000">
+                    <path
+                        d="M541.35 855a213.87 213.87 0 0 1-175.67 91.65c-118.24 0-214.09-95.81-214.09-214s95.85-214 214.09-214a214.17 214.17 0 0 1 205.56 154A152 152 0 1 1 541.35 855z"
+                        fill="#FFFFFF"></path>
+                    <path
+                        d="M557.34 828.12a212.52 212.52 0 0 0 21.31-73.47 157.85 157.85 0 0 1 227.48-49.33 152.11 152.11 0 0 1-238.46 185.23A157.24 157.24 0 0 1 557.23 834q0-2.93 0.11-5.88z"
+                        fill="#FFCCCC"></path>
+                    <path
+                        d="M810.2 712.55A152.19 152.19 0 0 1 637.88 930.7a157.75 157.75 0 0 1 144.71-220.56 158.79 158.79 0 0 1 27.61 2.41z"
+                        fill="#FF5252"></path>
+                    <path
+                        d="M238.51 904.83a213 213 0 0 1-41.85-127.12c0-118.19 95.85-214 214.09-214a213.19 213.19 0 0 1 127.17 41.83 213 213 0 0 1 41.85 127.12c0 118.19-95.85 214-214.09 214a213.19 213.19 0 0 1-127.17-41.83z"
+                        fill="#FFCCCC"></path>
+                    <path
+                        d="M219.56 889.07c6.5-112.35 99.7-201.45 213.73-201.45a213.39 213.39 0 0 1 146.12 57.59c-6.5 112.35-99.7 201.45-213.73 201.45a213.39 213.39 0 0 1-146.12-57.59z"
+                        fill="#FF5252"></path>
+                    <path
+                        d="M591 394.78q87.12 0 157.75-78.84Q678.16 237.1 591 237.1t-157.71 78.84q70.62 78.84 157.71 78.84z"
+                        fill="#89D66D"></path>
+                    <path
+                        d="M675.55 957.93a174.5 174.5 0 0 1-154.05-92.28l-6.5-12.19 7.92-11.34A191.89 191.89 0 0 0 549.61 679l-3.86-13.25 10-9.46a174 174 0 0 1 119.75-47.5c96.3 0 174.64 78.32 174.64 174.58s-78.29 174.56-174.59 174.56zM567.91 855.52a129.49 129.49 0 0 0 107.63 57.35c71.46 0 129.59-58.1 129.59-129.52S747 653.83 675.55 653.83a129.06 129.06 0 0 0-79 26.83 237.4 237.4 0 0 1 5.74 52 235 235 0 0 1-34.38 122.86z"
+                        fill=""></path>
+                    <path
+                        d="M675.55 955.88a172.46 172.46 0 0 1-152.25-91.2l36.11-19.34a131.56 131.56 0 0 0 116.14 69.58c72.58 0 131.64-59 131.64-131.57s-59.06-131.57-131.64-131.57a131.15 131.15 0 0 0-90.26 35.8l-28.09-29.81a172 172 0 0 1 118.35-46.94c95.17 0 172.6 77.4 172.6 172.53s-77.43 172.52-172.6 172.52z"
+                        fill=""></path>
+                    <path
+                        d="M365.68 967.14a234.52 234.52 0 1 1 165.86-68.67 233.08 233.08 0 0 1-165.86 68.67z m0-428c-106.76 0-193.61 86.81-193.61 193.51s86.85 193.51 193.61 193.51 193.61-86.81 193.61-193.51-86.85-193.5-193.61-193.5z"
+                        fill=""></path>
+                    <path
+                        d="M397.69 663a20.48 20.48 0 0 1-7.8-39.42C503.2 576.9 599 503.44 674.48 405.21c71.69-93.23 125-208.3 158.38-342a20.48 20.48 0 0 1 39.74 9.93C837.82 212.33 782.09 332.46 707 430.18 627 534.2 525.54 612 405.47 661.42a20.42 20.42 0 0 1-7.78 1.58z"
+                        fill=""></path>
+                    <path
+                        d="M591 415.26c-63.88 0-122.09-28.82-173-85.65l-12.24-13.67L418 302.28c50.92-56.84 109.12-85.66 173-85.66s122.09 28.82 173 85.66l12.24 13.67L764 329.61c-50.87 56.83-109.08 85.65-173 85.65z m-129.44-99.32c17.84 17.55 36.49 31.25 55.63 40.81a164.14 164.14 0 0 0 147.69 0c19.14-9.57 37.79-23.26 55.63-40.81-17.84-17.55-36.49-31.25-55.63-40.81a164.14 164.14 0 0 0-147.69 0c-19.13 9.57-37.79 23.26-55.63 40.81z"
+                        fill=""></path>
+                    <path
+                        d="M571.41 298.4h143.36a15.36 15.36 0 0 1 15.36 15.36 15.36 15.36 0 0 1-15.36 15.36H571.41A15.36 15.36 0 0 1 556 313.76a15.36 15.36 0 0 1 15.41-15.36z"
+                        fill="#015200"></path>
+                    <path
+                        d="M703.71 650.5a20.49 20.49 0 0 1-19.07-27.94c28-71.58 45.51-171.32 52.18-296.45a20.48 20.48 0 0 1 40.9 2.18c-6.9 129.5-25.38 233.52-54.93 309.17a20.49 20.49 0 0 1-19.08 13.04z"
+                        fill=""></path>
+                </svg>
+                <span class="mx-2"> Nginx WebUI </span>
+            </a>
+        </div>
 
-                <!--begin::End Navbar Links-->
-                <ul class="navbar-nav ms-auto">
-                    <!-- Nav Item - User Information -->
-                    <li class="nav-item dropdown no-arrow">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="bi bi-person mr-2 text-gray-400"></i>
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"
-                                id="loginUser">administrator</span>
-                        </a>
-                        <!-- Dropdown - User Information -->
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                            aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Logout
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-                <!--end::End Navbar Links-->
-            </div>
-            <!--end::Container-->
-        </nav>
-        <!--end::Header-->
-
-        <!--begin::Sidebar-->
-        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-
-            <!--begin::Sidebar Brand-->
-            <div class="sidebar-brand">
-                <!--begin::Brand Link-->
-                <a href="index.html" class="brand-link">
-                    <img src="images/logo.png" width="32" />
-                    <!--begin::Brand Text-->
-                    <span class="brand-text fw-light"> Nginx WebUI </span>
-                    <!--end::Brand Text-->
+        <ul class="menu menu-vertical flex-grow text-base-content/80 w-full pt-4">
+            <li>
+                <a data-show-panel="dashboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="text-blue-400 size-5">
+                        <path d="M12 16v5" />
+                        <path d="M16 14v7" />
+                        <path d="M20 10v11" />
+                        <path d="m22 3-8.646 8.646a.5.5 0 0 1-.708 0L9.354 8.354a.5.5 0 0 0-.707 0L2 15" />
+                        <path d="M4 18v3" />
+                        <path d="M8 14v7" />
+                    </svg>
+                    <p>Dashboard</p>
                 </a>
-                <!--end::Brand Link-->
-            </div>
-            <!--end::Sidebar Brand-->
-
-            <!--begin::Sidebar Wrapper-->
-            <div class="sidebar-wrapper">
-                <nav class="mt-2">
-                    <!--begin::Sidebar Menu-->
-                    <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="navigation"
-                        aria-label="Main navigation" data-accordion="false" id="navigation">
-                        <li class="nav-item">
-                            <a href="javascript:void(0)" class="nav-link" data-show-panel="dashboard">
-                                <i class="nav-icon bi bi-speedometer"></i>
-                                <p>Dashboard</p>
-                            </a>
-                        </li>
-                        <li class="nav-header">Certifications</li>
-                        <li class="nav-item">
-                            <a href="javascript:void(0)" class="nav-link" data-show-panel="cert">
-                                <i class="nav-icon bi bi-speedometer"></i>
+            </li>
+            <li>
+                <details open>
+                    <summary class="group">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="text-yellow-400 size-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" />
+                        </svg>
+                        <p>Certifications</p>
+                    </summary>
+                    <ul>
+                        <li>
+                            <a data-show-panel="cert">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="size-4">
+                                    <path
+                                        d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" />
+                                    <circle cx="16.5" cy="7.5" r=".5" fill="currentColor" />
+                                </svg>
                                 <p>Management</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="javascript:void(0)" class="nav-link" data-show-panel="cert_upload">
-                                <i class="nav-icon bi bi-speedometer"></i>
+                        <li>
+                            <a data-show-panel="cert_upload">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="size-4">
+                                    <path d="M12 3v12" />
+                                    <path d="m17 8-5-5-5 5" />
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                </svg>
                                 <p>Manual Upload</p>
                             </a>
                         </li>
-                        <li class="nav-header">Nginx</li>
-                        <li class="nav-item">
-                            <a href="javascript:void(0)" class="nav-link" data-show-panel="nginx_common">
-                                <i class="nav-icon bi bi-speedometer"></i>
+                    </ul>
+                </details>
+            </li>
+            <li>
+                <details open>
+                    <summary class="group">
+                        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" class="text-green-400 size-5"
+                            stroke="currentColor" fill="none">
+                            <path
+                                d="M15.948,2h.065a10.418,10.418,0,0,1,.972.528Q22.414,5.65,27.843,8.774a.792.792,0,0,1,.414.788c-.008,4.389,0,8.777-.005,13.164a.813.813,0,0,1-.356.507q-5.773,3.324-11.547,6.644a.587.587,0,0,1-.657.037Q9.912,26.6,4.143,23.274a.7.7,0,0,1-.4-.666q0-6.582,0-13.163a.693.693,0,0,1,.387-.67Q9.552,5.657,14.974,2.535c.322-.184.638-.379.974-.535"
+                                style="fill:green">
+                            </path>
+                            <path
+                                d="M8.767,10.538q0,5.429,0,10.859a1.509,1.509,0,0,0,.427,1.087,1.647,1.647,0,0,0,2.06.206,1.564,1.564,0,0,0,.685-1.293c0-2.62-.005-5.24,0-7.86q3.583,4.29,7.181,8.568a2.833,2.833,0,0,0,2.6.782,1.561,1.561,0,0,0,1.251-1.371q.008-5.541,0-11.081a1.582,1.582,0,0,0-3.152,0c0,2.662-.016,5.321,0,7.982-2.346-2.766-4.663-5.556-7-8.332A2.817,2.817,0,0,0,10.17,9.033,1.579,1.579,0,0,0,8.767,10.538Z"
+                                style="fill:#fff"></path>
+                        </svg>
+                        <p>Nginx</p>
+                    </summary>
+                    <ul>
+                        <li>
+                            <a data-show-panel="nginx_common">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="size-4">
+                                    <path d="M15 12h-5" />
+                                    <path d="M15 8h-5" />
+                                    <path d="M19 17V5a2 2 0 0 0-2-2H4" />
+                                    <path
+                                        d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3" />
+                                </svg>
                                 <p>HTTP Directive</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="javascript:void(0)" class="nav-link" data-show-panel="nginx_upstream">
-                                <i class="nav-icon bi bi-speedometer"></i>
+                        <li>
+                            <a data-show-panel="nginx_upstream">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="size-4">
+                                    <rect x="16" y="16" width="6" height="6" rx="1" />
+                                    <rect x="2" y="16" width="6" height="6" rx="1" />
+                                    <rect x="9" y="2" width="6" height="6" rx="1" />
+                                    <path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3" />
+                                    <path d="M12 12V8" />
+                                </svg>
                                 <p>Backend(Origin) Servers</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="javascript:void(0)" class="nav-link" data-show-panel="nginx_server">
-                                <i class="nav-icon bi bi-speedometer"></i>
+                        <li>
+                            <a data-show-panel="nginx_server">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="size-4">
+                                    <path d="M17 19a1 1 0 0 1-1-1v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2a1 1 0 0 1-1 1z" />
+                                    <path d="M17 21v-2" />
+                                    <path d="M19 14V6.5a1 1 0 0 0-7 0v11a1 1 0 0 1-7 0V10" />
+                                    <path d="M21 21v-2" />
+                                    <path d="M3 5V3" />
+                                    <path d="M4 10a2 2 0 0 1-2-2V6a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2a2 2 0 0 1-2 2z" />
+                                    <path d="M7 5V3" />
+                                </svg>
                                 <p>Domain/URL Handlers</p>
                             </a>
                         </li>
-                        <li class="nav-header">System</li>
-                        <li class="nav-item">
-                            <a href="javascript:void(0)" class="nav-link" data-show-panel="logrotate">
-                                <i class="nav-icon bi bi-speedometer"></i>
+                    </ul>
+                </details>
+            </li>
+
+            <li>
+                <details open>
+                    <summary class="group">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="text-red-400 size-5">
+                            <path d="M12 17v4" />
+                            <path d="m14.305 7.53.923-.382" />
+                            <path d="m15.228 4.852-.923-.383" />
+                            <path d="m16.852 3.228-.383-.924" />
+                            <path d="m16.852 8.772-.383.923" />
+                            <path d="m19.148 3.228.383-.924" />
+                            <path d="m19.53 9.696-.382-.924" />
+                            <path d="m20.772 4.852.924-.383" />
+                            <path d="m20.772 7.148.924.383" />
+                            <path d="M22 13v2a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7" />
+                            <path d="M8 21h8" />
+                            <circle cx="18" cy="6" r="3" />
+                        </svg>
+                        <p>System</p>
+                    </summary>
+                    <ul>
+                        <li>
+                            <a data-show-panel="logrotate">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="size-4">
+                                    <path d="M15 18H3" />
+                                    <path d="M17 6H3" />
+                                    <path d="M21 12H3" />
+                                </svg>
                                 <p>Logrotate</p>
                             </a>
                         </li>
-                        <li class="nav-header">Documents</li>
-                        <li class="nav-item">
-                            <a href="javascript:void(0)" class="nav-link" data-show-panel="document">
-                                <i class="nav-icon bi bi-speedometer"></i>
-                                <p>Manual</p>
-                            </a>
+                    </ul>
+                </details>
+            </li>
+            <li>
+                <a data-show-panel="document">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="text-purple-400 size-5">
+                        <path
+                            d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20" />
+                        <path d="m9 9.5 2 2 4-4" />
+                    </svg>
+                    <p>Documents</p>
+                </a>
+            </li>
+        </ul>
+
+        <footer class="footerp-4 p-4 text-base-content/60 text-sm">
+            <div class="text-center">
+                Made by Sungho Kim
+            </div>
+            <div class="flex justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="size-5">
+                    <path
+                        d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+                    <path d="M9 18c-4.51 2-5-2-7-2" />
+                </svg>
+                <a href="https://github.com/lancard/nginx-webui" class="mx-2">
+                    Github (lancard)
+                </a>
+            </div>
+        </footer>
+    </aside>
+
+    <main class="flex-1 bg-base-100 overflow-auto">
+        <header class="sticky top-0 z-50 bg-base-100 border-b border-base-100 shadow-xl bg-hero-hideout">
+            <nav class="navbar">
+                <div class="flex-1">
+                </div>
+                <div class="flex-none">
+                    <ul class="menu menu-horizontal px-1">
+                        <li class="mr-6">
+                            <fieldset class="fieldset py-2">
+                                <label class="flex gap-2 cursor-pointer items-center mx-2">
+                                    <input type="radio" name="theme-radios" class="radio radio-sm theme-controller"
+                                        value="default" checked />
+                                    <p>Auto</p>
+                                </label>
+                                <label class="flex gap-2 cursor-pointer items-center mx-2">
+                                    <input type="radio" name="theme-radios" class="radio radio-sm theme-controller"
+                                        value="light" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="5" />
+                                        <path
+                                            d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" />
+                                    </svg>
+                                </label>
+                                <label class="flex gap-2 cursor-pointer items-center mx-2">
+                                    <input type="radio" name="theme-radios" class="radio radio-sm theme-controller"
+                                        value="dark" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                    </svg>
+                                </label>
+                            </fieldset>
+                        </li>
+                        <li class="border-l border-base-300">
+                            <details>
+                                <summary>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="size-5">
+                                        <circle cx="12" cy="8" r="5" />
+                                        <path d="M20 21a8 8 0 0 0-16 0" />
+                                    </svg>
+                                    administrator
+                                </summary>
+                                <ul class="bg-base-100 text-base-content rounded-t-none p-2">
+                                    <li>
+                                        <a>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round" class="size-4">
+                                                <path d="m16 17 5-5-5-5" />
+                                                <path d="M21 12H9" />
+                                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                            </svg>
+                                            <p>Logout</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </details>
                         </li>
                     </ul>
-                    <!--end::Sidebar Menu-->
-                </nav>
-            </div>
-            <!--end::Sidebar Wrapper-->
-        </aside>
-        <!--end::Sidebar-->
+                </div>
+            </nav>
+        </header>
 
-        <!--begin::App Main-->
-        <main class="app-main">
-            <div class="collapse" data-section="dashboard"></div>
+        <div class="main-contents prose max-w-none p-6 w-full">
+            <div class="hidden" data-section="dashboard"></div>
 
-            <div class="collapse" data-section="nginx_common"></div>
-            <div class="collapse" data-section="nginx_upstream"></div>
-            <div class="collapse" data-section="nginx_server"></div>
+            <div class="hidden" data-section="nginx_common"></div>
+            <div class="hidden" data-section="nginx_upstream"></div>
+            <div class="hidden" data-section="nginx_server"></div>
 
-            <div class="collapse" data-section="cert"></div>
-            <div class="collapse" data-section="cert_upload"></div>
+            <div class="hidden" data-section="cert"></div>
+            <div class="hidden" data-section="cert_upload"></div>
 
-            <div class="collapse" data-section="logrotate"></div>
-            <div class="collapse" data-section="document"></div>
-        </main>
-        <!--end::App Main-->
-
-        <div class="container-fluid collapse" id="site">
+            <div class="hidden" data-section="logrotate"></div>
+            <div class="hidden" data-section="document"></div>
         </div>
-
-
-        <!--begin::Footer-->
-        <footer class="app-footer">
-            <!--begin::To the end-->
-            <!-- <div class="float-end d-none d-sm-inline">Anything you want</div> -->
-            <!--end::To the end-->
-            <!--begin::Copyright-->
-            <strong>
-                Copyright &copy; 2023-2025&nbsp;
-                Author: 
-                <a href="https://github.com/lancard/nginx-webui" class="text-decoration-none">Sungho Kim</a>.
-            </strong>            
-            <!--end::Copyright-->
-        </footer>
-        <!--end::Footer-->
-    </div>
+    </main>
 
     <!-- +++++++++++++++++++++++++++++++++++++++ templates below +++++++++++++++++++++++++++++++++++++++ -->
     <!-- save/test/apply button groups -->
-    <div class="btn-group my-2 collapse" role="group" data-save-test-apply-button-group-template>
-        <button class="btn btn-success py-1" data-click-function="saveConfig">
-            <i class="fas fa-save fa-sm text-white-50"></i> 1. All save to disk
-        </button>
-        <button class="btn btn-primary py-1" data-click-function="testConfig">
-            <i class="fas fa-microscope fa-sm text-white-50"></i>
-            2. Test nginx config
-        </button>
-        <button class="btn btn-danger py-1" data-click-function="applyConfig">
-            <i class="fas fa-check fa-sm text-white-50"></i>
-            3. Apply nginx config
-        </button>
-    </div>
+    <div class="template-hidden">
+        <div class="join" data-save-test-apply-button-group-template>
+            <button class="btn btn-success" data-click-function="saveConfig">
+                1. All save to disk
+            </button>
+            <button class="btn btn-warning" data-click-function="testConfig">
+                2. Test nginx config
+            </button>
+            <button class="btn btn-error" data-click-function="applyConfig">
+                3. Apply nginx config
+            </button>
+        </div>
 
 
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="closeModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="closeModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="javascript: void(0);" data-click-function="logout">Logout</a>
+        <!-- Logout Modal-->
+        <div class="dropdown-menu dropdown-menu-end fade" id="logoutModal" tabindex="-1" role="dialog"
+            aria-labelledby="closeModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="closeModalLabel">Ready to Leave?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-primary" href="javascript: void(0);" data-click-function="logout">Logout</a>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- dummy -->
+        <div class="dummy-div hidden status-success status-error"></div>
     </div>
 </body>
 

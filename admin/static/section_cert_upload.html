@@ -1,35 +1,54 @@
-<div class="app-content-header">
-    <h3>Upload Cert</h3>
-</div>
-<div class="app-content">
-    <strong class="text-danger">
-        will upload to '/etc/letsencrypt/live/(domain_name)' and will be overwritten if exist.
-    </strong>
-    <i>ex) /etc/letsencrypt/live/test.com/fullchain.pem,
-        /etc/letsencrypt/live/test.com/privkey.pem</i>
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <button class="btn btn-primary" type="button">
-                <small>
-                    DOMAIN NAME
-                </small>
-            </button>
-        </div>
-        <input type="text" class="form-control col-2 d-inline-block" id="domainName" value="test.com">
-    </div>
+<h1>
+    Upload Cert
+    <span class="desc-text">Manually upload certifications</span>
+</h1>
 
-    <div class="row">
-        <div class="col-6">
-            Cert File Contents:
-            <textarea class="form-control" rows="10" id="certFile"></textarea>
-        </div>
-        <div class="col-6">
-            Key File Contents:
-            <textarea class="form-control" rows="10" id="keyFile"></textarea>
-        </div>
-    </div>
-    <button type="button" data-click-function="uploadCert" class="btn btn-sm btn-primary">
-        <i class="fas fa-upload fa-sm text-white-50"></i> Upload
+<div role="alert" class="alert alert-soft alert-error text-xs m-4 my-2">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info h-6 w-6 shrink-0">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    </svg>
+    <p>
+        <span class="font-bold underline">WARNING: will upload to '/etc/letsencrypt/live/(domain_name)' and will be
+            overwritten
+            if exist.</span><br />
+        <br />
+        <span class="italic">
+            ex) /etc/letsencrypt/live/test.com/fullchain.pem,<br />
+            ex) /etc/letsencrypt/live/test.com/privkey.pem
+        </span>
+    </p>
+</div>
+
+<div class="text-center">
+    <label class="input m-4">
+        <span class="label">DOMAIN NAME</span>
+        <input type="text" id="domainName" value="test.com">
+    </label>
+</div>
+
+<div class="flex">
+    <fieldset class="fieldset w-1/2 p-4 text-center">
+        <legend class="fieldset-legend">Cert File Contents</legend>
+        <textarea class="textarea w-full" rows="10" id="certFile"></textarea>
+    </fieldset>
+
+    <fieldset class="fieldset w-1/2 p-4 text-center">
+        <legend class="fieldset-legend">Key File Contents</legend>
+        <textarea class="textarea w-full" rows="10" id="keyFile"></textarea>
+    </fieldset>
+</div>
+
+<div class="text-center">
+    <button type="button" data-click-function="uploadCert" class="btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-upload-icon lucide-upload">
+            <path d="M12 3v12" />
+            <path d="m17 8-5-5-5 5" />
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        </svg>
+        <p>Upload</p>
     </button>
 </div>
 

@@ -1,8 +1,5 @@
 {
   "dependencies": {
-    "admin-lte": "^4.0.0-rc3",
-    "bootstrap": "^5.3.7",
-    "bootstrap-icons": "^1.13.1",
     "chart.js": "^4.5.0",
     "chartjs-adapter-dayjs-4": "^1.0.4",
     "dayjs": "^1.11.13",
@@ -19,9 +16,8 @@
   "description": "nginx webui",
   "main": "src/index.js",
   "scripts": {
-    "build": "npx esbuild index.js --bundle --format=esm --target=esnext --outdir=static/dist --minify --sourcemap --loader:.css=css --loader:.woff=file --loader:.woff2=file --loader:.ttf=file",
-    "devServer": "node --watch server.js",
-    "watch": "npx esbuild --watch index.js --bundle --format=esm --target=esnext --outdir=static/dist --minify --sourcemap --loader:.css=css --loader:.woff=file --loader:.woff2=file --loader:.ttf=file"
+    "build": "(npx postcss index.css -o static/dist/index.css) & (npx esbuild index.js --bundle --format=esm --target=esnext --outdir=static/dist --minify --sourcemap)",
+    "watch": "(node --watch server.js) & (npx postcss --watch index.css -o static/dist/index.css) & (npx esbuild --watch index.js --bundle --format=esm --target=esnext --outdir=static/dist --minify --sourcemap)"
   },
   "repository": {
     "type": "git",
@@ -39,7 +35,13 @@
   },
   "homepage": "https://github.com/lancard/nginx-webui#readme",
   "devDependencies": {
-    "esbuild": "^0.25.7",
-    "esbuild-css-modules-plugin": "^3.1.5"
+    "@tailwindcss/postcss": "^4.1.11",
+    "@tailwindcss/typography": "^0.5.16",
+    "autoprefixer": "^10.4.21",
+    "daisyui": "^5.0.46",
+    "esbuild": "^0.25.8",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "tailwindcss": "^4.1.11"
   }
 }
