@@ -121,6 +121,10 @@ cd /admin
 npm run password
 ```
 
+## Install sshd for development (for contribution)
+
+- Set SSH_PUBLIC_KEY in docker env (refer container_files/entrypoint.sh)
+
 ## Built With
 
 - server side: npm, nodejs, express

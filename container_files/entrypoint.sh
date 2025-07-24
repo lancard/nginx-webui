@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # no password file
 if [ ! -f /data/password.json ]
@@ -27,6 +28,37 @@ else
     # copy default config
     cp /nginx_config/default_config.json /data/config.json
     cp /data/nginx.conf /etc/nginx/nginx.conf
+fi
+
+if [ -n "$SSH_PUBLIC_KEY" ]; then
+    echo "🔑 SSH_PUBLIC_KEY detected."
+
+    # install openssh-server
+    if ! command -v sshd >/dev/null 2>&1; then
+        echo "📦 Installing openssh-server..."
+        export DEBIAN_FRONTEND=noninteractive
+        apt-get update -qq
+        apt-get install -y -qq openssh-server
+    fi
+
+    echo "🔧 Configuring SSH..."
+    mkdir -p /var/run/sshd
+    mkdir -p /root/.ssh
+    echo "$SSH_PUBLIC_KEY" > /root/.ssh/authorized_keys
+    chmod 700 /root/.ssh
+    chmod 600 /root/.ssh/authorized_keys
+
+    # ssh host key
+    ssh-keygen -A
+
+    # allow root login
+    sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+    echo "🚀 Starting sshd..."
+    /usr/sbin/sshd -D
+else
+    echo "ℹ️ SSH_PUBLIC_KEY not set. Skipping SSH setup."
+    exec "$@"
 fi
 
 /docker-entrypoint.sh
