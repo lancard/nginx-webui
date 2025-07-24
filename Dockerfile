@@ -5,7 +5,7 @@ EXPOSE 443
 
 # install modules
 RUN apt-get update
-RUN apt-get install certbot python3-certbot-nginx npm nodejs net-tools cron logrotate dnsutils -y
+RUN apt-get install certbot python3-certbot-nginx npm nodejs net-tools cron logrotate dnsutils procps -y
 RUN apt-get upgrade -y
 
 # system configuration
