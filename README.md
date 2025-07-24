@@ -123,7 +123,7 @@ npm run password
 
 ## Install sshd for development (for contribution)
 
-- Set SSH_PUBLIC_KEY in docker env (refer container_files/entrypoint.sh)
+- Create a volume and make id_rsa.pub file then attach the volume to /root/.ssh
 
 ## Built With
 
