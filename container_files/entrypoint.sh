@@ -30,8 +30,11 @@ else
     cp /data/nginx.conf /etc/nginx/nginx.conf
 fi
 
-if [ -n "$SSH_PUBLIC_KEY" ]; then
+if [ -f /root/.ssh/id_rsa.pub ]; then
     echo "🔑 SSH_PUBLIC_KEY detected."
+
+    # clone git
+    git clone git@github.com:lancard/nginx-webui.git /root/nginx-webui || true
 
     # install openssh-server
     if ! command -v sshd >/dev/null 2>&1; then
@@ -55,7 +58,8 @@ if [ -n "$SSH_PUBLIC_KEY" ]; then
     sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 
     echo "🚀 Starting sshd..."
-    /usr/sbin/sshd -D
+    /usr/sbin/sshd
+    echo "🚀 sshd started."
 else
     echo "ℹ️ SSH_PUBLIC_KEY not set. Skipping SSH setup."
     exec "$@"
