@@ -12,7 +12,7 @@ import { tryCheckPassword } from './login.js';
 
 const FileStore = sessionFileStoreInit(session);
 const nginxBeautifier = new NginxBeautify();
-const port = process.env.npm_lifecycle_event ? 7777 : 3000;
+const port = process.env.npm_lifecycle_event == 'start' ? 3000 : 7777;
 const sessionTime = 30 * 60;
 const configFile = '/data/config.json';
 
