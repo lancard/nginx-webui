@@ -33,32 +33,30 @@ fi
 if [ -f /root/.ssh/id_rsa.pub ]; then
     echo "🔑 id_rsa.pub detected."
 
-
     # install openssh-server
     if ! command -v sshd >/dev/null 2>&1; then
         echo "📦 Installing openssh-server..."
         export DEBIAN_FRONTEND=noninteractive
         apt-get update -qq
         apt-get install -y -qq openssh-server
+        
+        echo "🔧 Configuring SSH..."
+        # make var run dir
+        mkdir -p /var/run/sshd
+        # ssh host key
+        ssh-keygen -A
+        # allow root login
+        sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
     fi
-
-
-    echo "🔧 Configuring SSH..."
-    # make var run dir
-    mkdir -p /var/run/sshd
-    # ssh host key
-    ssh-keygen -A
-    # allow root login
-    sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
-    
 
     echo "🚀 Starting sshd..."
     /usr/sbin/sshd
     echo "🚀 sshd started."
 
-
-    # clone git
-    git clone git@github.com:lancard/nginx-webui.git /root/nginx-webui || true
+    if [ ! -d /root/nginx-webui ]; then
+        # clone git
+        git clone git@github.com:lancard/nginx-webui.git /root/nginx-webui || true
+    fi
 else
     echo "ℹ️ id_rsa.pub not detected. Skipping SSH setup."
     exec "$@"
