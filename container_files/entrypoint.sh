@@ -1,18 +1,17 @@
 #!/bin/bash
 
-# first run
-if [ ! -f /data/password.txt ]
+# no password file
+if [ ! -f /data/password.json ]
 then
     # generate password
-    tr -dc A-Za-z0-9 </dev/urandom | head -c 32 > /data/password.txt
-    echo "generated admin password :"
-    cat /data/password.txt
-    echo ""
-    echo ""
+    npm run password
+fi
 
-    # copy default config
-    cp /nginx_config/default_config.json /data/config.json
-
+# check self-signed cert
+if [ -d /etc/letsencrypt/live/localhost_nginx_webui ]
+then
+    echo "self-signed cert exist"
+else
     # make directory
     mkdir -p /etc/letsencrypt/live/localhost_nginx_webui
 
@@ -24,10 +23,14 @@ fi
 if [ -f /data/nginx.conf ]
 then
     cp /data/nginx.conf /etc/nginx/nginx.conf
+else
+    # copy default config
+    cp /nginx_config/default_config.json /data/config.json
+    cp /data/nginx.conf /etc/nginx/nginx.conf
 fi
 
 /docker-entrypoint.sh
 
-node server.js &
+npm run start &
 
 nginx -g "daemon off;"

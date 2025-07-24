@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "chart.js": "^4.5.0",
     "dayjs": "^1.11.13",
     "express": "^5.1.0",
@@ -16,8 +17,10 @@
   "description": "nginx webui",
   "main": "src/index.js",
   "scripts": {
-    "build": "(npx postcss index.css -o static/dist/index.css) & (npx esbuild index.js --bundle --format=esm --target=esnext --outdir=static/dist --minify --sourcemap)",
-    "watch": "(node --watch server.js) & (npx postcss --watch index.css -o static/dist/index.css) & (npx esbuild --watch index.js --bundle --format=esm --target=esnext --outdir=static/dist --minify --sourcemap)"
+    "password": "node --input-type=module -e \"import { changePassword } from './login.js'; changePassword('administrator');\"",
+    "start": "node server.js",
+    "build": "(npx postcss static/index.css -o static/dist/index.css) & (npx esbuild static/index.js --bundle --format=esm --target=esnext --outdir=static/dist --minify --sourcemap)",
+    "watch": "(node --watch server.js) & (npx postcss --watch static/index.css -o static/dist/index.css) & (npx esbuild --watch static/index.js --bundle --format=esm --target=esnext --outdir=static/dist --minify --sourcemap)"
   },
   "repository": {
     "type": "git",

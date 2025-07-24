@@ -114,6 +114,13 @@ curl --insecure -H "Authorization: Bearer ${token}" "https://localhost:81/api/up
 curl --insecure -H "Authorization: Bearer ${token}" "https://localhost:81/api/upstream/${upstream-name}/${backend-address}/disable"
 ```
 
+## Reset password
+
+```
+cd /admin
+npm run password
+```
+
 ## Built With
 
 - server side: npm, nodejs, express

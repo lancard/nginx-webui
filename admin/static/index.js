@@ -811,7 +811,7 @@ class NginxWebUI {
             url: '/api/login',
             data: { user: $("#user").val(), password: $("#password").val() },
             success: (ret) => {
-                if (ret == "successfully login") {
+                if (ret == "OK") {
                     location.href = './index.html';
                     return;
                 }

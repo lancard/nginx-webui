@@ -8,6 +8,7 @@ import session from 'express-session';
 import NginxBeautify from 'nginxbeautify';
 import sessionFileStoreInit from 'session-file-store';
 import { exec } from 'child_process';
+import { tryCheckPassword } from './login.js';
 
 const FileStore = sessionFileStoreInit(session);
 const nginxBeautifier = new NginxBeautify();
@@ -122,19 +123,20 @@ app.get('/', (req, res) => {
     res.redirect('/static/login.html');
 });
 
+
+
 app.post('/api/login', (req, res) => {
-    if (req.body.user != "administrator") {
-        res.send("username or password invalid");
+    const errorMessage = tryCheckPassword(req.body.user, req.body.password);
+
+    if (errorMessage != "") {
+        res.send(errorMessage);
         return;
     }
 
-    if (req.body.password != fs.readFileSync("/data/password.txt").toString()) {
-        res.send("username or password invalid");
-        return;
-    }
     req.session.user = req.body.user;
     req.session.save();
-    res.send("successfully login");
+
+    res.send("OK");
 });
 
 app.post('/api/checkLogin', (req, res) => {
