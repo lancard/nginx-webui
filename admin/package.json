@@ -19,7 +19,7 @@
   "scripts": {
     "password": "node --input-type=module -e \"import { changePassword } from './login.js'; changePassword('administrator');\"",
     "start": "node server.js",
-    "build": "(npx postcss static/index.css -o static/dist/index.css) & (npx esbuild static/index.js --bundle --format=esm --target=esnext --outdir=static/dist --minify --sourcemap)",
+    "build": "npx postcss static/index.css -o static/dist/index.css && npx esbuild static/index.js --bundle --format=esm --target=esnext --outdir=static/dist --minify --sourcemap",
     "watch": "(node --watch server.js) & (npx postcss --watch static/index.css -o static/dist/index.css) & (npx esbuild --watch static/index.js --bundle --format=esm --target=esnext --outdir=static/dist --minify --sourcemap)"
   },
   "repository": {
