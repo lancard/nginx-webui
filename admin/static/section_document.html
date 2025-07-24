@@ -1,40 +1,39 @@
-<div class="app-content-header">
-    <h3>Documents</h3>
-</div>
-<div class="app-content">
+<h1>
+    Documents
+</h1>
 
-    <h1 class="text-primary">How to use upstream API</h1>
+<h2 class="text-primary">How to use upstream API</h2>
 
-    <h3 class="text-info">disable one of upstream backend and Apply nginx</h3>
-    <p>
-        <strong>
-            curl --insecure -H "Authorization: Bearer ${token}"
-            "https://localhost:81/api/upstream/${upstream-name}/${backend-address}/disable"
-        </strong>
-    </p>
-    <p>
-        <i>
-            example) curl --insecure -H "Authorization: Bearer 1odNjAI9nqpwQJHTXVjhuhp9QfCPlJHT"
-            "https://localhost:81/api/upstream/test_service/127.0.0.1:8080/disable"
-        </i>
-    </p>
+<h3 class="text-info">disable one of upstream backend and Apply nginx</h3>
+<p>
+    <strong>
+        curl --insecure -H "Authorization: Bearer ${token}"
+        "https://localhost:81/api/upstream/${upstream-name}/${backend-address}/disable"
+    </strong>
+</p>
+<p>
+    <i>
+        example) curl --insecure -H "Authorization: Bearer 1odNjAI9nqpwQJHTXVjhuhp9QfCPlJHT"
+        "https://localhost:81/api/upstream/test_service/127.0.0.1:8080/disable"
+    </i>
+</p>
 
-    <h3 class="text-info">enable one of upstream backend and Apply nginx</h3>
-    <p>
-        <strong>
-            curl --insecure -H "Authorization: Bearer ${token}"
-            "https://localhost:81/api/upstream/${upstream-name}/${backend-address}/enable"
-        </strong>
-    </p>
-    <p>
-        <i>
-            example) curl --insecure -H "Authorization: Bearer 1odNjAI9nqpwQJHTXVjhuhp9QfCPlJHT"
-            "https://localhost:81/api/upstream/test_service/127.0.0.1:8080/enable"
-        </i>
-    </p>
+<h3 class="text-info">enable one of upstream backend and Apply nginx</h3>
+<p>
+    <strong>
+        curl --insecure -H "Authorization: Bearer ${token}"
+        "https://localhost:81/api/upstream/${upstream-name}/${backend-address}/enable"
+    </strong>
+</p>
+<p>
+    <i>
+        example) curl --insecure -H "Authorization: Bearer 1odNjAI9nqpwQJHTXVjhuhp9QfCPlJHT"
+        "https://localhost:81/api/upstream/test_service/127.0.0.1:8080/enable"
+    </i>
+</p>
 
-    <h1 class="text-primary">HTTP directive Examples</h1>
-    <pre>
+<h2 class="text-primary">'nginx.conf' HTTP directive Examples</h2>
+<pre>
 # charset
 charset utf-8;
 
@@ -65,8 +64,8 @@ ssl_stapling           on;
 ssl_stapling_verify    on;
 </pre>
 
-    <h1 class="text-primary">SERVER directive Examples</h1>
-    <pre>
+<h2 class="text-primary">'nginx.conf' SERVER directive Examples</h2>
+<pre>
 # listen port
 listen 80;
 
@@ -90,8 +89,8 @@ add_header Permissions-Policy        "interest-cohort=()" always;
 add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 </pre>
 
-    <h1 class="text-primary">LOCATION directive Examples</h1>
-    <pre>
+<h2 class="text-primary">'nginx.conf' LOCATION directive Examples</h2>
+<pre>
 # serve static resource
 root /usr/share/nginx/html;
 
@@ -111,5 +110,3 @@ expires 7d;
 # Access control origin
 add_header Access-Control-Allow-Origin "*";
 </pre>
-
-</div>

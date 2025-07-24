@@ -1,8 +1,19 @@
-<div class="app-content-header">
-    <h3>Site Management</h3>
-    <button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm ml-2" data-click-function="addSite">
-        <i class="fas fa-plus fa-sm text-white-50"></i>
-        Add Site
+<h1>
+    Domain/URL Handlers
+    <span class="desc-text">nginx server directive management</span>
+</h1>
+
+<div class="text-end my-2">
+    <button class="btn btn-xs btn-outline btn-success" data-click-function="addSite">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 12H3" />
+            <path d="M16 6H3" />
+            <path d="M16 18H3" />
+            <path d="M18 9v6" />
+            <path d="M21 12h-6" />
+        </svg>
+        <p>Add New Domain Handler</p>
     </button>
 </div>
 
@@ -11,74 +22,85 @@
 <div class="text-end py-4" data-save-test-apply-button-location></div>
 
 <!-- templates -->
-<div class="collapse card border-left-primary shadow" site-service>
-    <div class="row">
-        <div class="col-5">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="font-weight-bold text-primary mb-1">
-                            <span site-service-name>test_service</span>
-                            <button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm ml-2"
-                                data-click-function="addLocation">
-                                <i class="fas fa-plus fa-sm text-white-50"></i>
-                                Add Location
-                            </button>
-                            <button class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm ml-2"
-                                data-click-function="deleteSite">
-                                <i class="fas fa-trash fa-sm text-white-50"></i>
-                                Delete This Site
-                            </button>
-                        </div>
-                        <div class="mt-2" site-default-section>
-                            <div class="input-group mt-2 mb-1">
-                                <div class="input-group-prepend">
-                                    <button class="btn btn-primary" type="button">
-                                        <small>
-                                            SERVER NAME (DOMAIN NAME)
-                                        </small>
-                                    </button>
-                                </div>
-                                <input type="text" class="form-control" site-server-name placeholder="test.com">
-                            </div>
-                        </div>
-                        <div class="card shadow my-2">
-                            <!-- Card Header - Accordion -->
-                            <a href="javascript: void(0)" class="d-block card-header bg-dark py-3">
-                                <h6 class="m-0 font-weight-bold text-white">
-                                    configuration in server directive
-                                </h6>
+<div class="template-hidden">
+
+    <!-- domain -->
+    <div class="card shadow mt-4 not-prose bg-info-content/50 border border-info" site-service>
+        <div class="card-header bg-base-300 pl-4 flex w-full items-center py-1 bg-info/50 rounded-box">
+            <div class="card-title text-sm mb-1 mr-4 fw-bold" site-service-name>test_domain_https</div>
+            <button class="btn btn-xs btn-soft btn-success" data-click-function="addLocation">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path
+                        d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" />
+                </svg>
+                <p>Add Location</p>
+            </button>
+            <div class="ml-auto pr-4 pb-1">
+                <details class="dropdown dropdown-end" site-tools>
+                    <summary class="btn btn-xs btn-soft btn-default">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 12h16" />
+                            <path d="M4 18h16" />
+                            <path d="M4 6h16" />
+                        </svg>
+                    </summary>
+                    <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 shadow-lg text-xs">
+                        <li>
+                            <a data-click-function="renameSite">
+                                Rename Domain Handler
                             </a>
-                            <div class="show bg-secondary">
-                                <div class="card-body">
-                                    <textarea class="form-control" style="height: 100px;" site-config></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        </li>
+                        <li>
+                            <a data-click-function="deleteSite">
+                                Delete Domain Handler
+                            </a>
+                        </li>
+                    </ul>
+                </details>
             </div>
         </div>
-        <div class="col-5">
-            <div class="h5 mb-0 font-weight-bold text-gray-800" site-node-body>
+        <div class="card-body bg-base-200/50 flex flex-row">
+            <div class="w-1/2">
+                <label class="input">
+                    <span class="label">DOMAIN NAME</span>
+                    <input type="text" site-server-name value="test.com">
+                </label>
+                <fieldset class="fieldset mt-2">
+                    <legend class="fieldset-legend p-0 text-base-content/50">
+                        Additional Server Directive Statement
+                    </legend>
+                    <textarea class="textarea w-full" rows="10" site-config></textarea>
+                </fieldset>
+            </div>
+            <div class="w-1/2">
+                <div site-node-body></div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="collapse" site-node-div>
-    <div class="card shadow my-2">
-        <div class="card-header py-3">
+    <!-- location -->
+    <div class="card border border-info/70 mt-2" site-node-div>
+        <div class="card-header pl-6 pt-3">
             <span class="text-primary" site-node-address>/api</span>
-            <button class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"
-                data-click-function="deleteLocation">
-                <i class="fas fa-download fa-sm text-white-50"></i>
-                Delete
+            <button class="btn btn-xs btn-soft btn-error mx-4" data-click-function="deleteLocation">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path
+                        d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" />
+                </svg>
+                <p>Delete Location</p>
             </button>
         </div>
-        <div class="card-body">
-            configuration:
-            <textarea class="form-control" style="height: 200px;" site-node-config></textarea>
+        <div class="card-body pt-0">
+            <fieldset class="fieldset mt-2">
+                <legend class="fieldset-legend p-0 text-base-content/50">URL Path(Location) Configuration
+                </legend>
+                <textarea class="textarea w-full" rows="10" site-node-config></textarea>
+            </fieldset>
         </div>
     </div>
 </div>

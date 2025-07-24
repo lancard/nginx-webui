@@ -1,16 +1,17 @@
 import $ from 'jquery';
 import dayjs from 'dayjs';
+import cloneDeep from 'lodash/cloneDeep';
 import {
     Chart,
     LineController,
     LineElement,
     PointElement,
     LinearScale,
-    TimeScale,
     Tooltip,
-    Legend
+    Title,
+    Legend,
+    CategoryScale,
 } from 'chart.js';
-import 'chartjs-adapter-dayjs-4/dist/chartjs-adapter-dayjs-4.esm';
 
 const defaultServerDirective = `listen 443 ssl;
 ssl_certificate /etc/letsencrypt/live/(domain_name)/fullchain.pem;
@@ -31,12 +32,22 @@ proxy_request_buffering off;
 proxy_buffering off; # Required for HTTP-based CLI to work over SSL
 
 # timeout
-proxy_connect_timeout 900;      
-proxy_send_timeout 900;      
-proxy_read_timeout 900;      
+proxy_connect_timeout 900;
+proxy_send_timeout 900;
+proxy_read_timeout 900;
 send_timeout 900;
 `;
 
+Chart.register(
+    LineController,
+    LineElement,
+    PointElement,
+    LinearScale,
+    Tooltip,
+    Title,
+    Legend,
+    CategoryScale,
+);
 
 class NginxWebUI {
     config = {};
@@ -44,17 +55,15 @@ class NginxWebUI {
     writingConnectionsChart = null;
     waitingConnectionsChart = null;
 
-    createChart() {
-        Chart.register(
-            LineController,
-            LineElement,
-            PointElement,
-            LinearScale,
-            TimeScale,
-            Tooltip,
-            Legend
-        );
+    handleAjaxError(jqxhr, textStatus, errorThrown) {
+        console.dir("error : ", jqxhr, textStatus, errorThrown);
+        if (jqxhr.status == 401) {
+            alert('session ended. move to login page');
+            location.href = 'login.html';
+        }
+    }
 
+    createChart() {
         const defaultOptions = {
             maintainAspectRatio: false,
             layout: {
@@ -67,26 +76,14 @@ class NginxWebUI {
             },
             scales: {
                 x: {
-                    type: 'time',
-                    time: {
-                        unit: 'day'
-                    },
-                    grid: {
-                        display: false,
-                        drawBorder: false
-                    },
                     ticks: {
-                        maxTicksLimit: 7
+                        maxTicksLimit: 10
                     }
                 },
                 y: {
+                    beginAtZero: true,
                     ticks: {
-                        beginAtZero: true,
-                        callback: function (label) {
-                            if (Math.floor(label) === label) {
-                                return label;
-                            }
-                        }
+                        stepSize: 1
                     }
                 }
             },
@@ -109,10 +106,24 @@ class NginxWebUI {
                     intersect: false,
                     mode: 'index',
                     caretPadding: 10
+                },
+                title: {
+                    display: true,          // 제목 표시 여부
+                    text: 'Connections',  // 제목 내용
+                    font: {
+                        size: 18             // 글꼴 크기 조정
+                    },
+                    padding: {
+                        top: 10,
+                        bottom: 30
+                    },
+                    align: 'center'         // center / start / end
                 }
             }
         };
 
+        const readingOption = cloneDeep(defaultOptions);
+        readingOption.plugins.title.text = 'Reading Connections';
         this.readingConnectionsChart = new Chart(document.getElementById("readingConnectionsChart"), {
             type: 'line',
             data: {
@@ -133,8 +144,11 @@ class NginxWebUI {
                     data: [],
                 }],
             },
-            options: defaultOptions
+            options: readingOption
         });
+
+        const writingOption = cloneDeep(defaultOptions);
+        writingOption.plugins.title.text = 'Writing Connections';
         this.writingConnectionsChart = new Chart(document.getElementById("writingConnectionsChart"), {
             type: 'line',
             data: {
@@ -155,8 +169,11 @@ class NginxWebUI {
                     data: [],
                 }],
             },
-            options: defaultOptions
+            options: writingOption
         });
+
+        const waitingOption = cloneDeep(defaultOptions);
+        waitingOption.plugins.title.text = 'Waiting Connections';
         this.waitingConnectionsChart = new Chart(document.getElementById("waitingConnectionsChart"), {
             type: 'line',
             data: {
@@ -177,8 +194,24 @@ class NginxWebUI {
                     data: [],
                 }],
             },
-            options: defaultOptions
+            options: waitingOption
         });
+    }
+
+    addData(chart, label, data) {
+        chart.data.labels.push(label);
+        chart.data.datasets.forEach((dataset) => {
+            dataset.data.push(data);
+        });
+        chart.update();
+    }
+
+    removeData(chart) {
+        chart.data.labels.pop();
+        chart.data.datasets.forEach((dataset) => {
+            dataset.data.pop();
+        });
+        chart.update();
     }
 
     logout() {
@@ -343,6 +376,14 @@ class NginxWebUI {
         }
     }
 
+    renameSite(element) {
+        var siteName = prompt('enter new domain handler name', 'test_site_http');
+        if (!siteName || siteName == '')
+            return;
+
+        $(element).parents("[site-service]").find('[site-service-name]').text(siteName);
+    }
+
     deleteSite(element) {
         if (!confirm('delete?'))
             return;
@@ -368,9 +409,11 @@ class NginxWebUI {
         $(element).parents("[site-node-div]").remove();
     }
 
-    upstreamDomToConfig() {
+    convertDomToConfig() {
+        var returnConfig = {};
+
         // common
-        this.config.common = $("#commonTextarea").val();
+        returnConfig.common = $("#commonTextarea").val();
 
         // cert
         var cert = [];
@@ -382,7 +425,7 @@ class NginxWebUI {
                 wildcard: $(e).find("[cert-wildcard]").val()
             });
         });
-        this.config.cert = cert;
+        returnConfig.cert = cert;
 
         // upstream
         var upstream = [];
@@ -406,7 +449,7 @@ class NginxWebUI {
 
             upstream.push(obj);
         });
-        this.config.upstream = upstream;
+        returnConfig.upstream = upstream;
 
         // sites
         var site = [];
@@ -427,23 +470,24 @@ class NginxWebUI {
 
             site.push(obj);
         });
-        this.config.site = site;
+        returnConfig.site = site;
 
+        return returnConfig;
     }
 
-    configToUpstreamDOM() {
+    convertConfigToDom(config) {
         // common
-        $("#commonTextarea").val(this.config.common);
+        $("#commonTextarea").val(config.common);
 
         // cert
         $("[cert-body]").empty();
-        this.config.cert.forEach(e => {
+        config.cert.forEach(e => {
             this.addCertRecord(e.domain, e.adminEmail, e.autoRenewal, e.wildcard);
         });
 
         // upstream
         $("[upstream-body]").empty();
-        this.config.upstream.forEach(e => {
+        config.upstream.forEach(e => {
             let $clonedObject = $(".template-hidden div[upstream-service]").clone();
             $clonedObject.find('[upstream-service-name]').text(e.upstreamName);
             $clonedObject.find('[upstream-auth-key]').val(e.upstreamAuthKey);
@@ -467,7 +511,7 @@ class NginxWebUI {
 
         // sites
         $("[site-body]").empty();
-        this.config.site.forEach(e => {
+        config.site.forEach(e => {
             let $clonedObject = $(".template-hidden div[site-service]").clone();
             $clonedObject.find('[site-service-name]').text(e.siteName);
             $clonedObject.find('[site-server-name]').val(e.serverName);
@@ -500,6 +544,19 @@ class NginxWebUI {
         });
     }
 
+    updatePreviewConfig() {
+        // update preview
+        $.ajax({
+            type: "POST",
+            url: '/api/previewConfig',
+            data: { config: JSON.stringify(this.convertDomToConfig()) },
+            success: (ret) => {
+                $("#nginxPreviewConfig").val(ret.preview);
+                $("#nginxCurrentConfig").val(ret.current);
+            }
+        });
+    }
+
     saveConfig() {
         // check auto renewal for already generated cert
         let checkFailed = false;
@@ -517,23 +574,35 @@ class NginxWebUI {
         }
 
         // write to back config
-        this.upstreamDomToConfig();
+        this.config = this.convertDomToConfig();
 
         $.ajax({
             type: "POST",
             url: '/api/saveConfig',
             data: { config: JSON.stringify(this.config, null, '\t') },
             success: (ret) => {
-                alert(ret);
+                if (ret == "OK") {
+                    alert("save success. you can preview config in 'Preview nginx.conf' menu.");
+                    this.updatePreviewConfig();
+                }
+                else {
+                    alert(ret);
+                }
             }
         });
     }
 
     loadConfig(callback) {
-        $.getJSON('/api/getConfig', (ret) => {
-            this.config = ret;
+        $.ajax({
+            dataType: "json",
+            type: "GET",
+            url: '/api/getConfig',
+            success: (ret) => {
+                this.config = ret;
 
-            callback();
+                callback();
+            },
+            error: this.handleAjaxError
         });
     }
 
@@ -690,22 +759,6 @@ class NginxWebUI {
         $(`[data-section="${selectedId}"]`).removeClass("hidden");
     }
 
-    addData(chart, label, data) {
-        chart.data.labels.push(label);
-        chart.data.datasets.forEach((dataset) => {
-            dataset.data.push(data);
-        });
-        chart.update();
-    }
-
-    removeData(chart) {
-        chart.data.labels.pop();
-        chart.data.datasets.forEach((dataset) => {
-            dataset.data.pop();
-        });
-        chart.update();
-    }
-
     updateStatus() {
         $.get('/api/getNginxStatus', (ret) => {
             ret = ret.split("\n");
@@ -743,7 +796,12 @@ class NginxWebUI {
                 retLine.push(`${e.peerAddress}:${e.peerPort} - ${e.state}`);
             })
 
-            $("#osConnections").text(retLine.join("\n"));
+            if (retLine.length == 0) {
+                $("#osConnections").text("No Connection.");
+            }
+            else {
+                $("#osConnections").text(retLine.join("\n"));
+            }
         });
     }
 
@@ -793,7 +851,7 @@ $(function () {
             type: "POST",
             url: '/api/checkLogin',
             success: (ret) => {
-                if (ret == "true") {
+                if ("" + ret == "true") {
                     location.href = './index.html';
                 }
             }
@@ -817,7 +875,7 @@ $(function () {
             const $template = $('.template-hidden [data-save-test-apply-button-group-template]').clone();
             $('[data-save-test-apply-button-location]').html($template);
 
-            instance.showPanel('nginx_upstream');
+            instance.showPanel('dashboard');
 
             // binding
             $(document).on('click', '[data-show-panel]', function (e) {
@@ -854,9 +912,10 @@ $(function () {
             instance.loadLogrotate();
 
             instance.loadConfig(() => {
-                instance.configToUpstreamDOM();
+                instance.convertConfigToDom(instance.config);
                 instance.updateStatus();
                 setInterval(() => instance.updateStatus(), 5000);
+                instance.updatePreviewConfig();
             });
 
             instance.createChart();

@@ -1,11 +1,11 @@
 {
   "dependencies": {
     "chart.js": "^4.5.0",
-    "chartjs-adapter-dayjs-4": "^1.0.4",
     "dayjs": "^1.11.13",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
     "jquery": "^3.7.1",
+    "lodash": "^4.17.21",
     "nginxbeautify": "^2.0.1",
     "session-file-store": "^1.5.0",
     "systeminformation": "^5.27.7"

@@ -1,140 +1,85 @@
-<div class="app-content-header">
-    <h3>Dashboard</h3>
-</div>
-<div class="app-content">
-    <!-- Content Row -->
-    <div class="row">
+<h1>
+    Dashboard
+</h1>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Accept Requests</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="acceptRequests">
-                                (LOGIN FIRST)
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
+<div class="text-center">
+
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-figure text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="inline-block h-8 w-8 stroke-current">
+                    <path d="M7 10v12" />
+                    <path
+                        d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z" />
+                </svg>
             </div>
+            <div class="stat-title">Accept Requests</div>
+            <div class="stat-value text-primary" id="acceptRequests">-</div>
+            <div class="stat-desc">nginx accept requests count</div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Handled Requests</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="handledRequests">
-                                (LOGIN FIRST)
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
+        <div class="stat">
+            <div class="stat-figure text-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="inline-block h-8 w-8 stroke-current">
+                    <path d="M12 12h.01" />
+                    <path d="M16 12h.01" />
+                    <path d="m17 7 5 5-5 5" />
+                    <path d="m7 7-5 5 5 5" />
+                    <path d="M8 12h.01" />
+                </svg>
             </div>
+            <div class="stat-title">Handled Requests</div>
+            <div class="stat-value text-secondary" id="handledRequests">-</div>
+            <div class="stat-desc">nginx handled requests count</div>
         </div>
 
-        <!-- Earnings (Monthly) Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-info shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Total Requests</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalRequests">
-                                (LOGIN FIRST)
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="stat">
+            <div class="stat-figure text-warning">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="inline-block h-8 w-8 stroke-current">
+                    <path
+                        d="M18 7V5a1 1 0 0 0-1-1H6.5a.5.5 0 0 0-.4.8l4.5 6a2 2 0 0 1 0 2.4l-4.5 6a.5.5 0 0 0 .4.8H17a1 1 0 0 0 1-1v-2" />
+                </svg>
             </div>
+            <div class="stat-title">Total Requests</div>
+            <div class="stat-value text-warning" id="totalRequests">-</div>
+            <div class="stat-desc">nginx total requests count</div>
         </div>
 
-        <!-- Pending Requests Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Active Connections</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="activeConnections">
-                                (LOGIN FIRST)
-                            </div>
-                        </div>
-                        <!--
-                                        <div class="col-auto">
-                                            <i class="fas fa-comments fa-2x text-gray-300"></i>
-                                        </div>
-                                        -->
-                    </div>
-                </div>
+        <div class="stat">
+            <div class="stat-figure text-success">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    class="inline-block h-8 w-8 stroke-current">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z">
+                    </path>
+                </svg>
             </div>
+            <div class="stat-title">Active Connections</div>
+            <div class="stat-value text-success" id="activeConnections">-</div>
+            <div class="stat-desc">nginx active connections count</div>
         </div>
     </div>
 
-    <!-- Content Row -->
-    <div class="row">
-
-        <div class="col-4">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Reading Connections</h6>
-                </div>
-                <div class="card-body">
-                    <div class="chart-area">
-                        <canvas id="readingConnectionsChart"></canvas>
-                    </div>
-                </div>
-            </div>
+    <div class="flex my-4">
+        <div class="w-1/3 h-[250px]">
+            <canvas id="readingConnectionsChart"></canvas>
         </div>
-        <div class="col-4">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Writing Connections</h6>
-                </div>
-                <div class="card-body">
-                    <div class="chart-area">
-                        <canvas id="writingConnectionsChart"></canvas>
-                    </div>
-                </div>
-            </div>
+        <div class="w-1/3 h-[250px]">
+            <canvas id="writingConnectionsChart"></canvas>
         </div>
-        <div class="col-4">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Waiting Connections</h6>
-                </div>
-                <div class="card-body">
-                    <div class="chart-area">
-                        <canvas id="waitingConnectionsChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-    <!-- Content Row -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-secondary">OS Network Connections</h6>
-                </div>
-                <div class="card-body">
-                    <pre id="osConnections" class="bg-dark text-white" style="height: 200px;"></pre>
-                </div>
-            </div>
+        <div class="w-1/3 h-[250px]">
+            <canvas id="waitingConnectionsChart"></canvas>
         </div>
     </div>
+
+
+    <h6 class="m-0 mt-4 text-base-content/50">OS Network Connections</h6>
+    <pre id="osConnections" class="bg-dark text-white" style="height: 200px; margin-top: 0px !important;"></pre>
+
 </div>

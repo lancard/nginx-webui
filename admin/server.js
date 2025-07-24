@@ -19,6 +19,12 @@ process.once('SIGTERM', (code) => {
     process.exit(0);
 });
 
+function sendJson(res, obj, status = 200) {
+    res.statusCode = status;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(obj, null, '\t'));
+}
+
 function loadConfig() {
     try {
         return JSON.parse(fs.readFileSync(configFile));
@@ -177,7 +183,7 @@ app.get('/api/getCertList', (req, res) => {
         });
     });
 
-    res.end(JSON.stringify(ret));
+    sendJson(res, ret);
 });
 
 app.post('/api/uploadCert', (req, res) => {
@@ -252,7 +258,7 @@ app.get('/api/getSystemInformation', (req, res) => {
 
     si.networkConnections()
         .then(data => {
-            res.send(JSON.stringify(data));
+            sendJson(res, data);
         })
         .catch(error => {
             res.send("ERROR");
@@ -277,7 +283,7 @@ app.post('/api/saveLogrotate', (req, res) => {
 app.get('/api/getConfig', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
-    res.send(JSON.stringify(loadConfig()));
+    sendJson(res, loadConfig());
 });
 
 app.post('/api/saveConfig', (req, res) => {
@@ -301,6 +307,25 @@ function generateNginxConfig() {
     return nginxBeautifier.parse(nginxConfig);
 }
 
+function generateNginxConfigFromRequest(config) {
+    var nginxConfig = fs.readFileSync('/nginx_config/default_nginx.conf').toString();
+
+    nginxConfig = nginxConfig.split("#[replaced_location]").join(configToNginxConfig(config));
+
+    return nginxBeautifier.parse(nginxConfig);
+}
+
+app.post('/api/previewConfig', (req, res) => {
+    if (isUnauthroizedRequest(req, res)) return;
+
+    sendJson(res, {
+        preview: generateNginxConfigFromRequest(JSON.parse(req.body.config)),
+        test: fs.readFileSync('/nginx_config/nginx.conf').toString(),
+        current: fs.readFileSync('/etc/nginx/nginx.conf').toString(),
+        backup: fs.readFileSync('/data/nginx.conf').toString(),
+    });
+});
+
 app.post('/api/testConfig', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
@@ -312,7 +337,7 @@ app.post('/api/testConfig', (req, res) => {
             stdout,
             stderr
         };
-        res.send(JSON.stringify(obj));
+        sendJson(res, obj);
     });
 });
 
@@ -339,7 +364,7 @@ app.post('/api/applyConfig', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
     applyConfig(obj => {
-        res.send(JSON.stringify(obj));
+        sendJson(res, obj);
     });
 });
 
@@ -410,7 +435,7 @@ app.get('/api/upstream/:upstream_name/:backend_address/:enable_type', (req, res)
         }
 
         applyConfig(obj => {
-            res.send(JSON.stringify(obj));
+            sendJson(res, obj);
         });
     } catch (e) {
         res.end("No such upstream or backend address / error occured: " + e);
