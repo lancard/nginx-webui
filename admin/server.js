@@ -322,7 +322,6 @@ app.post('/api/previewConfig', (req, res) => {
 
     sendJson(res, {
         preview: generateNginxConfigFromRequest(JSON.parse(req.body.config)),
-        test: fs.readFileSync('/nginx_config/nginx.conf').toString(),
         current: fs.readFileSync('/etc/nginx/nginx.conf').toString(),
         backup: fs.readFileSync('/data/nginx.conf').toString(),
     });
