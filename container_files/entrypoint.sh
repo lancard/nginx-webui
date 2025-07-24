@@ -31,10 +31,8 @@ else
 fi
 
 if [ -f /root/.ssh/id_rsa.pub ]; then
-    echo "🔑 SSH_PUBLIC_KEY detected."
+    echo "🔑 id_rsa.pub detected."
 
-    # clone git
-    git clone git@github.com:lancard/nginx-webui.git /root/nginx-webui || true
 
     # install openssh-server
     if ! command -v sshd >/dev/null 2>&1; then
@@ -44,17 +42,25 @@ if [ -f /root/.ssh/id_rsa.pub ]; then
         apt-get install -y -qq openssh-server
     fi
 
+
+    echo "🔧 Configuring SSH..."
+    # make var run dir
+    mkdir -p /var/run/sshd
     # ssh host key
     ssh-keygen -A
-
     # allow root login
     sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+    
 
     echo "🚀 Starting sshd..."
     /usr/sbin/sshd
     echo "🚀 sshd started."
+
+
+    # clone git
+    git clone git@github.com:lancard/nginx-webui.git /root/nginx-webui || true
 else
-    echo "ℹ️ SSH_PUBLIC_KEY not set. Skipping SSH setup."
+    echo "ℹ️ id_rsa.pub not detected. Skipping SSH setup."
     exec "$@"
 fi
 
