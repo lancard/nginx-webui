@@ -44,13 +44,6 @@ if [ -f /root/.ssh/id_rsa.pub ]; then
         apt-get install -y -qq openssh-server
     fi
 
-    echo "🔧 Configuring SSH..."
-    mkdir -p /var/run/sshd
-    mkdir -p /root/.ssh
-    echo "$SSH_PUBLIC_KEY" > /root/.ssh/authorized_keys
-    chmod 700 /root/.ssh
-    chmod 600 /root/.ssh/authorized_keys
-
     # ssh host key
     ssh-keygen -A
 
