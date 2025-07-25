@@ -1,5 +1,5 @@
 import fs from 'fs';
-import writeFileSync from 'write-file-atomic';
+import writeFileAtomicSync from 'write-file-atomic';
 import net from 'net';
 import http from 'http';
 import dayjs from 'dayjs';
@@ -196,8 +196,8 @@ app.post('/api/uploadCert', (req, res) => {
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
     }
-    fs.writeFileSync(`${dir}/fullchain.pem`, req.body.cert);
-    fs.writeFileSync(`${dir}/privkey.pem`, req.body.key);
+    writeFileAtomicSync(`${dir}/fullchain.pem`, req.body.cert);
+    writeFileAtomicSync(`${dir}/privkey.pem`, req.body.key);
 
     res.end("Upload OK");
 });
@@ -278,7 +278,7 @@ app.get('/api/getLogrotate', (req, res) => {
 app.post('/api/saveLogrotate', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
-    fs.writeFileSync('/etc/logrotate.d/nginx', req.body.logrotate);
+    writeFileAtomicSync('/etc/logrotate.d/nginx', req.body.logrotate);
 
     res.send("OK");
 });
@@ -331,7 +331,7 @@ app.post('/api/previewConfig', (req, res) => {
 app.post('/api/testConfig', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
-    fs.writeFileSync('/nginx_config/nginx.conf', generateNginxConfig());
+    writeFileAtomicSync('/nginx_config/nginx.conf', generateNginxConfig());
 
     exec("nginx -t -c /nginx_config/nginx.conf", (error, stdout, stderr) => {
         var obj = {
@@ -347,8 +347,8 @@ function applyConfig(callback) {
 
     var nginxConfig = generateNginxConfig();
 
-    fs.writeFileSync('/etc/nginx/nginx.conf', nginxConfig);
-    fs.writeFileSync('/data/nginx.conf', nginxConfig);
+    writeFileAtomicSync('/etc/nginx/nginx.conf', nginxConfig);
+    writeFileAtomicSync('/data/nginx.conf', nginxConfig);
 
     exec("nginx -s reload", (error, stdout, stderr) => {
         var obj = {
