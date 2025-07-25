@@ -19,7 +19,7 @@ services:
       - nginx-webui-cert:/etc/letsencrypt
       - nginx-webui-session:/session
       - nginx-webui-log:/var/log/nginx
-      # - ./admin:/admin
+      - nginx-webui-logrotate-config:/etc/logrotate.d
 
 volumes:
   nginx-webui-data:
