@@ -517,50 +517,56 @@ class NginxWebUI {
 
         // cert
         $("[cert-body]").empty();
-        config.cert.forEach(e => {
-            this.addCertRecord(e.domain, e.adminEmail, e.autoRenewal, e.wildcard);
-        });
+        if (config.cert) {
+            config.cert.forEach(e => {
+                this.addCertRecord(e.domain, e.adminEmail, e.autoRenewal, e.wildcard);
+            });
+        }
 
         // upstream
         $("[upstream-body]").empty();
-        config.upstream.forEach(e => {
-            let $clonedObject = $(".template-hidden [upstream-service]").clone();
-            $clonedObject.find('[upstream-service-name]').text(e.upstreamName);
-            $clonedObject.find('[upstream-auth-key]').val(e.upstreamAuthKey);
-            $clonedObject.appendTo("[upstream-body]");
+        if (config.upstream) {
+            config.upstream.forEach(e => {
+                let $clonedObject = $(".template-hidden [upstream-service]").clone();
+                $clonedObject.find('[upstream-service-name]').text(e.upstreamName);
+                $clonedObject.find('[upstream-auth-key]').val(e.upstreamAuthKey);
+                $clonedObject.appendTo("[upstream-body]");
 
-            e.nodes.forEach(ee => {
-                let $clonedObjectNode = $(".template-hidden [upstream-node]").clone();
-                $clonedObjectNode.find('[upstream-node-address]').text(ee.address);
-                $clonedObjectNode.find('[upstream-node-weight]').val(ee.weight);
-                $clonedObjectNode.find('[upstream-node-maxfails]').val(ee.maxFails);
-                $clonedObjectNode.find('[upstream-node-failtimeout]').val(ee.failTimeout);
-                if (ee.backup) {
-                    $clonedObjectNode.find('[upstream-node-backup]').attr('checked', 'true');
-                }
-                if (ee.disable) {
-                    $clonedObjectNode.find('[upstream-node-disable]').attr('checked', 'true');
-                }
-                $clonedObjectNode.appendTo($clonedObject.find("[upstream-node-body]"));
+                e.nodes.forEach(ee => {
+                    let $clonedObjectNode = $(".template-hidden [upstream-node]").clone();
+                    $clonedObjectNode.find('[upstream-node-address]').text(ee.address);
+                    $clonedObjectNode.find('[upstream-node-weight]').val(ee.weight);
+                    $clonedObjectNode.find('[upstream-node-maxfails]').val(ee.maxFails);
+                    $clonedObjectNode.find('[upstream-node-failtimeout]').val(ee.failTimeout);
+                    if (ee.backup) {
+                        $clonedObjectNode.find('[upstream-node-backup]').attr('checked', 'true');
+                    }
+                    if (ee.disable) {
+                        $clonedObjectNode.find('[upstream-node-disable]').attr('checked', 'true');
+                    }
+                    $clonedObjectNode.appendTo($clonedObject.find("[upstream-node-body]"));
+                });
             });
-        });
+        }
 
         // sites
         $("[site-body]").empty();
-        config.site.forEach(e => {
-            let $clonedObject = $(".template-hidden [site-service]").clone();
-            $clonedObject.find('[site-service-name]').text(e.siteName);
-            $clonedObject.find('[site-server-name]').val(e.serverName);
-            $clonedObject.find('[site-config]').val(e.siteConfig);
-            $clonedObject.appendTo("[site-body]");
+        if (config.site) {
+            config.site.forEach(e => {
+                let $clonedObject = $(".template-hidden [site-service]").clone();
+                $clonedObject.find('[site-service-name]').text(e.siteName);
+                $clonedObject.find('[site-server-name]').val(e.serverName);
+                $clonedObject.find('[site-config]').val(e.siteConfig);
+                $clonedObject.appendTo("[site-body]");
 
-            e.locations.forEach(ee => {
-                let $clonedObjectNode = $(".template-hidden [site-node-div]").clone();
-                $clonedObjectNode.find('[site-node-address]').text(ee.address);
-                $clonedObjectNode.find('[site-node-config]').val(ee.config);
-                $clonedObjectNode.appendTo($clonedObject.find("[site-node-body]"));
+                e.locations.forEach(ee => {
+                    let $clonedObjectNode = $(".template-hidden [site-node-div]").clone();
+                    $clonedObjectNode.find('[site-node-address]').text(ee.address);
+                    $clonedObjectNode.find('[site-node-config]').val(ee.config);
+                    $clonedObjectNode.appendTo($clonedObject.find("[site-node-body]"));
+                });
             });
-        });
+        }
     }
 
     loadLogrotate() {
