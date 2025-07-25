@@ -152,6 +152,8 @@ app.post('/api/logout', (req, res) => {
 });
 
 app.post('/api/changePassword', (req, res) => {
+    if (isUnauthroizedRequest(req, res)) return;
+
     changePassword(req.body.user, req.body.password);
 
     res.send("OK");
