@@ -124,6 +124,10 @@ npm run password
 ## Install sshd for development (for contribution)
 
 - Create a volume and make id_rsa.pub file then attach the volume to /root/.ssh
+- It will open ssh server automatically.
+- git clone
+- change directory (git clone directory)/admin
+- npm run watch
 
 ## Built With
 

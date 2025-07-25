@@ -1,4 +1,5 @@
 import fs from 'fs';
+import writeFileSync from 'write-file-atomic';
 import net from 'net';
 import http from 'http';
 import dayjs from 'dayjs';
@@ -36,7 +37,7 @@ function loadConfig() {
 }
 
 function saveConfig(configText) {
-    fs.writeFileSync(configFile, configText);
+    writeFileAtomicSync(configFile, configText);
 }
 
 function isUnauthroizedRequest(req, res) {

@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "write-file-atomic": "^6.0.0"
+  }
+}
