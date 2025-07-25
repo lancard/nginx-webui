@@ -17,7 +17,7 @@
     </button>
 </div>
 
-<div site-body></div>
+<ul site-body class="not-prose"></ul>
 
 <div class="text-end py-4" data-save-test-apply-button-location></div>
 
@@ -25,82 +25,103 @@
 <div class="template-hidden">
 
     <!-- domain -->
-    <div class="card shadow mt-4 not-prose bg-info-content/50 border border-info" site-service>
-        <div class="card-header bg-base-300 pl-4 flex w-full items-center py-1 bg-info/50 rounded-box">
-            <div class="card-title text-sm mb-1 mr-4 fw-bold" site-service-name>test_domain_https</div>
-            <button class="btn btn-xs btn-soft btn-success" data-click-function="addLocation">
+    <li site-service>
+        <div class="card shadow mt-4 not-prose bg-info-content/50 border border-info">
+            <div class="card-header bg-base-300 pl-4 flex w-full items-center py-1 bg-info/50 rounded-box">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                    <path
-                        d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" />
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="reorder-list mr-2 text-warning cursor-move">
+                    <path d="m3 16 4 4 4-4" />
+                    <path d="M7 20V4" />
+                    <path d="m21 8-4-4-4 4" />
+                    <path d="M17 4v16" />
                 </svg>
-                <p>Add Location</p>
-            </button>
-            <div class="ml-auto pr-4 pb-1">
-                <details class="dropdown dropdown-end" site-tools>
-                    <summary class="btn btn-xs btn-soft btn-default">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M4 12h16" />
-                            <path d="M4 18h16" />
-                            <path d="M4 6h16" />
-                        </svg>
-                    </summary>
-                    <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 shadow-lg text-xs">
-                        <li>
-                            <a data-click-function="renameSite">
-                                Rename Domain Handler
-                            </a>
-                        </li>
-                        <li>
-                            <a data-click-function="deleteSite">
-                                Delete Domain Handler
-                            </a>
-                        </li>
-                    </ul>
-                </details>
+                <div class="card-title text-sm mb-1 mr-4 fw-bold" site-service-name>test_domain_https</div>
+                <button class="btn btn-xs btn-soft btn-success" data-click-function="addLocation">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                        <path
+                            d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" />
+                    </svg>
+                    <p>Add Location</p>
+                </button>
+                <div class="ml-auto pr-4 pb-1">
+                    <details class="dropdown dropdown-end" site-tools>
+                        <summary class="btn btn-xs btn-soft btn-default">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M4 12h16" />
+                                <path d="M4 18h16" />
+                                <path d="M4 6h16" />
+                            </svg>
+                        </summary>
+                        <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 shadow-lg text-xs">
+                            <li>
+                                <a data-click-function="renameSite">
+                                    Rename Domain Handler
+                                </a>
+                            </li>
+                            <li>
+                                <a data-click-function="deleteSite">
+                                    Delete Domain Handler
+                                </a>
+                            </li>
+                        </ul>
+                    </details>
+                </div>
+            </div>
+            <div class="card-body bg-base-200/50 flex flex-row">
+                <div class="w-1/2">
+                    <label class="input">
+                        <span class="label">DOMAIN NAME</span>
+                        <input type="text" site-server-name value="test.com">
+                    </label>
+                    <fieldset class="fieldset mt-2">
+                        <legend class="fieldset-legend p-0 text-base-content/50">
+                            Additional Server Directive Statement
+                        </legend>
+                        <textarea class="textarea w-full" rows="10" site-config></textarea>
+                    </fieldset>
+                </div>
+                <div class="w-1/2">
+                    <ul site-node-body></ul>
+                </div>
             </div>
         </div>
-        <div class="card-body bg-base-200/50 flex flex-row">
-            <div class="w-1/2">
-                <label class="input">
-                    <span class="label">DOMAIN NAME</span>
-                    <input type="text" site-server-name value="test.com">
-                </label>
-                <fieldset class="fieldset mt-2">
-                    <legend class="fieldset-legend p-0 text-base-content/50">
-                        Additional Server Directive Statement
-                    </legend>
-                    <textarea class="textarea w-full" rows="10" site-config></textarea>
-                </fieldset>
-            </div>
-            <div class="w-1/2">
-                <div site-node-body></div>
-            </div>
-        </div>
-    </div>
+    </li>
 
     <!-- location -->
-    <div class="card border border-info/70 mt-2" site-node-div>
-        <div class="card-header pl-6 pt-3">
-            <span class="text-primary" site-node-address>/api</span>
-            <button class="btn btn-xs btn-soft btn-error mx-4" data-click-function="deleteLocation">
+    <li site-node-div>
+        <div class="card border border-info/70 mt-2">
+            <div class="card-header flex items-center pl-6 pt-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                    <path
-                        d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" />
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="reorder-list mr-4 text-warning cursor-move">
+                    <path d="m3 16 4 4 4-4" />
+                    <path d="M7 20V4" />
+                    <path d="m21 8-4-4-4 4" />
+                    <path d="M17 4v16" />
                 </svg>
-                <p>Delete Location</p>
-            </button>
+                <span class="text-primary" site-node-address>/api</span>
+                <button class="btn btn-xs btn-soft btn-error mx-4" data-click-function="deleteLocation">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                        <path
+                            d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" />
+                    </svg>
+                    <p>Delete Location</p>
+                </button>
+            </div>
+            <div class="card-body pt-0">
+                <fieldset class="fieldset mt-2">
+                    <legend class="fieldset-legend p-0 text-base-content/50">URL Path(Location) Configuration
+                    </legend>
+                    <textarea class="textarea w-full" rows="10" site-node-config></textarea>
+                </fieldset>
+            </div>
         </div>
-        <div class="card-body pt-0">
-            <fieldset class="fieldset mt-2">
-                <legend class="fieldset-legend p-0 text-base-content/50">URL Path(Location) Configuration
-                </legend>
-                <textarea class="textarea w-full" rows="10" site-node-config></textarea>
-            </fieldset>
-        </div>
-    </div>
+    </li>
 </div>

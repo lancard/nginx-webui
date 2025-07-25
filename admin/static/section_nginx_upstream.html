@@ -17,7 +17,7 @@
     </button>
 </div>
 
-<div upstream-body></div>
+<ul upstream-body class="not-prose"></ul>
 
 <div class="text-end py-4" data-save-test-apply-button-location></div>
 
@@ -48,96 +48,106 @@
 
 <!-- templates -->
 <div class="template-hidden">
-    
-    <div class="card shadow mt-4 not-prose" upstream-service>
-        <div class="card-header bg-base-300 pl-4 flex w-full items-center py-1">
-            <input type="hidden" upstream-auth-key value="">
-            <div class="card-title text-sm mb-1 mr-4 fw-bold" upstream-service-name>test_service</div>
-            <button class="btn btn-xs btn-soft btn-success" data-click-function="addBackendServer">
+    <li upstream-service>
+        <div class="card shadow mt-4 not-prose">
+            <div class="card-header bg-base-300 pl-4 flex w-full items-center py-1">
+                <input type="hidden" upstream-auth-key value="">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                    <path
-                        d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" />
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="reorder-list mr-2 text-warning cursor-move">
+                    <path d="m3 16 4 4 4-4" />
+                    <path d="M7 20V4" />
+                    <path d="m21 8-4-4-4 4" />
+                    <path d="M17 4v16" />
                 </svg>
-                <p>Add Backend Server</p>
-            </button>
-            <div class="ml-auto pr-4 pb-1">
-                <details class="dropdown dropdown-end" upstream-tools>
-                    <summary class="btn btn-xs btn-soft btn-default">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M4 12h16" />
-                            <path d="M4 18h16" />
-                            <path d="M4 6h16" />
-                        </svg>
-                    </summary>
-                    <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 shadow-lg text-xs">
-                        <li>
-                            <a onclick="this.nextElementSibling.showModal()">
-                                Show Auth Key
-                            </a>
-                            <dialog class="modal fixed inset-0 flex items-center justify-center">
-                                <div class="modal-box">
-                                    <form method="dialog">
-                                        <button
-                                            class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-                                    </form>
-                                    <h3 class="text-lg font-bold mb-4">Upstream Auth Key</h3>
-                                    <div class="modal-body">
-                                        <div class="text-lg text-error my-2">KEY: <span modal-key>(NOT EXIST, CLICK
-                                                GENERATE BUTTON)</span></div>
-                                        <div class="text-info my-2">REMARK: <span modal-remark></span></div>
-                                        <div class="mt-2 italic">Refer document section on the left menu.</div>
-                                    </div>
-                                    <div class="modal-action">
+                <div class="card-title text-sm mb-1 mr-4 fw-bold" upstream-service-name>test_service</div>
+                <button class="btn btn-xs btn-soft btn-success" data-click-function="addBackendServer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                        <path
+                            d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" />
+                    </svg>
+                    <p>Add Backend Server</p>
+                </button>
+                <div class="ml-auto pr-4 pb-1">
+                    <details class="dropdown dropdown-end" upstream-tools>
+                        <summary class="btn btn-xs btn-soft btn-default">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M4 12h16" />
+                                <path d="M4 18h16" />
+                                <path d="M4 6h16" />
+                            </svg>
+                        </summary>
+                        <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 shadow-lg text-xs">
+                            <li>
+                                <a onclick="this.nextElementSibling.showModal()">
+                                    Show Auth Key
+                                </a>
+                                <dialog class="modal fixed inset-0 flex items-center justify-center">
+                                    <div class="modal-box">
                                         <form method="dialog">
-                                            <button class="btn btn-sm btn-info" type="button"
-                                                data-click-function="generateKey">
-                                                (Re)Generate Key
-                                            </button>
-                                            <button class="btn btn-sm btn-primary" type="button"
-                                                data-click-function="saveKey">
-                                                Save
-                                            </button>
+                                            <button
+                                                class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                                         </form>
+                                        <h3 class="text-lg font-bold mb-4">Upstream Auth Key</h3>
+                                        <div class="modal-body">
+                                            <div class="text-lg text-error my-2">KEY: <span modal-key>(NOT EXIST, CLICK
+                                                    GENERATE BUTTON)</span></div>
+                                            <div class="text-info my-2">REMARK: <span modal-remark></span></div>
+                                            <div class="mt-2 italic">Refer document section on the left menu.</div>
+                                        </div>
+                                        <div class="modal-action">
+                                            <form method="dialog">
+                                                <button class="btn btn-sm btn-info" type="button"
+                                                    data-click-function="generateKey">
+                                                    (Re)Generate Key
+                                                </button>
+                                                <button class="btn btn-sm btn-primary" type="button"
+                                                    data-click-function="saveKey">
+                                                    Save
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
-                                </div>
-                            </dialog>
-                        </li>
-                        <li>
-                            <a data-click-function="renameUpstreamService">
-                                Rename Server Group
-                            </a>
-                        </li>
-                        <li>
-                            <a data-click-function="deleteUpstreamService">
-                                Delete Server Group
-                            </a>
-                        </li>
-                    </ul>
-                </details>
+                                </dialog>
+                            </li>
+                            <li>
+                                <a data-click-function="renameUpstreamService">
+                                    Rename Server Group
+                                </a>
+                            </li>
+                            <li>
+                                <a data-click-function="deleteUpstreamService">
+                                    Delete Server Group
+                                </a>
+                            </li>
+                        </ul>
+                    </details>
+                </div>
+            </div>
+            <div class="card-body bg-base-200/50">
+                <table class="table table-xs text-center not-prose border border-base-content/5">
+                    <thead class="bg-base-200 text-base-content text-xs">
+                        <tr>
+                            <th>STATUS</th>
+                            <th>DOMAIN:PORT</th>
+                            <th>WEIGHT</th>
+                            <th>MAX FAILS</th>
+                            <th>FAIL TIMEOUT</th>
+                            <th>IS BACKUP SERVER</th>
+                            <th>IS DISABLED SERVER</th>
+                            <th>DELETE</th>
+                        </tr>
+                    </thead>
+                    <tbody upstream-node-body>
+                    </tbody>
+                </table>
             </div>
         </div>
-        <div class="card-body bg-base-200/50">
-            <table class="table table-xs text-center not-prose border border-base-content/5">
-                <thead class="bg-base-200 text-base-content text-xs">
-                    <tr>
-                        <th>STATUS</th>
-                        <th>DOMAIN:PORT</th>
-                        <th>WEIGHT</th>
-                        <th>MAX FAILS</th>
-                        <th>FAIL TIMEOUT</th>
-                        <th>IS BACKUP SERVER</th>
-                        <th>IS DISABLED SERVER</th>
-                        <th>DELETE</th>
-                    </tr>
-                </thead>
-                <tbody upstream-node-body>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    </li>
 
     <table>
         <tr upstream-node>

@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import dayjs from 'dayjs';
 import cloneDeep from 'lodash/cloneDeep';
+import Sortable from 'sortablejs';
 import {
     Chart,
     LineController,
@@ -284,9 +285,9 @@ class NginxWebUI {
         if (!serviceName || serviceName == '')
             return;
 
-        let $clonedObject = $(".template-hidden div[upstream-service]").clone();
+        let $clonedObject = $(".template-hidden [upstream-service]").clone();
         $clonedObject.find('[upstream-service-name]').text(serviceName);
-        $clonedObject.appendTo("div[upstream-body]");
+        $clonedObject.appendTo("[upstream-body]");
     }
 
     deleteUpstreamService(element) {
@@ -301,7 +302,7 @@ class NginxWebUI {
         if (!serviceName || serviceName == '')
             return;
 
-        $(element).parents("div[upstream-service]").find('[upstream-service-name]').text(serviceName);
+        $(element).parents("[upstream-service]").find('[upstream-service-name]').text(serviceName);
     }
 
     checkBackendServerStatus(element) {
@@ -335,7 +336,7 @@ class NginxWebUI {
 
         let $clonedObject = $(".template-hidden [upstream-node]").clone();
         $clonedObject.find('[upstream-node-address]').text(backendServer);
-        $clonedObject.appendTo($(element).parents("div[upstream-service]").find("[upstream-node-body]"));
+        $clonedObject.appendTo($(element).parents("[upstream-service]").find("[upstream-node-body]"));
     }
 
     deleteBackendServer(element) {
@@ -351,28 +352,24 @@ class NginxWebUI {
         if (!siteName || siteName == '')
             return;
 
-        var answer = confirm("Is this an HTTP site running on port 80?\n(If you select 'Yes', we will generate example code to redirect HTTP to HTTPS.)");
+        var answer = confirm("Is this an HTTPS site running on port 443?\n(If you select 'Yes', we will generate example code of reverse proxy)");
 
-        if (answer) {
-
-        }
-
-        let $clonedObject = $(".template-hidden div[site-service]").clone();
+        let $clonedObject = $(".template-hidden [site-service]").clone();
         $clonedObject.find('[site-service-name]').text(siteName);
-        $clonedObject.find('[site-config]').val(answer ? 'listen 80;\n' : defaultServerDirective);
-        $clonedObject.appendTo("div[site-body]");
+        $clonedObject.find('[site-config]').val(answer ? defaultServerDirective : 'listen 80;\n');
+        $clonedObject.appendTo("[site-body]");
 
         // add root
-        let $clonedObject2 = $(".template-hidden div[site-node-div]").clone();
+        let $clonedObject2 = $(".template-hidden [site-node-div]").clone();
         $clonedObject2.find('[site-node-address]').text('/');
-        $clonedObject2.find('[site-node-config]').val(answer ? '# Moved Permanently\nreturn 301 https://$host$request_uri;\n' : defaultServerLocation);
+        $clonedObject2.find('[site-node-config]').val(answer ? defaultServerLocation : '# Moved Permanently\nreturn 301 https://$host$request_uri;\n');
         $clonedObject2.appendTo($clonedObject.find("[site-node-body]"));
 
         if (answer) {
-            alert('generated 80 port redirect site.');
+            alert("generated 443 port (SSL/HTTPS) default proxy site.\nif you need, change '(domain_name)' in server directive.");
         }
         else {
-            alert("generated 443 port (SSL/HTTPS) default proxy site.\nif you need, change '(domain_name)' in server directive.");
+            alert('generated 80 port redirect site.');
         }
     }
 
@@ -396,10 +393,10 @@ class NginxWebUI {
         if (!locationDirective || locationDirective == '')
             return;
 
-        let $clonedObject = $(".template-hidden div[site-node-div]").clone();
+        let $clonedObject = $(".template-hidden [site-node-div]").clone();
         $clonedObject.find('[site-node-address]').text(locationDirective);
         $clonedObject.find('[site-node-config]').val(defaultServerLocation);
-        $clonedObject.appendTo($(element).parents("div[site-service]").find("[site-node-body]"));
+        $clonedObject.appendTo($(element).parents("[site-service]").find("[site-node-body]"));
     }
 
     deleteLocation(element) {
@@ -488,10 +485,10 @@ class NginxWebUI {
         // upstream
         $("[upstream-body]").empty();
         config.upstream.forEach(e => {
-            let $clonedObject = $(".template-hidden div[upstream-service]").clone();
+            let $clonedObject = $(".template-hidden [upstream-service]").clone();
             $clonedObject.find('[upstream-service-name]').text(e.upstreamName);
             $clonedObject.find('[upstream-auth-key]').val(e.upstreamAuthKey);
-            $clonedObject.appendTo("div[upstream-body]");
+            $clonedObject.appendTo("[upstream-body]");
 
             e.nodes.forEach(ee => {
                 let $clonedObjectNode = $(".template-hidden [upstream-node]").clone();
@@ -512,14 +509,14 @@ class NginxWebUI {
         // sites
         $("[site-body]").empty();
         config.site.forEach(e => {
-            let $clonedObject = $(".template-hidden div[site-service]").clone();
+            let $clonedObject = $(".template-hidden [site-service]").clone();
             $clonedObject.find('[site-service-name]').text(e.siteName);
             $clonedObject.find('[site-server-name]').val(e.serverName);
             $clonedObject.find('[site-config]').val(e.siteConfig);
-            $clonedObject.appendTo("div[site-body]");
+            $clonedObject.appendTo("[site-body]");
 
             e.locations.forEach(ee => {
-                let $clonedObjectNode = $(".template-hidden div[site-node-div]").clone();
+                let $clonedObjectNode = $(".template-hidden [site-node-div]").clone();
                 $clonedObjectNode.find('[site-node-address]').text(ee.address);
                 $clonedObjectNode.find('[site-node-config]').val(ee.config);
                 $clonedObjectNode.appendTo($clonedObject.find("[site-node-body]"));
@@ -916,6 +913,10 @@ $(function () {
                 instance.updateStatus();
                 setInterval(() => instance.updateStatus(), 5000);
                 instance.updatePreviewConfig();
+                Sortable.create($("ul[upstream-body]")[0], { handle: ".reorder-list" });
+                Sortable.create($("ul[site-body]")[0], { handle: ".reorder-list" });
+                Sortable.create($("ul[site-node-body]")[0], { handle: ".reorder-list" });
+                Sortable.create($("tbody[cert-body]")[0], { handle: ".reorder-list" });
             });
 
             instance.createChart();
