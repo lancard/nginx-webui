@@ -16,8 +16,8 @@
 
 <body id="body-index" class="text-xs flex h-screen">
     <aside class="w-64 bg-base-200 flex flex-col h-full bg-hero-topography">
-        <div class="bg-base-100 border-b border-base-100 p-4 pl-6 shadow-xl bg-hero-hideout">
-            <a href="index.html" class="flex text-xl font-bold mb-1">
+        <div class="bg-base-100 border-b border-base-100 p-3 pl-4 shadow-xl bg-hero-hideout">
+            <a href="index.html" class="flex text-xl font-bold">
                 <svg width="32px" height="32px" viewBox="0 0 1024 1024" class="icon" version="1.1"
                     xmlns="http://www.w3.org/2000/svg" fill="#000000">
                     <path
@@ -265,71 +265,83 @@
     </aside>
 
     <main class="flex-1 bg-base-100 overflow-auto">
-        <header class="sticky top-0 z-50 bg-base-100 border-b border-base-100 shadow-xl bg-hero-hideout">
-            <nav class="navbar">
-                <div class="flex-1">
-                </div>
-                <div class="flex-none">
-                    <ul class="menu menu-horizontal px-1">
-                        <li class="mr-6">
-                            <fieldset class="fieldset py-2">
-                                <label class="flex gap-2 cursor-pointer items-center mx-2">
-                                    <input type="radio" name="theme-radios" class="radio radio-sm theme-controller"
-                                        value="default" checked />
-                                    <p>Auto</p>
-                                </label>
-                                <label class="flex gap-2 cursor-pointer items-center mx-2">
-                                    <input type="radio" name="theme-radios" class="radio radio-sm theme-controller"
-                                        value="light" />
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="5" />
-                                        <path
-                                            d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" />
-                                    </svg>
-                                </label>
-                                <label class="flex gap-2 cursor-pointer items-center mx-2">
-                                    <input type="radio" name="theme-radios" class="radio radio-sm theme-controller"
-                                        value="dark" />
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                                    </svg>
-                                </label>
-                            </fieldset>
-                        </li>
-                        <li class="border-l border-base-300">
-                            <details>
-                                <summary>
+        <header
+            class="sticky top-0 z-40 bg-base-100 border-b border-base-100 shadow-xl bg-hero-hideout not-prose text-end">
+            <ul class="flex items-center">
+                <li class="mr-2 ml-auto">Theme: </li>
+                <li class="mr-4">
+                    <select data-choose-theme class="select select-sm">
+                        <option value="">auto</option>
+                        <option value="autumn">[light] autumn (default)</option>
+                        <option value="caramellatte">[light] caramellatte</option>
+                        <option value="forest">[dark] forest (default)</option>
+                        <option value="coffee">[dark] coffee</option>
+                        <option value="dim">[dark] dim (dark)</option>
+                    </select>
+                </li>
+                <li>
+                    <details class="dropdown dropdown-end mr-2 py-2">
+                        <summary class="btn btn-sm m-1 border-base-content">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="size-5">
+                                <circle cx="12" cy="8" r="5" />
+                                <path d="M20 21a8 8 0 0 0-16 0" />
+                            </svg>
+                            <p>administrator</p>
+                        </summary>
+                        <ul class="menu dropdown-content">
+                            <li>
+                                <a onclick="password_modal.showModal()">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="size-5">
-                                        <circle cx="12" cy="8" r="5" />
-                                        <path d="M20 21a8 8 0 0 0-16 0" />
+                                        stroke-linejoin="round" class="size-4">
+                                        <path
+                                            d="M12.4 2.7a2.5 2.5 0 0 1 3.4 0l5.5 5.5a2.5 2.5 0 0 1 0 3.4l-3.7 3.7a2.5 2.5 0 0 1-3.4 0L8.7 9.8a2.5 2.5 0 0 1 0-3.4z" />
+                                        <path d="m14 7 3 3" />
+                                        <path
+                                            d="m9.4 10.6-6.814 6.814A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814" />
                                     </svg>
-                                    administrator
-                                </summary>
-                                <ul class="bg-base-100 text-base-content rounded-t-none p-2">
-                                    <li>
-                                        <a>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round" class="size-4">
-                                                <path d="m16 17 5-5-5-5" />
-                                                <path d="M21 12H9" />
-                                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                                            </svg>
-                                            <p>Logout</p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </details>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+                                    <p class="whitespace-nowrap">Change password</p>
+                                </a>
+                                <dialog id="password_modal" class="modal">
+                                    <div class="modal-box w-96">
+                                        <h3 class="font-bold text-lg">Change password</h3>
+
+                                        <form id="password_form" method="dialog" class="space-y-3 mt-4">
+                                            <input type="password" id="password_new" name="password_new"
+                                                placeholder="New Password" class="input input-bordered w-full"
+                                                required />
+                                            <input type="password" id="password_confirm" name="password_confirm"
+                                                placeholder="Confirm Password" class="input input-bordered w-full"
+                                                required />
+
+                                            <div class="modal-action justify-end">
+                                                <button type="button" class="btn btn-outline"
+                                                    onclick="password_modal.close()">Cancel</button>
+                                                <button type="button" class="btn btn-primary"
+                                                    data-click-function="changePassword">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </dialog>
+                            </li>
+                            <li>
+                                <a data-click-function="logout">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="size-4">
+                                        <path d="m16 17 5-5-5-5" />
+                                        <path d="M21 12H9" />
+                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                    </svg>
+                                    <p>Logout</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </details>
+                </li>
+            </ul>
         </header>
 
         <div class="main-contents prose max-w-none p-6 w-full">
@@ -361,27 +373,6 @@
             <button class="btn btn-error" data-click-function="applyConfig">
                 3. Apply nginx config
             </button>
-        </div>
-
-
-        <!-- Logout Modal-->
-        <div class="dropdown-menu dropdown-menu-end fade" id="logoutModal" tabindex="-1" role="dialog"
-            aria-labelledby="closeModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="closeModalLabel">Ready to Leave?</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-primary" href="javascript: void(0);" data-click-function="logout">Logout</a>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- dummy -->

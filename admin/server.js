@@ -9,7 +9,7 @@ import session from 'express-session';
 import NginxBeautify from 'nginxbeautify';
 import sessionFileStoreInit from 'session-file-store';
 import { exec } from 'child_process';
-import { tryCheckPassword } from './login.js';
+import { tryCheckPassword, changePassword } from './login.js';
 
 const FileStore = sessionFileStoreInit(session);
 const nginxBeautifier = new NginxBeautify();
@@ -150,6 +150,13 @@ app.post('/api/logout', (req, res) => {
     req.session.save();
     res.send("OK");
 });
+
+app.post('/api/changePassword', (req, res) => {
+    changePassword(req.body.user, req.body.password);
+
+    res.send("OK");
+});
+
 
 app.get('/api/getNginxStatus', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;

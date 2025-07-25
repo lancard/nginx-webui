@@ -2,6 +2,7 @@ import $ from 'jquery';
 import dayjs from 'dayjs';
 import cloneDeep from 'lodash/cloneDeep';
 import Sortable from 'sortablejs';
+import { themeChange } from 'theme-change'
 import {
     Chart,
     LineController,
@@ -38,6 +39,8 @@ proxy_send_timeout 900;
 proxy_read_timeout 900;
 send_timeout 900;
 `;
+
+themeChange();
 
 Chart.register(
     LineController,
@@ -215,6 +218,24 @@ class NginxWebUI {
         chart.update();
     }
 
+    login() {
+        $.ajax({
+            type: "POST",
+            url: '/api/login',
+            data: { user: $("#user").val(), password: $("#password").val() },
+            success: (ret) => {
+                if (ret == "OK") {
+                    location.href = './index.html';
+                    return;
+                }
+
+                alert(ret);
+            }
+        });
+
+        return false;
+    }
+
     logout() {
         $.ajax({
             type: "POST",
@@ -222,6 +243,24 @@ class NginxWebUI {
             success: (ret) => {
                 // alert(ret);
                 location.href = 'login.html';
+            }
+        });
+    }
+
+    changePassword() {
+        password_modal.close();
+
+        if ($("#password_new").val() != $("#password_confirm").val()) {
+            alert('password different.');
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: '/api/changePassword',
+            data: { user: 'administrator', password: $("#password_new").val() },
+            success: (ret) => {
+                alert(ret);
             }
         });
     }
@@ -800,24 +839,6 @@ class NginxWebUI {
                 $("#osConnections").text(retLine.join("\n"));
             }
         });
-    }
-
-    login() {
-        $.ajax({
-            type: "POST",
-            url: '/api/login',
-            data: { user: $("#user").val(), password: $("#password").val() },
-            success: (ret) => {
-                if (ret == "OK") {
-                    location.href = './index.html';
-                    return;
-                }
-
-                alert(ret);
-            }
-        });
-
-        return false;
     }
 }
 

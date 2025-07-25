@@ -1,9 +1,6 @@
 import daisyui from 'daisyui';
 
 export default {
-    content: ["./src/**/*.{html,js}"],
-    theme: {
-        extend: {},
-    },
+    content: ["./static/*.{html,js}"],
     plugins: [daisyui, require('@tailwindcss/typography')],
 };

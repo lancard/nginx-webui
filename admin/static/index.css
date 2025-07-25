@@ -1,6 +1,9 @@
 @import "tailwindcss";
-@plugin "daisyui";
 @plugin "@tailwindcss/typography";
+
+@plugin "daisyui" {
+    themes: autumn --default, forest --prefersdark, caramellatte, coffee, dim;
+}
 
 @layer utilities {
     .bg-hero-topography {
@@ -26,5 +29,9 @@
     textarea {
         @apply leading-tight;
         font-family: 'Menlo', 'Monaco', 'Consolas', 'Courier New', monospace;
+    }
+
+    .modal {
+        @apply fixed inset-0 items-center justify-center flex;
     }
 }
