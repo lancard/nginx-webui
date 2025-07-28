@@ -131,12 +131,22 @@ curl --insecure -H "Authorization: Bearer ${token}" "https://localhost:81/api/up
 curl --insecure -H "Authorization: Bearer ${token}" "https://localhost:81/api/upstream/${upstream-name}/${backend-address}/disable"
 ```
 
+---
+
 ## Reset password
 
 ```
 cd /admin
 npm run password
 ```
+
+---
+
+## 📦 Migration Guide
+
+If you're upgrading from a previous version, please refer to the [MIGRATION.md](./MIGRATION.md) for detailed steps and compatibility notes.
+
+---
 
 ## Install sshd for development (for contribution)
 
@@ -146,11 +156,14 @@ npm run password
 - change directory (git clone directory)/admin
 - npm run watch
 
+---
+
 ## Built With
 
 - server side: npm, nodejs, express
 - client side: bower, sbadmin2 (bootstrap), jquery, moment, chart.js
 
+---
 
 ## Contributing
 
@@ -163,9 +176,13 @@ Don't forget to give the project a star! Thank you!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+---
+
 ## Contributor License Agreement
 
 For easy license management and legal dispute avoidance, the contributing codes are attributed to the author and all rights are attributed to the author. In addition, the MIT license is maintained. If you don't want it, please don't make PR.
+
+---
 
 ## License
 
