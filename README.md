@@ -28,8 +28,7 @@
 - 🧩 **Lightweight and minimal UI stack**: tailwind, daisyui etc. (no heavy frameworks)  
 - 🔁 Instant config reload & validation – UI‑triggered NGINX config test + reload  
 - 🔥 **Session and certificate data persisted in Docker volumes**, ready for production
-- 🛠 Easy setup with production‑grade **Docker‑Compose** (`version: '3.7'` by default) :contentReference[oaicite:1]{index=1}  
-- 🔐 **Self‑signed HTTPS for admin UI** on port 81 (browser warning expected, ignore and proceed) :contentReference[oaicite:2]{index=2}  
+- 🛠 Easy setup with production‑grade **Docker‑Compose**
 - 📈 **NGINX Status Dashboard**: Real-time stats including active OS-level connections.
 - 🌙 **Dark Mode & Themes**: Modern UI with theme switching support.
 - 📡 **Backend Health Check**: Ping and verify backend server availability.
