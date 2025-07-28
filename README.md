@@ -16,6 +16,8 @@
 
 - ✅ One‑click reverse proxy setup  
 - 🔐 Automatic Let's Encrypt certificate issuance & renewal (incl. DNS challenge)  
+- 🔁 **Path Rewriting & Redirects**: Fine-grained control over request rewriting and redirect rules.
+- 📁 **Static File Hosting**: Easily expose folders with access control.
 - 🔄 CI/CD‑friendly API to enable/disable upstream backends  
 - 🧰 Logrotate configuration via UI  
 - ⚙️ Superuser/admin mode for advanced NGINX config  
@@ -28,7 +30,9 @@
 - 🔥 **Session and certificate data persisted in Docker volumes**, ready for production
 - 🛠 Easy setup with production‑grade **Docker‑Compose** (`version: '3.7'` by default) :contentReference[oaicite:1]{index=1}  
 - 🔐 **Self‑signed HTTPS for admin UI** on port 81 (browser warning expected, ignore and proceed) :contentReference[oaicite:2]{index=2}  
-
+- 📈 **NGINX Status Dashboard**: Real-time stats including active OS-level connections.
+- 🌙 **Dark Mode & Themes**: Modern UI with theme switching support.
+- 📡 **Backend Health Check**: Ping and verify backend server availability.
 
 ---
 
