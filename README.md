@@ -94,7 +94,7 @@ volumes:
   nginx-webui-cert:
   nginx-webui-session:
   nginx-webui-log:
-  logrotate-config:
+  nginx-webui-logrotate-config:
 ```
 
 3. Run docker-compose
