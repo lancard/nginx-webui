@@ -1,6 +1,7 @@
 # NGINX WebUI
 
 [![Build Status](https://github.com/lancard/nginx-webui/actions/workflows/build-docker.yml/badge.svg)](https://github.com/lancard/nginx-webui/actions/workflows/build-docker.yml)
+![GitHub package.json version (branch)](https://img.shields.io/github/package-json/v/lancard/nginx-webui/master?filename=admin%2Fpackage.json)
 ![Repo Size](https://img.shields.io/github/repo-size/lancard/nginx-webui)
 ![File Count](https://img.shields.io/github/directory-file-count/lancard/nginx-webui)
 ![Docker Pulls](https://img.shields.io/docker/pulls/lancard/nginx-webui)
