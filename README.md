@@ -37,7 +37,7 @@
 
 ## 📸 Screenshots
 
-| UI Overview | Service Editor | SSL Management | Dashboard |
+| UI Overview | Cert Management | Backend Server | Domain/URL |
 |------------|----------------|----------------|-----------|
 | ![](./screenshot/screenshot1.png) | ![](./screenshot/screenshot2.png) | ![](./screenshot/screenshot3.png) | ![](./screenshot/screenshot4.png) |
 
