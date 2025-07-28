@@ -1,54 +1,67 @@
-[![build](https://github.com/lancard/nginx-webui/actions/workflows/build-docker.yml/badge.svg)](https://github.com/lancard/nginx-webui/actions/workflows/build-docker.yml)
-![GitHub repo size](https://img.shields.io/github/repo-size/lancard/nginx-webui)
-![GitHub repo file count](https://img.shields.io/github/directory-file-count/lancard/nginx-webui)
-![Docker pulls](https://img.shields.io/docker/pulls/lancard/nginx-webui)
-![Docker image size](https://img.shields.io/docker/image-size/lancard/nginx-webui)
+# NGINX WebUI
+
+[![Build Status](https://github.com/lancard/nginx-webui/actions/workflows/build-docker.yml/badge.svg)](https://github.com/lancard/nginx-webui/actions/workflows/build-docker.yml)
+![Repo Size](https://img.shields.io/github/repo-size/lancard/nginx-webui)
+![File Count](https://img.shields.io/github/directory-file-count/lancard/nginx-webui)
+![Docker Pulls](https://img.shields.io/docker/pulls/lancard/nginx-webui)
+![Docker Image Size](https://img.shields.io/docker/image-size/lancard/nginx-webui)
+
+> 💡 **Manage NGINX like a pro, without touching the terminal.**  
+> Simple, powerful, and production-ready NGINX management UI with Let's Encrypt integration.
+
+---
+
+## ✨ Features
+
+- ✅ One‑click reverse proxy setup  
+- 🔐 Automatic Let's Encrypt certificate issuance & renewal (incl. DNS challenge)  
+- 🔄 CI/CD‑friendly API to enable/disable upstream backends  
+- 🧰 Logrotate configuration via UI  
+- ⚙️ Superuser/admin mode for advanced NGINX config  
+- 👨‍👩‍👧‍👦 Designed for managing **multiple domains** and **teams**  
+- 🧪 Non‑disruptive deployments using Jenkins or other CI/CD tools  
+- ⚡ Built with **full ES Modules (ESM)** for modern, modular Node.js architecture  
+- 📱 **Responsive, mobile‑friendly UI** that adapts to desktop, tablet, and phone layouts  
+- 🧩 **Lightweight and minimal UI stack**: tailwind, daisyui etc. (no heavy frameworks)  
+- 🔁 Instant config reload & validation – UI‑triggered NGINX config test + reload  
+- 🔥 **Session and certificate data persisted in Docker volumes**, ready for production
+- 🛠 Easy setup with production‑grade **Docker‑Compose** (`version: '3.7'` by default) :contentReference[oaicite:1]{index=1}  
+- 🔐 **Self‑signed HTTPS for admin UI** on port 81 (browser warning expected, ignore and proceed) :contentReference[oaicite:2]{index=2}  
 
 
-This project aims to create a UI that wrap nginx.
-We developed a program that makes it easy for companies and people with multiple domains to manage nginx through UI.
-And, it implemented a function that easily updates through Let's encrypt.
+---
 
-## Screenshot
-![screenshot1](./screenshot/screenshot1.png)
-![screenshot2](./screenshot/screenshot2.png)
-![screenshot3](./screenshot/screenshot3.png)
-![screenshot4](./screenshot/screenshot4.png)
+## 📸 Screenshots
 
-# Youtube Setting tutorial (Click to watch)
-- Install process and set load-balancer
-- [![Let's encrypt cert renewal](https://img.youtube.com/vi/3SEdU_Jj5IM/0.jpg)](https://www.youtube.com/watch?v=3SEdU_Jj5IM)
-- Non-disruptive deployment with jenkins
-- [![Let's encrypt cert renewal](https://img.youtube.com/vi/UaJF-s2AuZo/0.jpg)](https://www.youtube.com/watch?v=UaJF-s2AuZo)
-- Let's encrypt cert renewal
-- [![Let's encrypt cert renewal](https://img.youtube.com/vi/O12f2PYPCpU/0.jpg)](https://www.youtube.com/watch?v=O12f2PYPCpU)
+| UI Overview | Service Editor | SSL Management | Dashboard |
+|------------|----------------|----------------|-----------|
+| ![](./screenshot/screenshot1.png) | ![](./screenshot/screenshot2.png) | ![](./screenshot/screenshot3.png) | ![](./screenshot/screenshot4.png) |
 
+---
 
-## Project Goal
+## 🎬 Video Tutorials
 
-Basically, a program was written to make it easy to use reverse proxy.
-main goal is management for 'upstream' / 'server' / certificates nginx configuration.
+- **Install & Load-Balancer Setup**  
+  [![Install and Setup](https://img.youtube.com/vi/3SEdU_Jj5IM/0.jpg)](https://www.youtube.com/watch?v=3SEdU_Jj5IM)
 
-## Features
+- **CI/CD + Non-disruptive Deployment**  
+  [![Jenkins Integration](https://img.youtube.com/vi/UaJF-s2AuZo/0.jpg)](https://www.youtube.com/watch?v=UaJF-s2AuZo)
 
-- Auto renewal Let's encrypt cert.
-- enable/disable API for backend upstream (useful for CI/CD integration)
-- modify reverse proxy and multiple upstream settings with web UI.
-- modify logrotate config.
-- Easily create services and locations.
-- Advanced Nginx configuration available for super users.
-- Let's encrypt DNS challenge.
+- **Let's Encrypt Certificate Renewal**  
+  [![Cert Renewal](https://img.youtube.com/vi/O12f2PYPCpU/0.jpg)](https://www.youtube.com/watch?v=O12f2PYPCpU)
 
-## Quick Setup
+---
 
-1. Install Docker and Docker-Compose
+## 🚀 Quick Start
 
-- [Docker Install documentation](https://docs.docker.com/install/)
-- [Docker-Compose Install documentation](https://docs.docker.com/compose/install/)
+### 1. Prerequisites
 
-2. Create a docker-compose.yml file similar to this:
+- [Docker](https://docs.docker.com/install/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
-```yml
+### 2. Create `docker-compose.yml`
+
+```yaml
 version: '3.7'
 services:
   nginx-webui:
@@ -77,79 +90,4 @@ volumes:
   nginx-webui-cert:
   nginx-webui-session:
   nginx-webui-log:
-  logrotate-config:
-```
-
-3. Run docker-compose
-
-```bash
-docker-compose up -d
-docker-compose logs # for check admin password
-```
-
-4. Log in to the Admin UI
-
-The 'administrator' user password is randomly generated by first time.
-you can check it by 'docker-compose logs'
-
-When your docker container is running, connect to it on port `81` for the admin interface.
-(The connection is secured with a self-signed certificate. If you receive a security warning message, ignore it and continue)
-
-[https://127.0.0.1:81](http://127.0.0.1:81)
-
-Default Admin User:
-```
-id: administrator
-password: (get it from docker-compose logs)
-```
-
-5. Setup Config
-
-Refer Screenshot 4
-
-6. Use API for CI/CD
-
-```
-curl --insecure -H "Authorization: Bearer ${token}" "https://localhost:81/api/upstream/${upstream-name}/${backend-address}/enable"
-curl --insecure -H "Authorization: Bearer ${token}" "https://localhost:81/api/upstream/${upstream-name}/${backend-address}/disable"
-```
-
-## Reset password
-
-```
-cd /admin
-npm run password
-```
-
-## Install sshd for development (for contribution)
-
-- Create a volume and make id_rsa.pub file then attach the volume to /root/.ssh
-- It will open ssh server automatically.
-- git clone
-- change directory (git clone directory)/admin
-- npm run watch
-
-## Built With
-
-- server side: npm, nodejs, express
-- client side: bower, sbadmin2 (bootstrap), jquery, moment, chart.js
-
-
-## Contributing
-
-Feel free to make PR!
-Don't forget to give the project a star! Thank you!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## Contributor License Agreement
-
-For easy license management and legal dispute avoidance, the contributing codes are attributed to the author and all rights are attributed to the author. In addition, the MIT license is maintained. If you don't want it, please don't make PR.
-
-## License
-
-MIT License
+  nginx-webui-logrotate-config:
