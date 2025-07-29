@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import si from 'systeminformation';
 import express from 'express';
 import session from 'express-session';
+import validator from 'validator';
 import NginxBeautify from 'nginxbeautify';
 import sessionFileStoreInit from 'session-file-store';
 import { exec, execFile } from 'child_process';
@@ -239,6 +240,12 @@ app.post('/api/deleteCert', (req, res) => {
 });
 
 function renewCertHTTP(domain, email, callback) {
+    if (!validator.isFQDN(domain, { require_tld: false }) || !validator.isEmail(email)) {
+        if (callback)
+            callback(new Error("Invalid domain or email"), null, null);
+        return;
+    }
+
     exec(`certbot certonly --nginx -n --agree-tos -d ${domain} -m ${email}`, (error, stdout, stderr) => {
         if (callback)
             callback(error, stdout, stderr);
@@ -385,6 +392,11 @@ app.post('/api/checkServerStatus', (req, res) => {
     const host = req.body.host;
     const port = req.body.port;
     const timeout = 2000;
+
+    if (!validator.isFQDN(host, { require_tld: false }) || !validator.isNumeric(port)) {
+        res.send({ success: false, message: "Invalid host or port" });
+        return;
+    }
 
     const socket = new net.Socket();
 

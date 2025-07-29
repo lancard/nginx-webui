@@ -12,6 +12,7 @@
     "sortablejs": "^1.15.6",
     "systeminformation": "^5.27.7",
     "theme-change": "^2.5.0",
+    "validator": "^13.15.15",
     "write-file-atomic": "^6.0.0"
   },
   "name": "nginx-webui",
