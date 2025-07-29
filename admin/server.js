@@ -246,7 +246,7 @@ function renewCertHTTP(domain, email, callback) {
         return;
     }
 
-    exec(`certbot certonly --nginx -n --agree-tos -d ${domain} -m ${email}`, (error, stdout, stderr) => {
+    execFile("/usr/bin/certbot", ["certonly", "--nginx", "-n", "--agree-tos", "-d", domain, "-m", email], (error, stdout, stderr) => {
         if (callback)
             callback(error, stdout, stderr);
     });
@@ -265,8 +265,17 @@ app.post('/api/renewCertHTTP', (req, res) => {
 app.post('/api/renewCertDNS', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
-    console.log(`new cert (dns): ${req.body.domain}`);
-    execFile('/admin/shell/dns-challenge.sh', [req.body.domain, req.body.email, req.body.wildcard], (error, stdout, stderr) => {
+    const domain = req.body.domain;
+    const email = req.body.email;
+    const wildcard = req.body.wildcard;
+
+    if (!validator.isFQDN(domain, { require_tld: false }) || !validator.isEmail(email) || !validator.isBoolean(wildcard)) {
+        res.end("Invalid domain or email");
+        return;
+    }
+
+    console.log(`new cert (dns): ${domain}`);
+    execFile('/admin/shell/dns-challenge.sh', [domain, email, wildcard], (error, stdout, stderr) => {
         res.end(stdout);
         console.log("new cert", error, stdout, stderr);
     });
