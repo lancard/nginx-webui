@@ -414,7 +414,7 @@ app.post('/api/checkServerStatus', (req, res) => {
     socket.connect(port, host, () => {
         isDone = true;
         socket.destroy();
-        res.json({ success: true, message: `${host}:${port} connected` });
+        res.json({ success: true, message: "connected" });
     });
 
     socket.on('error', (err) => {
