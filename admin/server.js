@@ -1,5 +1,6 @@
 import fs from 'fs';
 import writeFileAtomicSync from 'write-file-atomic';
+import isPortReachable from 'is-port-reachable';
 import net from 'net';
 import http from 'http';
 import dayjs from 'dayjs';
@@ -400,36 +401,24 @@ app.post('/api/checkServerStatus', (req, res) => {
 
     const host = req.body.host;
     const port = req.body.port;
-    const timeout = 2000;
 
     if (!validator.isFQDN(host, { require_tld: false }) || !validator.isNumeric(port)) {
         res.send({ success: false, message: "Invalid host or port" });
         return;
     }
 
-    const socket = new net.Socket();
-
-    let isDone = false;
-
-    socket.connect(port, host, () => {
-        isDone = true;
-        socket.destroy();
-        res.json({ success: true, message: "connected" });
-    });
-
-    socket.on('error', (err) => {
-        if (isDone) return;
-        isDone = true;
-        res.json({ success: false, message: err.message });
-    });
-
-    // 타임아웃 시
-    socket.setTimeout(timeout, () => {
-        if (isDone) return;
-        isDone = true;
-        socket.destroy();
-        res.json({ success: false, message: 'timeout' });
-    });
+    isPortReachable(port, { host: host })
+        .then(reachable => {
+            if (reachable) {
+                res.json({ success: true, message: "connected" });
+            }
+            else {
+                res.json({ success: false, message: "failed" });
+            }
+        })
+        .catch(err => {
+            res.json({ success: false, message: err.message });
+        });
 });
 
 app.get('/api/upstream/:upstream_name/:backend_address/:enable_type', (req, res) => {
