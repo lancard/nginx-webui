@@ -8,7 +8,7 @@ import express from 'express';
 import session from 'express-session';
 import NginxBeautify from 'nginxbeautify';
 import sessionFileStoreInit from 'session-file-store';
-import { exec } from 'child_process';
+import { exec, execFile } from 'child_process';
 import { tryCheckPassword, changePassword } from './login.js';
 
 const FileStore = sessionFileStoreInit(session);
@@ -259,7 +259,7 @@ app.post('/api/renewCertDNS', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
     console.log(`new cert (dns): ${req.body.domain}`);
-    exec(`/admin/shell/dns-challenge.sh ${req.body.domain} ${req.body.email} ${req.body.wildcard}`, (error, stdout, stderr) => {
+    execFile('/admin/shell/dns-challenge.sh', [req.body.domain, req.body.email, req.body.wildcard], (error, stdout, stderr) => {
         res.end(stdout);
         console.log("new cert", error, stdout, stderr);
     });
