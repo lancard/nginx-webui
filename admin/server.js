@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 import writeFileAtomicSync from 'write-file-atomic';
 import isPortReachable from 'is-port-reachable';
 import net from 'net';
@@ -199,8 +200,8 @@ app.get('/api/getCertList', (req, res) => {
 
         ret.push({
             domain: e,
-            created: fs.statSync(`/etc/letsencrypt/live/${e}`).mtime,
-            modified: fs.statSync(`/etc/letsencrypt/live/${e}/privkey.pem`).mtime
+            created: fs.statSync(path.join("/etc/letsencrypt/live/", e)).mtime,
+            modified: fs.statSync(path.join("/etc/letsencrypt/live/", e, "/privkey.pem")).mtime
         });
     });
 
@@ -210,12 +211,12 @@ app.get('/api/getCertList', (req, res) => {
 app.post('/api/uploadCert', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
-    const dir = `/etc/letsencrypt/live/${req.body.domain}`;
+    const dir = path.join("/etc/letsencrypt/live/", req.body.domain);
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
     }
-    writeFileAtomicSync(`${dir}/fullchain.pem`, req.body.cert);
-    writeFileAtomicSync(`${dir}/privkey.pem`, req.body.key);
+    writeFileAtomicSync(path.join(dir, "/fullchain.pem"), req.body.cert);
+    writeFileAtomicSync(path.join(dir, "/privkey.pem"), req.body.key);
 
     res.end("Upload OK");
 });
@@ -223,22 +224,29 @@ app.post('/api/uploadCert', (req, res) => {
 app.post('/api/deleteCert', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
+    const domain = req.body.domain;
+
+    if (!validator.isFQDN(domain, { require_tld: false })) {
+        res.end("Invalid domain name");
+        return;
+    }
+
     try {
-        const dir = `/etc/letsencrypt/live/${req.body.domain}`;
+        const dir = path.join("/etc/letsencrypt/live/", domain);
         fs.rmSync(dir, { recursive: true, force: true });
     }
     catch (e) {
     }
 
     try {
-        const renewalFile = `/etc/letsencrypt/renewal/${req.body.domain}.conf`;
+        const renewalFile = path.join("/etc/letsencrypt/renewal/", domain + ".conf");
         fs.rmSync(renewalFile);
     }
     catch (e) {
     }
 
     try {
-        const dir = `/etc/letsencrypt/archive/${req.body.domain}`;
+        const dir = path.join("/etc/letsencrypt/archive/", domain);
         fs.rmSync(dir, { recursive: true, force: true });
     }
     catch (e) {
@@ -485,7 +493,7 @@ function renewalCert() {
 
         config.cert.forEach(cert => {
             console.log(` - checking: ${cert.domain}`);
-            const filename = `/etc/letsencrypt/live/${cert.domain}/fullchain.pem`;
+            const filename = path.join("/etc/letsencrypt/live/", cert.domain, "/fullchain.pem");
             var statObject = null;
             var lastTime = dayjs("1900-01-01", "YYYY-MM-DD");
             var twoMonthBefore = dayjs().add(-2, 'month');
