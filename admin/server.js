@@ -10,9 +10,14 @@ import session from 'express-session';
 import validator from 'validator';
 import NginxBeautify from 'nginxbeautify';
 import sessionFileStoreInit from 'session-file-store';
+import { rateLimit } from 'express-rate-limit';
 import { exec, execFile } from 'child_process';
 import { tryCheckPassword, changePassword } from './login.js';
 
+const limiter = rateLimit({
+    windowMs: 1000,
+    max: 20
+});
 const FileStore = sessionFileStoreInit(session);
 const nginxBeautifier = new NginxBeautify();
 const port = process.env.npm_lifecycle_event == 'start' ? 3000 : 7777;
@@ -115,6 +120,8 @@ const sessionObj = {
 loadConfig();
 
 const app = express();
+
+app.use('/api', limiter);
 
 app.use(express.urlencoded({ extended: false }));
 
