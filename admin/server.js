@@ -62,6 +62,18 @@ function hasListen80(configText) {
     return regex.test(configText);
 }
 
+function checkPathUnderRoot(rootPath, targetPath) {
+    try {
+        const resolvedRoot = fs.realpathSync(path.resolve(rootPath));
+        const resolvedTarget = fs.realpathSync(path.resolve(targetPath));
+
+        return resolvedTarget.startsWith(resolvedRoot + '/');
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
+}
+
 function configToNginxConfig(config) {
     // common
     var nginxConfig = config.common + "\n";
@@ -198,10 +210,13 @@ app.get('/api/getCertList', (req, res) => {
         if (e == "README")
             return;
 
+        let dirPath = path.join("/etc/letsencrypt/live/", e);
+        let keyPath = path.join("/etc/letsencrypt/live/", e, "/privkey.pem");
+
         ret.push({
             domain: e,
-            created: fs.statSync(path.join("/etc/letsencrypt/live/", e)).mtime,
-            modified: fs.statSync(path.join("/etc/letsencrypt/live/", e, "/privkey.pem")).mtime
+            created: fs.statSync(dirPath).mtime,
+            modified: fs.statSync(keyPath).mtime
         });
     });
 
@@ -233,21 +248,30 @@ app.post('/api/deleteCert', (req, res) => {
 
     try {
         const dir = path.join("/etc/letsencrypt/live/", domain);
-        fs.rmSync(dir, { recursive: true, force: true });
+        if (checkPathUnderRoot("/etc/letsencrypt/live/", dir)) {
+            console.log("deleted");
+            fs.rmSync(dir, { recursive: true, force: true });
+        }
     }
     catch (e) {
     }
 
     try {
         const renewalFile = path.join("/etc/letsencrypt/renewal/", domain + ".conf");
-        fs.rmSync(renewalFile);
+        if (checkPathUnderRoot("/etc/letsencrypt/renewal/", renewalFile)) {
+            console.log("deleted2");
+            fs.rmSync(renewalFile);
+        }
     }
     catch (e) {
     }
 
     try {
         const dir = path.join("/etc/letsencrypt/archive/", domain);
-        fs.rmSync(dir, { recursive: true, force: true });
+        if (checkPathUnderRoot("/etc/letsencrypt/archive/", dir)) {
+            console.log("deleted3");
+            fs.rmSync(dir, { recursive: true, force: true });
+        }
     }
     catch (e) {
     }
@@ -255,24 +279,19 @@ app.post('/api/deleteCert', (req, res) => {
     res.end("Delete OK");
 });
 
-function renewCertHTTP(domain, email, callback) {
-    if (!validator.isFQDN(domain, { require_tld: false }) || !validator.isEmail(email)) {
-        if (callback)
-            callback(new Error("Invalid domain or email"), null, null);
-        return;
-    }
-
-    execFile("/usr/bin/certbot", ["certonly", "--nginx", "-n", "--agree-tos", "-d", domain, "-m", email], (error, stdout, stderr) => {
-        if (callback)
-            callback(error, stdout, stderr);
-    });
-}
-
 app.post('/api/renewCertHTTP', (req, res) => {
     if (isUnauthroizedRequest(req, res)) return;
 
-    console.log(`new cert (http): ${req.body.domain}`);
-    renewCertHTTP(req.body.domain, req.body.email, (error, stdout, stderr) => {
+    const domain = req.body.domain;
+    const email = req.body.email;
+
+    if (!validator.isFQDN(domain, { require_tld: false }) || !validator.isEmail(email)) {
+        res.end("Invalid domain or email");
+        return;
+    }
+
+    console.log(`new cert (http): ${domain}`);
+    execFile("/usr/bin/certbot", ["certonly", "--webroot", "-w", "/usr/share/nginx/html", "--agree-tos", "-d", domain, "-m", email], (error, stdout, stderr) => {
         res.end(stdout);
         console.log("new cert", error, stdout, stderr);
     });
@@ -482,6 +501,19 @@ app.get('/api/upstream/:upstream_name/:backend_address/:enable_type', (req, res)
 app.listen(port, () => {
     console.log(`listening on port ${port}`);
 });
+
+function renewCertHTTP(domain, email, callback) {
+    if (!validator.isFQDN(domain, { require_tld: false }) || !validator.isEmail(email)) {
+        if (callback)
+            callback(new Error("Invalid domain or email"), null, null);
+        return;
+    }
+
+    execFile("/usr/bin/certbot", ["certonly", "--nginx", "-n", "--agree-tos", "-d", domain, "-m", email], (error, stdout, stderr) => {
+        if (callback)
+            callback(error, stdout, stderr);
+    });
+}
 
 function renewalCert() {
     console.log("renewal start");
