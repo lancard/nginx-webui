@@ -68,10 +68,12 @@ function hasListen80(configText) {
 
 function checkPathUnderRoot(rootPath, targetPath) {
     try {
-        const resolvedRoot = fs.realpathSync(path.resolve(rootPath));
-        const resolvedTarget = fs.realpathSync(path.resolve(targetPath));
+        const resolvedRoot = path.resolve(rootPath);
+        const resolvedTarget = path.resolve(targetPath);
 
-        return resolvedTarget.startsWith(resolvedRoot + '/');
+        const relative = path.relative(resolvedRoot, resolvedTarget);
+
+        return !!relative && !relative.startsWith('..') && !path.isAbsolute(relative);
     } catch (err) {
         console.log(err);
         return false;
