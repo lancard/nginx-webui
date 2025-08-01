@@ -506,7 +506,7 @@ function renewCertHTTP(domain, email, callback) {
         return;
     }
 
-    execFile("/usr/bin/certbot", ["certonly", "--webroot", "-w", "/usr/share/nginx/html", "--agree-tos", "-d", domain, "-m", email], (error, stdout, stderr) => {
+    execFile("/usr/bin/certbot", ["certonly", "--non-interactive", "--webroot", "-w", "/usr/share/nginx/html", "--agree-tos", "-d", domain, "-m", email], (error, stdout, stderr) => {
         if (callback)
             callback(error, stdout, stderr);
     });
