@@ -14,7 +14,7 @@ import NginxBeautify from 'nginxbeautify';
 import { randomBytes } from 'node:crypto';
 import { rateLimit } from 'express-rate-limit';
 import { exec, execFile } from 'child_process';
-import { tryCheckPassword, changePassword } from './login.js';
+import { tryCheckPassword, changePassword, usernameBlacklist } from './login.js';
 
 const devMode = process.env.npm_lifecycle_event == 'start' ? false : true;
 

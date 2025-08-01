@@ -7,6 +7,7 @@ import { randomBytes } from 'node:crypto';
 const saltRounds = 7;
 const passwordFile = '/data/password.json';
 const maxTryCount = 20;
+export const usernameBlacklist = ['__proto__', 'constructor', 'prototype'];
 
 export function hashPassword(plainPassword) {
     const hash = bcrypt.hashSync(plainPassword, saltRounds);
@@ -58,6 +59,11 @@ export function tryCheckPassword(user, password) {
 }
 
 export function changePassword(user, password) {
+    if (usernameBlacklist.includes(user)) {
+        console.log('refusing to set dangerous property');
+        return;
+    }
+
     const userList = loadPassword();
     if (!userList[user] || !password) {
         return "no user or no password.";
@@ -71,6 +77,11 @@ export function changePassword(user, password) {
 }
 
 export function resetPassword(user) {
+    if (usernameBlacklist.includes(user)) {
+        console.log('refusing to set dangerous property');
+        return;
+    }
+
     const userList = loadPassword();
     if (!userList[user]) {
         userList[user] = {};
