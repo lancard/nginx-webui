@@ -246,9 +246,16 @@ app.get('/api/getCertList', (req, res) => {
 
 app.post('/api/uploadCert', (req, res) => {
     const dir = path.join("/etc/letsencrypt/live/", req.body.domain);
+    
+    if (!checkPathUnderRoot("/etc/letsencrypt/live/", dir)) {
+        res.end("Security Alert!");
+        return;
+    }
+
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
     }
+
     writeFileAtomic.sync(path.join(dir, "/fullchain.pem"), req.body.cert);
     writeFileAtomic.sync(path.join(dir, "/privkey.pem"), req.body.key);
 
@@ -266,7 +273,6 @@ app.post('/api/deleteCert', (req, res) => {
     try {
         const dir = path.join("/etc/letsencrypt/live/", domain);
         if (checkPathUnderRoot("/etc/letsencrypt/live/", dir)) {
-            console.log("deleted");
             fs.rmSync(dir, { recursive: true, force: true });
         }
     }
@@ -276,7 +282,6 @@ app.post('/api/deleteCert', (req, res) => {
     try {
         const renewalFile = path.join("/etc/letsencrypt/renewal/", domain + ".conf");
         if (checkPathUnderRoot("/etc/letsencrypt/renewal/", renewalFile)) {
-            console.log("deleted2");
             fs.rmSync(renewalFile);
         }
     }
@@ -286,7 +291,6 @@ app.post('/api/deleteCert', (req, res) => {
     try {
         const dir = path.join("/etc/letsencrypt/archive/", domain);
         if (checkPathUnderRoot("/etc/letsencrypt/archive/", dir)) {
-            console.log("deleted3");
             fs.rmSync(dir, { recursive: true, force: true });
         }
     }
