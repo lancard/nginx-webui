@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import writeFileAtomicSync from 'write-file-atomic';
+import * as writeFileAtomic from 'write-file-atomic';
 import isPortReachable from 'is-port-reachable';
 import net from 'net';
 import http from 'http';
@@ -57,7 +57,7 @@ function loadConfig() {
 }
 
 function saveConfig(configText) {
-    writeFileAtomicSync(configFile, configText);
+    writeFileAtomic.sync(configFile, configText);
 }
 
 function hasListen80(configText) {
@@ -249,8 +249,8 @@ app.post('/api/uploadCert', (req, res) => {
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
     }
-    writeFileAtomicSync(path.join(dir, "/fullchain.pem"), req.body.cert);
-    writeFileAtomicSync(path.join(dir, "/privkey.pem"), req.body.key);
+    writeFileAtomic.sync(path.join(dir, "/fullchain.pem"), req.body.cert);
+    writeFileAtomic.sync(path.join(dir, "/privkey.pem"), req.body.key);
 
     res.end("Upload OK");
 });
@@ -340,7 +340,7 @@ app.get('/api/getLogrotate', (req, res) => {
 });
 
 app.post('/api/saveLogrotate', (req, res) => {
-    writeFileAtomicSync('/etc/logrotate.d/nginx', req.body.logrotate);
+    writeFileAtomic.sync('/etc/logrotate.d/nginx', req.body.logrotate);
 
     res.send("OK");
 });
@@ -385,7 +385,7 @@ app.post('/api/previewConfig', (req, res) => {
 });
 
 app.post('/api/testConfig', (req, res) => {
-    writeFileAtomicSync('/nginx_config/nginx.conf', generateNginxConfig());
+    writeFileAtomic.sync('/nginx_config/nginx.conf', generateNginxConfig());
 
     exec("nginx -t -c /nginx_config/nginx.conf", (error, stdout, stderr) => {
         var obj = {
@@ -401,8 +401,8 @@ function applyConfig(callback) {
 
     var nginxConfig = generateNginxConfig();
 
-    writeFileAtomicSync('/etc/nginx/nginx.conf', nginxConfig);
-    writeFileAtomicSync('/data/nginx.conf', nginxConfig);
+    writeFileAtomic.sync('/etc/nginx/nginx.conf', nginxConfig);
+    writeFileAtomic.sync('/data/nginx.conf', nginxConfig);
 
     exec("nginx -s reload", (error, stdout, stderr) => {
         var obj = {

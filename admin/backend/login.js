@@ -1,4 +1,5 @@
 import fs from 'fs';
+import * as writeFileAtomic from 'write-file-atomic';
 import dayjs from 'dayjs';
 import bcrypt from 'bcrypt';
 import { randomBytes } from 'node:crypto';
@@ -22,7 +23,7 @@ export function loadPassword() {
 }
 
 export function savePassword(configPassowrd) {
-    fs.writeFileSync(passwordFile, JSON.stringify(configPassowrd, null, '\t'));
+    writeFileAtomic.sync(passwordFile, JSON.stringify(configPassowrd, null, '\t'));
 }
 
 export function tryCheckPassword(user, password) {
