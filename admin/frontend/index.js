@@ -222,6 +222,9 @@ class NginxWebUI {
         $.ajax({
             type: "POST",
             url: '/api/login',
+            xhrFields: {
+                withCredentials: true
+            },
             data: { user: $("#user").val(), password: $("#password").val() },
             success: (ret) => {
                 if (ret == "OK") {
@@ -786,7 +789,7 @@ class NginxWebUI {
         $.ajax({
             type: "POST",
             url: '/api/uploadCert',
-            data: { name: $("#domainName").val(), cert: $("#certFile").val(), key: $("#keyFile").val() },
+            data: { domain: $("#domainName").val(), cert: $("#certFile").val(), key: $("#keyFile").val() },
             success: (ret) => {
                 this.loadCertList();
                 alert(ret);

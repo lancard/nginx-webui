@@ -28,6 +28,7 @@ if (!jwtSecret) {
     console.log("Generated JWT_SECRET = " + jwtSecret);
 }
 const jwtExpiresIn = process.env.JWT_EXPIRES_IN || '1h';
+const cookieTokenName = devMode ? 'nginxwebuitoken_dev' : 'nginxwebuitoken';
 
 const limiter = rateLimit({
     windowMs: 1000,
@@ -141,7 +142,7 @@ app.use((req, res, next) => {
         return next();
     }
 
-    const token = req.cookies.nginxwebuitoken;
+    const token = req.cookies[cookieTokenName];
 
     if (!req || !token) {
         res.sendStatus(401);
@@ -176,7 +177,7 @@ app.post('/api/login', (req, res) => {
 
     const token = jwt.sign({ user: req.body.user }, jwtSecret, { expiresIn: jwtExpiresIn });
 
-    res.cookie('nginxwebuitoken', token, {
+    res.cookie(cookieTokenName, token, {
         httpOnly: true,
         secure: !devMode,
         sameSite: 'Strict'
@@ -196,7 +197,7 @@ app.post('/api/checkLogin', (req, res) => {
 });
 
 app.post('/api/logout', (req, res) => {
-    res.clearCookie('nginxwebuitoken');
+    res.clearCookie(cookieTokenName);
     res.send("OK");
 });
 
@@ -246,7 +247,7 @@ app.get('/api/getCertList', (req, res) => {
 
 app.post('/api/uploadCert', (req, res) => {
     const dir = path.join("/etc/letsencrypt/live/", req.body.domain);
-    
+
     if (!checkPathUnderRoot("/etc/letsencrypt/live/", dir)) {
         res.end("Security Alert!");
         return;
