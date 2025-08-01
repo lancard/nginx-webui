@@ -21,11 +21,11 @@ jobs:
             --exclude-dir=.git \
             --exclude-dir=node_modules \
             --exclude-dir=dist \
-            --binary-files=without-match | grep -vP '[\xF0\x9F\xE2\x9C]'; then
-              echo "❌ Non-ASCII character detected. abort."
+            --binary-files=without-match; then
+              echo "Non-ASCII character detected. abort."
               exit 1
           else
-              echo "✅ All good."
+              echo "All good."
           fi
 
       - name: Extract version and set it to TAG env var

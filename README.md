@@ -7,35 +7,35 @@
 ![Docker Pulls](https://img.shields.io/docker/pulls/lancard/nginx-webui)
 ![Docker Image Size](https://img.shields.io/docker/image-size/lancard/nginx-webui)
 
-> 💡 **Manage NGINX like a pro, without touching the terminal.**  
+> **Manage NGINX like a pro, without touching the terminal.**  
 > Simple, powerful, and production-ready NGINX management UI with Let's Encrypt integration.
 
 ---
 
-## ✨ Features
+## Features
 
-- ✅ One‑click reverse proxy setup  
-- 🔐 Automatic Let's Encrypt certificate issuance & renewal (incl. DNS challenge)  
-- 🔁 **Path Rewriting & Redirects**: Fine-grained control over request rewriting and redirect rules.
-- 📁 **Static File Hosting**: Easily expose folders with access control.
-- 🔄 CI/CD‑friendly API to enable/disable upstream backends  
-- 🧰 Logrotate configuration via UI  
-- ⚙️ Superuser/admin mode for advanced NGINX config  
-- 👨‍👩‍👧‍👦 Designed for managing **multiple domains** and **teams**  
-- 🧪 Non‑disruptive deployments using Jenkins or other CI/CD tools  
-- ⚡ Built with **full ES Modules (ESM)** for modern, modular Node.js architecture  
-- 📱 **Responsive, mobile‑friendly UI** that adapts to desktop, tablet, and phone layouts  
-- 🧩 **Lightweight and minimal UI stack**: tailwind, daisyui etc. (no heavy frameworks)  
-- 🔁 Instant config reload & validation – UI‑triggered NGINX config test + reload  
-- 🔥 **certificate data persisted in Docker volumes**, ready for production
-- 🛠 Easy setup with production‑grade **Docker‑Compose**
-- 📈 **NGINX Status Dashboard**: Real-time stats including active OS-level connections.
-- 🌙 **Dark Mode & Themes**: Modern UI with theme switching support.
-- 📡 **Backend Health Check**: Ping and verify backend server availability.
+- One-click reverse proxy setup
+- Automatic Let's Encrypt certificate issuance & renewal (incl. DNS challenge)  
+- **Path Rewriting & Redirects**: Fine-grained control over request rewriting and redirect rules.
+- **Static File Hosting**: Easily expose folders with access control.
+- CI/CD-friendly API to enable/disable upstream backends  
+- Logrotate configuration via UI  
+- Superuser/admin mode for advanced NGINX config  
+- Designed for managing **multiple domains** and **teams**  
+- Non-disruptive deployments using Jenkins or other CI/CD tools  
+- Built with **full ES Modules (ESM)** for modern, modular Node.js architecture  
+- **Responsive, mobile-friendly UI** that adapts to desktop, tablet, and phone layouts  
+- **Lightweight and minimal UI stack**: tailwind, daisyui etc. (no heavy frameworks)  
+- Instant config reload & validation - UI-triggered NGINX config test + reload  
+- **certificate data persisted in Docker volumes**, ready for production
+- Easy setup with production-grade **Docker-Compose**
+- **NGINX Status Dashboard**: Real-time stats including active OS-level connections.
+- **Dark Mode & Themes**: Modern UI with theme switching support.
+- **Backend Health Check**: Ping and verify backend server availability.
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 | UI Overview | Cert Management | Backend Server | Domain/URL |
 |------------|----------------|----------------|-----------|
@@ -43,7 +43,7 @@
 
 ---
 
-## 🎬 Video Tutorials
+## Video Tutorials
 
 - **Install & Load-Balancer Setup**  
   [![Install and Setup](https://img.youtube.com/vi/3SEdU_Jj5IM/0.jpg)](https://www.youtube.com/watch?v=3SEdU_Jj5IM)
@@ -147,7 +147,7 @@ npm run password
 
 ---
 
-## 📦 Migration Guide
+## Migration Guide
 
 If you're upgrading from a previous version, please refer to the [MIGRATION.md](./MIGRATION.md) for detailed steps and compatibility notes.
 
