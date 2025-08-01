@@ -1,6 +1,7 @@
 import fs from 'fs';
 import dayjs from 'dayjs';
 import bcrypt from 'bcrypt';
+import { randomBytes } from 'node:crypto';
 
 const saltRounds = 7;
 const passwordFile = '/data/password.json';
@@ -55,19 +56,6 @@ export function tryCheckPassword(user, password) {
     return "";
 }
 
-export function generateRandomString(length) {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    let counter = 0;
-    while (counter < length) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        counter += 1;
-    }
-    return result;
-}
-
-
 export function changePassword(user, password) {
     const userList = loadPassword();
     if (!userList[user]) {
@@ -75,7 +63,7 @@ export function changePassword(user, password) {
     }
     let userInfo = userList[user];
     if (!password) {
-        password = generateRandomString(16);
+        password = randomBytes(16).toString('hex');
         console.log(`initial password: ${password}`);
     }
     userInfo.password = hashPassword(password);
@@ -83,5 +71,5 @@ export function changePassword(user, password) {
     userInfo.lastLogin = dayjs().toISOString();
     savePassword(userList);
 
-    console.log(`change password / reset count: ${user}`);
+    console.log(`change password and reset count: ${user}`);
 }

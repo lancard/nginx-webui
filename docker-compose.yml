@@ -17,7 +17,6 @@ services:
     volumes:
       - nginx-webui-data:/data
       - nginx-webui-cert:/etc/letsencrypt
-      - nginx-webui-session:/session
       - nginx-webui-log:/var/log/nginx
       - nginx-webui-logrotate-config:/etc/logrotate.d
 

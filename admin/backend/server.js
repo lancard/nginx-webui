@@ -6,23 +6,31 @@ import net from 'net';
 import http from 'http';
 import dayjs from 'dayjs';
 import si from 'systeminformation';
+import jwt from 'jsonwebtoken';
 import express from 'express';
-import session from 'express-session';
+import cookieParser from 'cookie-parser';
 import validator from 'validator';
 import NginxBeautify from 'nginxbeautify';
-import sessionFileStoreInit from 'session-file-store';
+import { randomBytes } from 'node:crypto';
 import { rateLimit } from 'express-rate-limit';
 import { exec, execFile } from 'child_process';
 import { tryCheckPassword, changePassword } from './login.js';
+
+let jwtSecret = process.env.JWT_SECRET;
+if (!jwtSecret) {
+    jwtSecret = randomBytes(64).toString('hex');
+    console.log("no JWT_SECRET environment variable found.");
+    console.log("Generated JWT_SECRET = " + jwtSecret);
+}
+const jwtExpiresIn = process.env.JWT_EXPIRES_IN || '1h';
 
 const limiter = rateLimit({
     windowMs: 1000,
     max: 20
 });
-const FileStore = sessionFileStoreInit(session);
 const nginxBeautifier = new NginxBeautify();
-const port = process.env.npm_lifecycle_event == 'start' ? 3000 : 7777;
-const sessionTime = 30 * 60;
+const devMode = process.env.npm_lifecycle_event == 'start' ? false : true;
+const port = devMode ? 7777 : 3000;
 const configFile = '/data/config.json';
 
 process.once('SIGTERM', (code) => {
@@ -46,15 +54,6 @@ function loadConfig() {
 
 function saveConfig(configText) {
     writeFileAtomicSync(configFile, configText);
-}
-
-function isUnauthroizedRequest(req, res) {
-    if (!req || !req.session || req.session.user != 'administrator') {
-        res.sendStatus(401);
-        return true;
-    }
-
-    return false;
 }
 
 function hasListen80(configText) {
@@ -121,26 +120,41 @@ function configToNginxConfig(config) {
     return nginxConfig;
 }
 
-const sessionObj = {
-    secret: 'nginxwebuisession',
-    resave: true,
-    saveUninitialized: false,
-    store: new FileStore({ ttl: sessionTime, path: '/session', retries: 0 }),
-    cookie: { maxAge: sessionTime * 1000 }
-};
-
-
 loadConfig();
 
 const app = express();
+
+app.use(cookieParser());
 
 app.use('/api', limiter);
 
 app.use(express.urlencoded({ extended: false }));
 
-app.use(session(sessionObj));
+app.use('/static', express.static('../frontend'));
 
-app.use('/static', express.static('static'));
+app.use((req, res, next) => {
+    if (req.path.startsWith('/static') || req.path === '/' || req.path === '/favicon.ico' || req.path === '/api/login' || req.path === '/api/checkLogin' || req.path === '/api/logout') {
+        return next();
+    }
+
+    const token = req.cookies.nginxwebuitoken;
+
+    if (!req || !token) {
+        res.sendStatus(401);
+        return;
+    }
+
+    try {
+        const jwtInfo = jwt.verify(token, jwtSecret);
+        req.loginInfo = jwtInfo;
+    }
+    catch (e) {
+        res.sendStatus(401);
+        return;
+    }
+
+    next();
+});
 
 app.get('/', (req, res) => {
     res.redirect('/static/login.html');
@@ -156,26 +170,33 @@ app.post('/api/login', (req, res) => {
         return;
     }
 
-    req.session.user = req.body.user;
-    req.session.save();
+    const token = jwt.sign({ user: req.body.user }, jwtSecret, { expiresIn: jwtExpiresIn });
+
+    res.cookie('nginxwebuitoken', token, {
+        httpOnly: true,
+        secure: !devMode,
+        sameSite: 'Strict'
+    });
 
     res.send("OK");
 });
 
 app.post('/api/checkLogin', (req, res) => {
-    res.send(req.session.user == 'administrator');
+    if (!req.loginInfo || !req.loginInfo.user != 'administrator') {
+        res.send(false);
+        return;
+    }
+
+    res.send(true);
     return;
 });
 
 app.post('/api/logout', (req, res) => {
-    delete req.session.user;
-    req.session.save();
+    res.clearCookie('nginxwebuitoken');
     res.send("OK");
 });
 
 app.post('/api/changePassword', (req, res) => {
-    if (isUnauthroizedRequest(req, res)) return;
-
     changePassword(req.body.user, req.body.password);
 
     res.send("OK");
@@ -183,8 +204,6 @@ app.post('/api/changePassword', (req, res) => {
 
 
 app.get('/api/getNginxStatus', (req, res) => {
-    if (isUnauthroizedRequest(req, res)) return;
-
     http.get('http://127.0.0.1:5000/status', (apiRes) => {
         apiRes.setEncoding('utf8');
 
@@ -202,8 +221,6 @@ app.get('/api/getNginxStatus', (req, res) => {
 });
 
 app.get('/api/getCertList', (req, res) => {
-    if (isUnauthroizedRequest(req, res)) return;
-
     var arr = fs.readdirSync('/etc/letsencrypt/live');
     var ret = [];
     arr.forEach(e => {
@@ -224,8 +241,6 @@ app.get('/api/getCertList', (req, res) => {
 });
 
 app.post('/api/uploadCert', (req, res) => {
-    if (isUnauthroizedRequest(req, res)) return;
-
     const dir = path.join("/etc/letsencrypt/live/", req.body.domain);
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
@@ -237,8 +252,6 @@ app.post('/api/uploadCert', (req, res) => {
 });
 
 app.post('/api/deleteCert', (req, res) => {
-    if (isUnauthroizedRequest(req, res)) return;
-
     const domain = req.body.domain;
 
     if (!validator.isFQDN(domain, { require_tld: false })) {
@@ -280,26 +293,17 @@ app.post('/api/deleteCert', (req, res) => {
 });
 
 app.post('/api/renewCertHTTP', (req, res) => {
-    if (isUnauthroizedRequest(req, res)) return;
-
     const domain = req.body.domain;
     const email = req.body.email;
 
-    if (!validator.isFQDN(domain, { require_tld: false }) || !validator.isEmail(email)) {
-        res.end("Invalid domain or email");
-        return;
-    }
-
     console.log(`new cert (http): ${domain}`);
-    execFile("/usr/bin/certbot", ["certonly", "--webroot", "-w", "/usr/share/nginx/html", "--agree-tos", "-d", domain, "-m", email], (error, stdout, stderr) => {
+    renewCertHTTP(domain, email, (error, stdout, stderr) => {
         res.end(stdout);
         console.log("new cert", error, stdout, stderr);
     });
 });
 
 app.post('/api/renewCertDNS', (req, res) => {
-    if (isUnauthroizedRequest(req, res)) return;
-
     const domain = req.body.domain;
     const email = req.body.email;
     const wildcard = req.body.wildcard;
@@ -317,8 +321,6 @@ app.post('/api/renewCertDNS', (req, res) => {
 });
 
 app.get('/api/getSystemInformation', (req, res) => {
-    if (isUnauthroizedRequest(req, res)) return;
-
     si.networkConnections()
         .then(data => {
             sendJson(res, data);
@@ -330,28 +332,20 @@ app.get('/api/getSystemInformation', (req, res) => {
 });
 
 app.get('/api/getLogrotate', (req, res) => {
-    if (isUnauthroizedRequest(req, res)) return;
-
     res.send(fs.readFileSync('/etc/logrotate.d/nginx').toString());
 });
 
 app.post('/api/saveLogrotate', (req, res) => {
-    if (isUnauthroizedRequest(req, res)) return;
-
     writeFileAtomicSync('/etc/logrotate.d/nginx', req.body.logrotate);
 
     res.send("OK");
 });
 
 app.get('/api/getConfig', (req, res) => {
-    if (isUnauthroizedRequest(req, res)) return;
-
     sendJson(res, loadConfig());
 });
 
 app.post('/api/saveConfig', (req, res) => {
-    if (isUnauthroizedRequest(req, res)) return;
-
     if (!req.body.config) {
         res.sendStatus(500);
         return;
@@ -379,8 +373,6 @@ function generateNginxConfigFromRequest(config) {
 }
 
 app.post('/api/previewConfig', (req, res) => {
-    if (isUnauthroizedRequest(req, res)) return;
-
     sendJson(res, {
         preview: generateNginxConfigFromRequest(JSON.parse(req.body.config)),
         current: fs.readFileSync('/etc/nginx/nginx.conf').toString(),
@@ -389,8 +381,6 @@ app.post('/api/previewConfig', (req, res) => {
 });
 
 app.post('/api/testConfig', (req, res) => {
-    if (isUnauthroizedRequest(req, res)) return;
-
     writeFileAtomicSync('/nginx_config/nginx.conf', generateNginxConfig());
 
     exec("nginx -t -c /nginx_config/nginx.conf", (error, stdout, stderr) => {
@@ -423,16 +413,12 @@ function applyConfig(callback) {
 }
 
 app.post('/api/applyConfig', (req, res) => {
-    if (isUnauthroizedRequest(req, res)) return;
-
     applyConfig(obj => {
         sendJson(res, obj);
     });
 });
 
 app.post('/api/checkServerStatus', (req, res) => {
-    if (isUnauthroizedRequest(req, res)) return;
-
     const host = req.body.host;
     const port = req.body.port;
 
@@ -509,7 +495,7 @@ function renewCertHTTP(domain, email, callback) {
         return;
     }
 
-    execFile("/usr/bin/certbot", ["certonly", "--nginx", "-n", "--agree-tos", "-d", domain, "-m", email], (error, stdout, stderr) => {
+    execFile("/usr/bin/certbot", ["certonly", "--webroot", "-w", "/usr/share/nginx/html", "--agree-tos", "-d", domain, "-m", email], (error, stdout, stderr) => {
         if (callback)
             callback(error, stdout, stderr);
     });

@@ -1,32 +1,18 @@
 {
-  "dependencies": {
-    "bcrypt": "^6.0.0",
-    "chart.js": "^4.5.0",
-    "dayjs": "^1.11.13",
-    "express": "^5.1.0",
-    "express-rate-limit": "^8.0.1",
-    "express-session": "^1.18.2",
-    "is-port-reachable": "^4.0.0",
-    "jquery": "^3.7.1",
-    "lodash": "^4.17.21",
-    "nginxbeautify": "^2.0.1",
-    "session-file-store": "^1.5.0",
-    "sortablejs": "^1.15.6",
-    "systeminformation": "^5.27.7",
-    "theme-change": "^2.5.0",
-    "validator": "^13.15.15",
-    "write-file-atomic": "^6.0.0"
-  },
+  "private": true,
+  "workspaces": [
+    "packages/backend",
+    "packages/frontend"
+  ],
   "name": "nginx-webui",
-  "version": "1.3.4",
-  "type": "module",
+  "version": "1.3.5",
   "description": "nginx webui",
-  "main": "src/index.js",
   "scripts": {
-    "password": "node --input-type=module -e \"import { changePassword } from './login.js'; changePassword('administrator');\"",
-    "start": "node server.js",
-    "build": "npx postcss static/index.css -o static/dist/index.css && npx esbuild static/index.js --bundle --format=esm --target=esnext --outdir=static/dist --minify --sourcemap",
-    "watch": "(node --watch server.js) & (npx postcss --watch static/index.css -o static/dist/index.css) & (npx esbuild --watch static/index.js --bundle --format=esm --target=esnext --outdir=static/dist --minify --sourcemap)"
+    "password": "cd backend && node --input-type=module -e \"import { changePassword } from './login.js'; changePassword('administrator');\"",
+    "start": "cd backend && node server.js",
+    "build": "cd frontend && npx postcss index.css -o dist/index.css && npx esbuild index.js --bundle --format=esm --target=esnext --outdir=dist --minify --sourcemap",
+    "cleanBuild": "rm -rf frontend/node_modules",
+    "watch": "(cd backend && node --watch server.js) & (cd frontend && npx postcss --watch index.css -o dist/index.css) & (cd frontend && npx esbuild --watch index.js --bundle --format=esm --target=esnext --outdir=dist --minify --sourcemap)"
   },
   "repository": {
     "type": "git",
@@ -42,15 +28,5 @@
   "bugs": {
     "url": "https://github.com/lancard/nginx-webui/issues"
   },
-  "homepage": "https://github.com/lancard/nginx-webui#readme",
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.11",
-    "@tailwindcss/typography": "^0.5.16",
-    "autoprefixer": "^10.4.21",
-    "daisyui": "^5.0.47",
-    "esbuild": "^0.25.8",
-    "postcss": "^8.5.6",
-    "postcss-cli": "^11.0.1",
-    "tailwindcss": "^4.1.11"
-  }
+  "homepage": "https://github.com/lancard/nginx-webui#readme"
 }

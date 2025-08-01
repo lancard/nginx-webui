@@ -19,7 +19,6 @@ COPY admin /admin
 COPY container_files/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 RUN mkdir -p /data
-RUN mkdir -p /session
 RUN rm -f /var/log/nginx/*
 
 # change to node folder
@@ -27,5 +26,6 @@ WORKDIR /admin
 RUN npm install -g esbuild
 RUN npm install
 RUN npm run build
+RUN npm run cleanBuild
 
 ENTRYPOINT ["/entrypoint.sh"]
