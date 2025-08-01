@@ -16,9 +16,14 @@ import { rateLimit } from 'express-rate-limit';
 import { exec, execFile } from 'child_process';
 import { tryCheckPassword, changePassword } from './login.js';
 
+const devMode = process.env.npm_lifecycle_event == 'start' ? false : true;
+
 let jwtSecret = process.env.JWT_SECRET;
 if (!jwtSecret) {
     jwtSecret = randomBytes(64).toString('hex');
+    if (devMode) {
+        jwtSecret = "test1234567890ab";
+    }
     console.log("no JWT_SECRET environment variable found.");
     console.log("Generated JWT_SECRET = " + jwtSecret);
 }
@@ -29,7 +34,6 @@ const limiter = rateLimit({
     max: 20
 });
 const nginxBeautifier = new NginxBeautify();
-const devMode = process.env.npm_lifecycle_event == 'start' ? false : true;
 const port = devMode ? 7777 : 3000;
 const configFile = '/data/config.json';
 
