@@ -112,10 +112,10 @@ class NginxWebUI {
                     caretPadding: 10
                 },
                 title: {
-                    display: true,          // 제목 표시 여부
-                    text: 'Connections',  // 제목 내용
+                    display: true,
+                    text: 'Connections',
                     font: {
-                        size: 18             // 글꼴 크기 조정
+                        size: 18
                     },
                     padding: {
                         top: 10,

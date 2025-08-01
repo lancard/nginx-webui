@@ -13,6 +13,21 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Check for non-ASCII characters (excluding emoji)
+        run: |
+          set -e
+
+          if grep -rInP '[^\x00-\x7F]' . \
+            --exclude-dir=.git \
+            --exclude-dir=node_modules \
+            --exclude-dir=dist \
+            --binary-files=without-match | grep -vP '[\xF0\x9F\xE2\x9C]'; then
+              echo "❌ Non-ASCII character detected. abort."
+              exit 1
+          else
+              echo "✅ All good."
+          fi
+
       - name: Extract version and set it to TAG env var
         run: echo "TAG=$(jq -r '.version' admin/package.json)" >> $GITHUB_ENV
 
