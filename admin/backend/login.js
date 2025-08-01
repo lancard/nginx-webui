@@ -28,6 +28,10 @@ export function savePassword(configPassowrd) {
 }
 
 export function tryCheckPassword(user, password) {
+    if (usernameBlacklist.includes(user)) {
+        return "refusing to set dangerous property";
+    }
+
     const userList = loadPassword();
 
     let userInfo = userList[user];
