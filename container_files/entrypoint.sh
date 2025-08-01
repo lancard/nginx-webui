@@ -56,8 +56,7 @@ if [ -f /root/.ssh/id_rsa.pub ]; then
     if [ ! -d /root/nginx-webui ]; then
         # clone git
         git clone git@github.com:lancard/nginx-webui.git /root/nginx-webui || true
-        npm install --prefix /root/nginx-webui/admin/frontend/
-        npm install --prefix /root/nginx-webui/admin/backend/
+        (cd /root/nginx-webui/admin && npm install)
     fi
 else
     echo "id_rsa.pub not detected. Skipping SSH setup."
