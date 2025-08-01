@@ -3,6 +3,8 @@ name: build-module-version-up
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -20,13 +22,6 @@ jobs:
           cd admin
           npm update
           npm update --save
-
-      # ignore bower due to .gitignore file
-      # - name: bower update
-      #   run: |
-      #     npm install -g bower
-      #     cd admin/static
-      #     bower install jquery moment fontawesome --save
 
       - name: Commit changes
         run: |
