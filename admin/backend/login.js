@@ -58,14 +58,26 @@ export function tryCheckPassword(user, password) {
 
 export function changePassword(user, password) {
     const userList = loadPassword();
+    if (!userList[user] || !password) {
+        return "no user or no password.";
+    }
+    let userInfo = userList[user];
+    userInfo.password = hashPassword(password);
+    userInfo.tryCount = 0;
+    savePassword(userList);
+
+    console.log(`change password: ${user}`);
+}
+
+export function resetPassword(user) {
+    const userList = loadPassword();
     if (!userList[user]) {
         userList[user] = {};
     }
     let userInfo = userList[user];
-    if (!password) {
-        password = randomBytes(16).toString('hex');
-        console.log(`initial password: ${password}`);
-    }
+    password = randomBytes(16).toString('hex');
+    console.log(`initial password: ${password}`);
+
     userInfo.password = hashPassword(password);
     userInfo.tryCount = 0;
     userInfo.lastLogin = dayjs().toISOString();
