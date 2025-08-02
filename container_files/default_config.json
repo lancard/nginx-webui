@@ -3,7 +3,8 @@
                 {
                         "domain": "localhost_nginx_webui",
                         "adminEmail": "admin@localhost",
-                        "autoRenewal": "true"
+                        "autoRenewal": "false",
+                        "wildcard": "false"
                 }
         ],
         "upstream": [
@@ -34,14 +35,8 @@
                 {
                         "siteName": "test_site",
                         "serverName": "test.com",
-                        "adminEmail": "",
-                        "autoRenew": "false",
                         "siteConfig": "listen 80;\n# listen 443 ssl;\n# ssl_certificate /etc/letsencrypt/live/test.com/fullchain.pem;\n# ssl_certificate_key /etc/letsencrypt/live/test.com/privkey.pem;\n",
                         "locations": [
-                                {
-                                        "address": "/.well-known/acme-challenge",
-                                        "config": "# for let's encrypt renewal\nroot /usr/share/nginx/html;"
-                                },
                                 {
                                         "address": "/",
                                         "config": "set $backend            http://test_service;\nproxy_pass              $backend;\n\nproxy_set_header        Host $host:$server_port;\nproxy_set_header        X-Real-IP $remote_addr;\nproxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;\nproxy_set_header        X-Forwarded-Proto $scheme;\n\n# Required for new HTTP-based CLI\nproxy_http_version 1.1;\nproxy_request_buffering off;\nproxy_buffering off; # Required for HTTP-based CLI to work over SSL\n\n# timeout\nproxy_connect_timeout 900;      \nproxy_send_timeout 900;      \nproxy_read_timeout 900;      \nsend_timeout 900;"
@@ -49,20 +44,18 @@
                                 {
                                         "address": "/api",
                                         "config": "set $backend            http://test_service;\nproxy_pass              $backend;\n\nproxy_set_header        Host $host:$server_port;\nproxy_set_header        X-Real-IP $remote_addr;\nproxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;\nproxy_set_header        X-Forwarded-Proto $scheme;\n\n# Required for new HTTP-based CLI\nproxy_http_version 1.1;\nproxy_request_buffering off;\nproxy_buffering off; # Required for HTTP-based CLI to work over SSL\n\n# timeout\nproxy_connect_timeout 900;      \nproxy_send_timeout 900;      \nproxy_read_timeout 900;      \nsend_timeout 900;"
+                                },
+                                {
+                                        "address": "~* \\.(jpg|jpeg|png|gif)$",
+                                        "config": "set $backend            http://test_service;\nproxy_pass              $backend;\n\nproxy_set_header        Host $host:$server_port;\nproxy_set_header        X-Real-IP $remote_addr;\nproxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;\nproxy_set_header        X-Forwarded-Proto $scheme;\n\n# Required for new HTTP-based CLI\nproxy_http_version 1.1;\nproxy_request_buffering off;\n\n# timeout\nproxy_connect_timeout 900;      \nproxy_send_timeout 900;      \nproxy_read_timeout 900;      \nsend_timeout 900;\n\n# cache\n# proxy_cache nginxcache;\n# proxy_ignore_headers Cache-Control Expires Set-Cookie;\n# proxy_cache_revalidate on;\n# proxy_cache_lock on;\n# proxy_cache_valid 200 301 302 1m; # 1min\n# proxy_cache_use_stale error timeout http_500 http_502 http_503 http_504;\n# proxy_cache_background_update on;\n# add_header X-CACHE-STATUS $upstream_cache_status;\n"
                                 }
                         ]
                 },
                 {
                         "siteName": "test_site2",
                         "serverName": "test2.com",
-                        "adminEmail": "",
-                        "autoRenew": "false",
                         "siteConfig": "listen 80;\n# listen 443 ssl;\n# ssl_certificate /etc/letsencrypt/live/test2.com/fullchain.pem;\n# ssl_certificate_key /etc/letsencrypt/live/test2.com/privkey.pem;\n",
                         "locations": [
-                                {
-                                        "address": "/.well-known/acme-challenge",
-                                        "config": "# for let's encrypt renewal\nroot /usr/share/nginx/html;"
-                                },
                                 {
                                         "address": "/",
                                         "config": "set $backend            http://test_service;\nproxy_pass              $backend;\n\nproxy_set_header        Host $host:$server_port;\nproxy_set_header        X-Real-IP $remote_addr;\nproxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;\nproxy_set_header        X-Forwarded-Proto $scheme;\n\n# Required for new HTTP-based CLI\nproxy_http_version 1.1;\nproxy_request_buffering off;\nproxy_buffering off; # Required for HTTP-based CLI to work over SSL\n\n# timeout\nproxy_connect_timeout 900;      \nproxy_send_timeout 900;      \nproxy_read_timeout 900;      \nsend_timeout 900;"
