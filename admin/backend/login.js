@@ -91,7 +91,7 @@ export function resetPassword(user) {
         userList[user] = {};
     }
     let userInfo = userList[user];
-    password = randomBytes(16).toString('hex');
+    let password = randomBytes(16).toString('hex');
     console.log(`initial password: ${password}`);
 
     userInfo.password = hashPassword(password);
