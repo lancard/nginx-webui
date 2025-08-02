@@ -29,7 +29,7 @@
                         ]
                 }
         ],
-        "common": "# http section setting\nclient_max_body_size 10G;\nresolver 127.0.0.11 valid=1s;\n",
+        "common": "# http section setting\nclient_max_body_size 10G;\nresolver 127.0.0.11 valid=1s;\n\n# proxy_cache_path /var/cache/nginx keys_zone=nginxcache:10m max_size=10g min_free=1g use_temp_path=off;\n",
         "site": [
                 {
                         "siteName": "test_site",

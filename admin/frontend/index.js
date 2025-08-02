@@ -38,6 +38,16 @@ proxy_connect_timeout 900;
 proxy_send_timeout 900;
 proxy_read_timeout 900;
 send_timeout 900;
+
+# cache (need 'proxy_buffering on' if you want to use)
+# proxy_cache nginxcache;
+# proxy_ignore_headers Cache-Control Expires Set-Cookie;
+# proxy_cache_revalidate on;
+# proxy_cache_lock on;
+# proxy_cache_valid 200 301 302 1m; # 1min
+# proxy_cache_use_stale error timeout http_500 http_502 http_503 http_504;
+# proxy_cache_background_update on;
+# add_header X-CACHE-STATUS $upstream_cache_status;
 `;
 
 themeChange();
@@ -447,6 +457,16 @@ class NginxWebUI {
             return;
 
         $(element).parents("[site-node-div]").remove();
+    }
+
+    renameLocation(element) {
+        const originalName = $(element).parents("[site-node-div]").find('[site-node-address]').text();
+
+        var locationName = prompt('enter new name (rule)', originalName);
+        if (!locationName || locationName == '')
+            return;
+
+        $(element).parents("[site-node-div]").find('[site-node-address]').text(locationName);
     }
 
     convertDomToConfig() {
@@ -944,10 +964,10 @@ $(function () {
                 instance.updateStatus();
                 setInterval(() => instance.updateStatus(), 5000);
                 instance.updatePreviewConfig();
-                Sortable.create($("ul[upstream-body]")[0], { handle: ".reorder-list" });
-                Sortable.create($("ul[site-body]")[0], { handle: ".reorder-list" });
-                Sortable.create($("ul[site-node-body]")[0], { handle: ".reorder-list" });
-                Sortable.create($("tbody[cert-body]")[0], { handle: ".reorder-list" });
+                $("[upstream-body]").each(function () { console.log(this); Sortable.create(this, { handle: ".reorder-list-upstream" }); });
+                $("[site-body]").each(function () { Sortable.create(this, { handle: ".reorder-list-site" }); });
+                $("[site-node-body]").each(function () { Sortable.create(this, { handle: ".reorder-list-site-node" }); });
+                $("[cert-body]").each(function () { Sortable.create(this, { handle: ".reorder-list-cert" }); });
             });
 
             instance.createChart();

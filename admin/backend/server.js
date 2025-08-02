@@ -103,9 +103,9 @@ function configToNginxConfig(config) {
     config.site.forEach(e => {
         nginxConfig += `# ${e.siteName}
             server { 
-                ${e.siteConfig}
-
                 ${e.serverName && e.serverName != "" ? "server_name " + e.serverName + ";" : ""}
+                ${e.siteConfig}
+                
             `;
 
         let isFoundAcmeChallenge = false;
