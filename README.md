@@ -159,16 +159,15 @@ If you're upgrading from a previous version, please refer to the [MIGRATION.md](
 
 - Create a volume and make id_rsa.pub file then attach the volume to /root/.ssh
 - It will open ssh server automatically.
-- git clone
-- change directory (git clone directory)/admin
-- npm run watch
+- change directory /root/nginx-webui/admin
+- execute 'npm run watch'
 
 ---
 
 ## Built With
 
 - server side: npm, nodejs, express
-- client side: bower, sbadmin2 (bootstrap), jquery, moment, chart.js
+- client side: daisyui, tailwind, esbuild, jquery, dayjs, chart.js
 
 ---
 
