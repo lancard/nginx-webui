@@ -131,6 +131,8 @@ loadConfig();
 
 const app = express();
 
+app.set('trust proxy', process.env.TRUST_PROXY ? +(process.env.TRUST_PROXY) : 1);
+
 app.use(cookieParser());
 
 app.use('/api', limiter);

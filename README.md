@@ -99,8 +99,10 @@ volumes:
 ```
 JWT_SECRET=abcdefgh
 JWT_EXPIRES_IN=1h
+TRUST_PROXY=1
 ```
 Setting JWT_SECRET is beneficial in scenarios such as server reboots or when load balancing across multiple nginx-webui servers.
+To obtain the real IP address of the client, set the TRUST_PROXY environment variable. (Specify how many proxies are in front of the server.)
 
 4. Run docker-compose
 
