@@ -113,11 +113,12 @@ expires 7d;
 # Access control origin
 add_header Access-Control-Allow-Origin "*";
 
-# CACHE (if you want to jpeg, use location:   ~* \.(jpg|jpeg)$ )
+# CACHE (if you want to jpeg, use location:   ~* \.(jpg|jpeg)$ , and need 'proxy_buffering on')
 proxy_cache nginxcache;
+proxy_ignore_headers Cache-Control Expires Set-Cookie;
 proxy_cache_revalidate on;
 proxy_cache_lock on;
-proxy_cache_valid 1m; # 1min
+proxy_cache_valid 200 301 302 1m; # 1min
 proxy_cache_use_stale error timeout http_500 http_502 http_503 http_504;
 proxy_cache_background_update on;
 add_header X-CACHE-STATUS $upstream_cache_status;
