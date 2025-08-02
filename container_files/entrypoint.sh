@@ -27,6 +27,7 @@ then
 else
     # copy default config
     cp /nginx_config/default_config.json /data/config.json
+    cp /nginx_config/default_nginx.conf /data/nginx.conf
     cp /data/nginx.conf /etc/nginx/nginx.conf
 fi
 
