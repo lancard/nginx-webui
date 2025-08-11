@@ -326,11 +326,28 @@ class NginxWebUI {
         modal.find('[modal-key]').text(key);
     }
 
+    copyKey(elem) {
+        var modal = $(elem).parents("dialog");
+        var targetUpstream = $(elem).parents("[upstream-service]");
+        var key = this.generateRandomString(32);
+        navigator.clipboard.writeText(modal.find('[modal-key]').text()).then(() => { alert('copied!'); });
+    }
+
     saveKey(elem) {
         var modal = $(elem).parents("dialog");
         var targetUpstream = $(elem).parents("[upstream-service]");
-        targetUpstream.find("[upstream-auth-key]").val(modal.find('[modal-key]').text());
+        targetUpstream.data("upstream-auth-key", modal.find('[modal-key]').text());
         modal[0].close();
+        $(elem).parents("details.dropdown").prop("open", false);
+        alert('click below save button to activate');
+    }
+
+    openKeyDialog(elem) {
+        var dialog = elem.nextElementSibling;
+        var targetUpstream = $(elem).parents("[upstream-service]");
+        var key = targetUpstream.data("upstream-auth-key");
+        $(dialog).find("[modal-key]").text(key ? key : "(NOT EXIST, CLICK GENERATE BUTTON)");
+        elem.nextElementSibling.showModal();
     }
 
     addUpstreamService() {
@@ -492,7 +509,7 @@ class NginxWebUI {
         $("[upstream-body] [upstream-service]").each((idx, e) => {
             var obj = {
                 upstreamName: $(e).find("[upstream-service-name]").text(),
-                upstreamAuthKey: $(e).find("[upstream-auth-key]").val(),
+                upstreamAuthKey: $(e).data("upstream-auth-key"),
                 nodes: []
             };
 
@@ -553,7 +570,7 @@ class NginxWebUI {
             config.upstream.forEach(e => {
                 let $clonedObject = $(".template-hidden [upstream-service]").clone();
                 $clonedObject.find('[upstream-service-name]').text(e.upstreamName);
-                $clonedObject.find('[upstream-auth-key]').val(e.upstreamAuthKey);
+                $clonedObject.data('upstream-auth-key', e.upstreamAuthKey);
                 $clonedObject.appendTo("[upstream-body]");
 
                 e.nodes.forEach(ee => {

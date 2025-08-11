@@ -83,7 +83,7 @@
                         </summary>
                         <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 shadow-lg text-xs">
                             <li>
-                                <a onclick="this.nextElementSibling.showModal()">
+                                <a data-click-function="openKeyDialog">
                                     Show Auth Key
                                 </a>
                                 <dialog class="modal">
@@ -94,9 +94,14 @@
                                         </form>
                                         <h3 class="text-lg font-bold mb-4">Upstream Auth Key</h3>
                                         <div class="modal-body">
-                                            <div class="text-lg text-error my-2">KEY: <span modal-key>(NOT EXIST, CLICK
-                                                    GENERATE BUTTON)</span></div>
-                                            <div class="text-info my-2">REMARK: <span modal-remark></span></div>
+                                            <div class="text-lg text-error my-2">KEY:
+                                                <span class="select-text" modal-key></span>
+                                                <button class="btn btn-sm btn-soft" type="button"
+                                                    data-click-function="copyKey">← copy</button>
+                                            </div>
+                                            <div class="text-info my-2">REMARK: <span modal-remark></span>
+
+                                            </div>
                                             <div class="mt-2 italic">Refer document section on the left menu.</div>
                                         </div>
                                         <div class="modal-action">

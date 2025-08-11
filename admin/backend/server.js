@@ -142,7 +142,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/static', express.static('../frontend'));
 
 app.use((req, res, next) => {
-    if (req.path.startsWith('/static') || req.path === '/' || req.path === '/favicon.ico' || req.path === '/api/login' || req.path === '/api/checkLogin' || req.path === '/api/logout') {
+    if (req.path.startsWith('/static') || req.path.startsWith('/api/upstream/') || req.path === '/' || req.path === '/favicon.ico' || req.path === '/api/login' || req.path === '/api/checkLogin' || req.path === '/api/logout') {
         return next();
     }
 
