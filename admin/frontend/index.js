@@ -932,7 +932,6 @@ $(function () {
             });
             $(document).on('click', '[data-click-function]', function (e) {
                 const func = $(this).data('click-function');
-                $("details.dropdown").prop("open", false);
                 instance[func](this);
             });
 
@@ -964,7 +963,7 @@ $(function () {
                 instance.updateStatus();
                 setInterval(() => instance.updateStatus(), 5000);
                 instance.updatePreviewConfig();
-                $("[upstream-body]").each(function () { console.log(this); Sortable.create(this, { handle: ".reorder-list-upstream" }); });
+                $("[upstream-body]").each(function () { Sortable.create(this, { handle: ".reorder-list-upstream" }); });
                 $("[site-body]").each(function () { Sortable.create(this, { handle: ".reorder-list-site" }); });
                 $("[site-node-body]").each(function () { Sortable.create(this, { handle: ".reorder-list-site-node" }); });
                 $("[cert-body]").each(function () { Sortable.create(this, { handle: ".reorder-list-cert" }); });
