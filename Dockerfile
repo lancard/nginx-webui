@@ -18,6 +18,7 @@ RUN echo "net.ipv4.tcp_fin_timeout=3" >> /etc/sysctl.conf
 # copy and config
 COPY container_files/default_nginx.conf /default_config/default_nginx.conf
 COPY container_files/default_config.json /default_config/default_config.json
+COPY container_files/default_anubis.yaml /default_config/default_anubis.yaml
 COPY container_files/anubis.conf /etc/nginx/anubis.conf
 RUN cp /default_config/default_nginx.conf /etc/nginx/nginx.conf
 COPY admin /admin
