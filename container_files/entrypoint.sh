@@ -67,5 +67,6 @@ fi
 /docker-entrypoint.sh
 
 npm run start &
+anubis -target http://localhost:5000/ &
 
 nginx -g "daemon off;"

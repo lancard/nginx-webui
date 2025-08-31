@@ -121,6 +121,9 @@ function configToNginxConfig(config) {
             nginxConfig += `  location /.well-known/acme-challenge { \n root /usr/share/nginx/html; \n }\n`;
         }
 
+        // include anubis config
+        nginxConfig += `  include /etc/nginx/anubis.conf;\n`;
+
         nginxConfig += `\n}\n`;
     });
 
@@ -214,6 +217,23 @@ app.post('/api/changePassword', (req, res) => {
 
 app.get('/api/getNginxStatus', (req, res) => {
     http.get('http://127.0.0.1:5000/status', (apiRes) => {
+        apiRes.setEncoding('utf8');
+
+        var resData = '';
+        apiRes.on('data', (chunk) => {
+            resData += chunk;
+        });
+
+        apiRes.on('end', () => {
+            res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+            res.write(resData);
+            res.end();
+        });
+    });
+});
+
+app.get('/api/getAnubisStatus', (req, res) => {
+    http.get('http://127.0.0.1:9090/metrics', (apiRes) => {
         apiRes.setEncoding('utf8');
 
         var resData = '';

@@ -20,7 +20,11 @@ ssl_certificate /etc/letsencrypt/live/(domain_name)/fullchain.pem;
 ssl_certificate_key /etc/letsencrypt/live/(domain_name)/privkey.pem;
 `;
 
-const defaultServerLocation = `set $backend            http://test_backend_server_group;
+const defaultServerLocation = `# To enable Anubis, please remove the commented lines below.
+# auth_request            /.anubis;
+# error_page              401 = @anubis;
+
+set $backend            http://test_backend_server_group;
 proxy_pass              $backend;
 
 proxy_set_header        Host $host:$server_port;

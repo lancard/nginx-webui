@@ -161,6 +161,7 @@ If you're upgrading from a previous version, please refer to the [MIGRATION.md](
 - It will open ssh server automatically.
 - change directory /root/nginx-webui/admin
 - execute 'npm run watch'
+- it will open 7777 port
 
 ---
 
