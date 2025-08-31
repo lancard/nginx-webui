@@ -2,6 +2,9 @@ bots:
   - name: well-known
     path_regex: ^/.well-known/.*$
     action: ALLOW
+  - name: anubis-itself
+    path_regex: ^/.within.website/.*$
+    action: ALLOW
   - name: favicon
     path_regex: ^/favicon.ico$
     action: ALLOW
