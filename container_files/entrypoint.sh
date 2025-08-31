@@ -26,9 +26,18 @@ then
     cp /data/nginx.conf /etc/nginx/nginx.conf
 else
     # copy default config
-    cp /nginx_config/default_config.json /data/config.json
-    cp /nginx_config/default_nginx.conf /data/nginx.conf
+    cp /default_config/default_config.json /data/config.json
+    cp /default_config/default_nginx.conf /data/nginx.conf
     cp /data/nginx.conf /etc/nginx/nginx.conf
+fi
+
+# copy config back to nginx (for update engine)
+if [ -f /data/anubis.yaml ]
+then
+    echo "already have anubis config. skipping copy."
+else
+    # copy default anubis config
+    cp /default_config/default_anubis.yaml /data/anubis.yaml
 fi
 
 if [ -f /root/.ssh/id_rsa.pub ]; then
@@ -67,6 +76,6 @@ fi
 /docker-entrypoint.sh
 
 npm run start &
-anubis -target http://localhost:5000/ > /var/log/anubis.log 2>/var/log/anubis.log &
+anubis -target http://localhost:5000/ -policy-fname=/data/anubis.yaml > /var/log/anubis.log 2>/var/log/anubis.log &
 
 nginx -g "daemon off;"

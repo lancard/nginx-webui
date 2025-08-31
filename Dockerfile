@@ -16,10 +16,10 @@ RUN rm anubis_1.21.3_amd64.deb
 RUN echo "net.ipv4.tcp_fin_timeout=3" >> /etc/sysctl.conf
 
 # copy and config
-COPY container_files/default_nginx.conf /nginx_config/default_nginx.conf
-COPY container_files/default_config.json /nginx_config/default_config.json
+COPY container_files/default_nginx.conf /default_config/default_nginx.conf
+COPY container_files/default_config.json /default_config/default_config.json
 COPY container_files/anubis.conf /etc/nginx/anubis.conf
-RUN cp /nginx_config/default_nginx.conf /etc/nginx/nginx.conf
+RUN cp /default_config/default_nginx.conf /etc/nginx/nginx.conf
 COPY admin /admin
 COPY container_files/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh

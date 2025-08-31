@@ -390,7 +390,7 @@ app.post('/api/saveConfig', (req, res) => {
 });
 
 function generateNginxConfig() {
-    var nginxConfig = fs.readFileSync('/nginx_config/default_nginx.conf').toString();
+    var nginxConfig = fs.readFileSync('/default_config/default_nginx.conf').toString();
 
     nginxConfig = nginxConfig.split("#[replaced_location]").join(configToNginxConfig(loadConfig()));
 
@@ -398,7 +398,7 @@ function generateNginxConfig() {
 }
 
 function generateNginxConfigFromRequest(config) {
-    var nginxConfig = fs.readFileSync('/nginx_config/default_nginx.conf').toString();
+    var nginxConfig = fs.readFileSync('/default_config/default_nginx.conf').toString();
 
     nginxConfig = nginxConfig.split("#[replaced_location]").join(configToNginxConfig(config));
 
@@ -414,9 +414,9 @@ app.post('/api/previewConfig', (req, res) => {
 });
 
 app.post('/api/testConfig', (req, res) => {
-    writeFileAtomic.sync('/nginx_config/nginx.conf', generateNginxConfig());
+    writeFileAtomic.sync('/default_config/nginx.conf', generateNginxConfig());
 
-    exec("nginx -t -c /nginx_config/nginx.conf", (error, stdout, stderr) => {
+    exec("nginx -t -c /default_config/nginx.conf", (error, stdout, stderr) => {
         var obj = {
             error,
             stdout,
