@@ -15,7 +15,9 @@
 ## Features
 
 - One-click reverse proxy setup
-- Automatic Let's Encrypt certificate issuance & renewal (incl. DNS challenge)  
+- Automatic Let's Encrypt certificate issuance & renewal (incl. DNS challenge)
+- Integrated WAF with Anubis: Protect your applications with intelligent request filtering and attack mitigation.
+- Anti-Crawling & Bot Protection: Block unwanted scrapers and abusive traffic with adaptive Anubis rules.
 - **Path Rewriting & Redirects**: Fine-grained control over request rewriting and redirect rules.
 - **Static File Hosting**: Easily expose folders with access control.
 - CI/CD-friendly API to enable/disable upstream backends  
