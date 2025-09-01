@@ -15,19 +15,19 @@
 ## Features
 
 - One-click reverse proxy setup
-- Automatic Let's Encrypt certificate issuance & renewal (incl. DNS challenge)
+- Automatic [Let's Encrypt](https://letsencrypt.org) certificate issuance & renewal (incl. DNS challenge)
 - Integrated WAF with Anubis: Protect your applications with intelligent request filtering and attack mitigation.
-- Anti-Crawling & Bot Protection: Block unwanted scrapers and abusive traffic with adaptive Anubis rules.
+- Anti-Crawling & Bot Protection: Block unwanted scrapers and abusive traffic with adaptive [Anubis](https://github.com/TecharoHQ/anubis) rules.
 - **Path Rewriting & Redirects**: Fine-grained control over request rewriting and redirect rules.
 - **Static File Hosting**: Easily expose folders with access control.
 - CI/CD-friendly API to enable/disable upstream backends  
-- Logrotate configuration via UI  
+- [Logrotate](https://github.com/logrotate/logrotate) configuration via UI  
 - Superuser/admin mode for advanced NGINX config  
 - Designed for managing **multiple domains** and **teams**  
 - Non-disruptive deployments using Jenkins or other CI/CD tools  
 - Built with **full ES Modules (ESM)** for modern, modular Node.js architecture  
 - **Responsive, mobile-friendly UI** that adapts to desktop, tablet, and phone layouts  
-- **Lightweight and minimal UI stack**: tailwind, daisyui etc. (no heavy frameworks)  
+- **Lightweight and minimal UI stack**: [tailwind](https://tailwindcss.com), [daisyui](https://daisyui.com) etc. (no heavy frameworks)  
 - Instant config reload & validation - UI-triggered NGINX config test + reload  
 - **certificate data persisted in Docker volumes**, ready for production
 - Easy setup with production-grade **Docker-Compose**
