@@ -615,6 +615,8 @@ class NginxWebUI {
     }
 
     viewNginxLog() {
+        $("#nginxAccessLog,#nginxErrorLog").val("Loading...");
+        
         $.get('/api/getNginxAccessLog', (ret) => {
             let $textarea = $("#nginxAccessLog");
             $textarea.val(ret);
