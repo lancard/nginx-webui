@@ -614,6 +614,19 @@ class NginxWebUI {
         }
     }
 
+    viewNginxLog() {
+        $.get('/api/getNginxAccessLog', (ret) => {
+            let $textarea = $("#nginxAccessLog");
+            $textarea.val(ret);
+            $textarea.scrollTop($textarea[0].scrollHeight);
+        });
+        $.get('/api/getNginxErrorLog', (ret) => {
+            let $textarea = $("#nginxErrorLog");
+            $textarea.val(ret);
+            $textarea.scrollTop($textarea[0].scrollHeight);
+        });
+    }
+
     loadLogrotate() {
         $.get('/api/getLogrotate', (ret) => {
             $("#logrotate").val(ret);

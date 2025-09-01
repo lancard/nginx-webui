@@ -9,6 +9,7 @@
     "is-port-reachable": "^4.0.0",
     "jsonwebtoken": "^9.0.2",
     "nginxbeautify": "^2.0.1",
+    "read-last-lines": "^1.8.0",
     "systeminformation": "^5.27.8",
     "validator": "^13.15.15",
     "write-file-atomic": "^6.0.0"

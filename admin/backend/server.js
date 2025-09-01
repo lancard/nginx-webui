@@ -13,6 +13,7 @@ import validator from 'validator';
 import NginxBeautify from 'nginxbeautify';
 import { randomBytes } from 'node:crypto';
 import { rateLimit } from 'express-rate-limit';
+import { read } from 'read-last-lines';
 import { exec, execFile } from 'child_process';
 import { tryCheckPassword, changePassword, usernameBlacklist } from './login.js';
 
@@ -362,6 +363,14 @@ app.get('/api/getSystemInformation', (req, res) => {
             res.send("ERROR");
             console.error(error)
         });
+});
+
+app.get('/api/getNginxAccessLog', (req, res) => {
+    read('/var/log/nginx/access.log', 1000).then((lines) => res.send(lines));
+});
+
+app.get('/api/getNginxErrorLog', (req, res) => {
+    read('/var/log/nginx/error.log', 1000).then((lines) => res.send(lines));
 });
 
 app.get('/api/getLogrotate', (req, res) => {
