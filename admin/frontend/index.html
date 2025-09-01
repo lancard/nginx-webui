@@ -378,7 +378,9 @@
     <!-- +++++++++++++++++++++++++++++++++++++++ templates below +++++++++++++++++++++++++++++++++++++++ -->
     <!-- save/test/apply button groups -->
     <div class="template-hidden">
-        <div class="join" data-save-test-apply-button-group-template>
+        <div class="fixed bottom-8 right-8 bg-neutral shadow-lg rounded-xl p-6 flex flex-col gap-2 z-50"
+            data-save-test-apply-button-group-template>
+            <div class="text-center text-info">Nginx Apply Buttons</div>
             <button class="btn btn-success" data-click-function="saveConfig">
                 1. All save to disk
             </button>
@@ -389,9 +391,6 @@
                 3. Apply nginx config
             </button>
         </div>
-
-        <!-- dummy -->
-        <div class="dummy-div hidden status-success status-error"></div>
     </div>
 </body>
 

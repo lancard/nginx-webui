@@ -616,7 +616,7 @@ class NginxWebUI {
 
     viewNginxLog() {
         $("#nginxAccessLog,#nginxErrorLog").val("Loading...");
-        
+
         $.get('/api/getNginxAccessLog', (ret) => {
             let $textarea = $("#nginxAccessLog");
             $textarea.val(ret);
@@ -888,23 +888,27 @@ class NginxWebUI {
 
         this.loadCertList();
 
-        $.getJSON('/api/getSystemInformation', (ret) => {
-            var arr = ret.filter(e => e.protocol == "tcp");
-            arr = arr.filter(e => e.state != "LISTEN");
-            arr = arr.filter(e => e.localPort == "80" || e.localPort == "443");
+        $.getJSON('/api/getSystemInformation')
+            .done((ret) => {
+                var arr = ret.filter(e => e.protocol == "tcp");
+                arr = arr.filter(e => e.state != "LISTEN");
+                arr = arr.filter(e => e.localPort == "80" || e.localPort == "443");
 
-            var retLine = [];
-            arr.forEach(e => {
-                retLine.push(`${e.peerAddress}:${e.peerPort} - ${e.state}`);
+                var retLine = [];
+                arr.forEach(e => {
+                    retLine.push(`${e.peerAddress}:${e.peerPort} - ${e.state}`);
+                })
+
+                if (retLine.length == 0) {
+                    $("#osConnections").text("No Connection.");
+                }
+                else {
+                    $("#osConnections").text(retLine.join("\n"));
+                }
             })
-
-            if (retLine.length == 0) {
-                $("#osConnections").text("No Connection.");
-            }
-            else {
-                $("#osConnections").text(retLine.join("\n"));
-            }
-        });
+            .fail((jqxhr, textStatus, errorThrown) => {
+                this.handleAjaxError(jqxhr, textStatus, errorThrown);
+            });
     }
 }
 
@@ -944,6 +948,15 @@ $(function () {
 
     // index.html
     if ($("#body-index").length > 0) {
+        // reset theme for auto
+        $("select[data-choose-theme]").on('change', function () {
+            const theme = $(this).val();
+            if (theme == '') {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.removeItem('theme');
+            }
+        });
+
         // load sections
         const $sections = $('[data-section]');
         const promises = $sections.map(function () {
