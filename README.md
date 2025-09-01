@@ -34,6 +34,7 @@
 - **NGINX Status Dashboard**: Real-time stats including active OS-level connections.
 - **Dark Mode & Themes**: Modern UI with theme switching support.
 - **Backend Health Check**: Ping and verify backend server availability.
+- Nginx access / error log display.
 
 ---
 
