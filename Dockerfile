@@ -4,7 +4,7 @@ EXPOSE 80
 EXPOSE 443
 
 # install modules
-RUN apt-get update && apt-get install certbot python3-certbot-nginx npm nodejs net-tools cron logrotate dnsutils procps -y && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get upgrade -y && apt-get install certbot python3-certbot-nginx npm nodejs net-tools cron logrotate dnsutils procps -y && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # install anubis
 WORKDIR /tmp
