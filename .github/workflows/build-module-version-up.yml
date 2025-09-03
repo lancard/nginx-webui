@@ -12,16 +12,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install npm-check-updates
+        run: npm install -g npm-check-updates
+
       - name: version up
         run: |
           cd admin
           npm version patch
-
-      - name: npm update
-        run: |
-          cd admin
-          npm update
-          npm update --save
+          ncu -ws -u
+          npm install
 
       - name: Commit changes
         run: |
