@@ -1,0 +1,19 @@
+name: scan-trivy
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  build:
+    name: Scan with trivy
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: 'docker.io/lancard/nginx-webui'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
