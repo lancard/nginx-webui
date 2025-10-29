@@ -10,9 +10,9 @@
     "jsonwebtoken": "^9.0.2",
     "nginxbeautify": "^2.0.1",
     "read-last-lines": "^1.8.0",
-    "systeminformation": "^5.27.10",
-    "validator": "^13.15.15",
-    "write-file-atomic": "^6.0.0"
+    "systeminformation": "^5.27.11",
+    "validator": "^13.15.20",
+    "write-file-atomic": "^7.0.0"
   },
   "type": "module",
   "main": "server.js"
