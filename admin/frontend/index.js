@@ -434,7 +434,7 @@ class NginxWebUI {
 
         let $clonedObject = $(".template-hidden [site-service]").clone();
         $clonedObject.find('[site-service-name]').text(siteName);
-        $clonedObject.find('[site-config]').val(answer ? defaultServerDirective : 'listen 80;\n');
+        $clonedObject.find('[site-config]').val(answer ? defaultServerDirective : 'listen 80;\nlisten [::]:80;\n');
         $clonedObject.appendTo("[site-body]");
 
         // add root
