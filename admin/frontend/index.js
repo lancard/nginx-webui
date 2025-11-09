@@ -16,6 +16,7 @@ import {
 } from 'chart.js';
 
 const defaultServerDirective = `listen 443 ssl;
+listen [::]:443 ssl;
 ssl_certificate /etc/letsencrypt/live/(domain_name)/fullchain.pem;
 ssl_certificate_key /etc/letsencrypt/live/(domain_name)/privkey.pem;
 `;
@@ -42,6 +43,9 @@ proxy_connect_timeout 900;
 proxy_send_timeout 900;
 proxy_read_timeout 900;
 send_timeout 900;
+
+# serve static file
+# root /usr/share/nginx/html;
 
 # cache (need 'proxy_buffering on' if you want to use)
 # proxy_cache nginxcache;
