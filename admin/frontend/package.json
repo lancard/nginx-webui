@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "chart.js": "^4.5.1",
-    "dayjs": "^1.11.18",
+    "dayjs": "^1.11.19",
     "jquery": "^3.7.1",
     "lodash": "^4.17.21",
     "sortablejs": "^1.15.6",
@@ -10,13 +10,13 @@
   "type": "module",
   "main": "index.js",
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.16",
+    "@tailwindcss/postcss": "^4.1.17",
     "@tailwindcss/typography": "^0.5.19",
     "autoprefixer": "^10.4.21",
-    "daisyui": "^5.3.10",
-    "esbuild": "^0.25.11",
+    "daisyui": "^5.4.7",
+    "esbuild": "^0.26.0",
     "postcss": "^8.5.6",
     "postcss-cli": "^11.0.1",
-    "tailwindcss": "^4.1.16"
+    "tailwindcss": "^4.1.17"
   }
 }
