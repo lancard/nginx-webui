@@ -7,7 +7,7 @@
     "express-rate-limit": "^8.2.1",
     "express-session": "^1.18.2",
     "is-port-reachable": "^4.0.0",
-    "jsonwebtoken": "^9.0.2",
+    "jsonwebtoken": "^9.0.3",
     "nginxbeautify": "^2.0.1",
     "read-last-lines": "^1.8.0",
     "systeminformation": "^5.27.11",
