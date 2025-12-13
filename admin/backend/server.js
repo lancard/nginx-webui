@@ -26,7 +26,7 @@ class Server {
         const isProd = process.env.NODE_ENV === 'production';
 
         this.devMode = !isProd;
-        this.port = this.devMode ? 8080 : 3000;
+        this.port = this.devMode ? 7777 : 3000;
 
         this.jwtSecret = process.env.JWT_SECRET;
         if (!this.jwtSecret) {
@@ -77,7 +77,9 @@ class Server {
 
             if (renewExist) {
                 setTimeout(() => {
-                    nginxHandler.reloadNginx();
+                    nginxHandler.reloadNginx((error, stdout, stderr) => {
+                        logger.info([error, stdout, stderr]);
+                    });
                 }, 60 * 1000);
             }
         } catch (e) {
