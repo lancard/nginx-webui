@@ -26,7 +26,7 @@ class Server {
         const isProd = process.env.NODE_ENV === 'production';
 
         this.devMode = !isProd;
-        this.port = this.devMode ? 7777 : 3000;
+        this.port = this.devMode ? 8080 : 3000;
 
         this.jwtSecret = process.env.JWT_SECRET;
         if (!this.jwtSecret) {
