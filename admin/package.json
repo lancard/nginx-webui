@@ -8,8 +8,8 @@
   "version": "1.4.10",
   "description": "nginx webui",
   "scripts": {
-    "password": "cd backend && node --input-type=module -e \"import { resetPassword } from './login.js'; resetPassword('administrator');\"",
-    "start": "cd backend && node server.js",
+    "password": "cd backend && node --input-type=module -e \"import lh from './modules/login-handler.js'; lh.resetPassword('administrator');\"",
+    "start": "cd backend && NODE_ENV=production node server.js",
     "build": "cd frontend && npx postcss index.css -o dist/index.css && npx esbuild index.js --bundle --format=esm --target=esnext --outdir=dist --minify --sourcemap",
     "cleanBuild": "rm -rf frontend/node_modules",
     "watch": "(cd backend && node --watch server.js) & (cd frontend && npx postcss --watch index.css -o dist/index.css) & (cd frontend && npx esbuild --watch index.js --bundle --format=esm --target=esnext --outdir=dist --minify --sourcemap)"
