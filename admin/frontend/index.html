@@ -14,7 +14,7 @@
 
 </head>
 
-<body id="body-index" class="text-xs flex h-screen">
+<body class="text-xs flex h-screen" x-data="app">
     <aside class="w-64 bg-base-200 flex flex-col h-full bg-hero-topography">
         <div class="bg-base-100 border-b border-base-100 p-3 pl-4 shadow-xl bg-hero-hideout">
             <a href="index.html" class="flex text-xl font-bold">
@@ -66,7 +66,7 @@
 
         <ul class="menu menu-vertical flex-grow text-base-content/80 w-full pt-4">
             <li>
-                <a data-show-panel="dashboard">
+                <a @click="uiComponent.main.selectedMenu='dashboard'; uiComponent.main.showNginxButtonGroup=false;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         class="text-blue-400 size-5">
@@ -92,7 +92,7 @@
                     </summary>
                     <ul>
                         <li>
-                            <a data-show-panel="cert">
+                            <a @click="uiComponent.main.selectedMenu='cert'; uiComponent.main.showNginxButtonGroup=false;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="size-4">
@@ -104,7 +104,7 @@
                             </a>
                         </li>
                         <li>
-                            <a data-show-panel="cert_upload">
+                            <a @click="uiComponent.main.selectedMenu='cert_upload'; uiComponent.main.showNginxButtonGroup=false;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="size-4">
@@ -135,7 +135,7 @@
                     </summary>
                     <ul>
                         <li>
-                            <a data-show-panel="nginx_common">
+                            <a @click="uiComponent.main.selectedMenu='nginx_common'; uiComponent.main.showNginxButtonGroup=true;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="size-4">
@@ -149,7 +149,7 @@
                             </a>
                         </li>
                         <li>
-                            <a data-show-panel="nginx_upstream">
+                            <a @click="uiComponent.main.selectedMenu='nginx_upstream'; uiComponent.main.showNginxButtonGroup=true;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="size-4">
@@ -163,7 +163,7 @@
                             </a>
                         </li>
                         <li>
-                            <a data-show-panel="nginx_server">
+                            <a @click="uiComponent.main.selectedMenu='nginx_server'; uiComponent.main.showNginxButtonGroup=true;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="size-4">
@@ -179,7 +179,7 @@
                             </a>
                         </li>
                         <li>
-                            <a data-show-panel="nginx_preview">
+                            <a @click="uiComponent.main.selectedMenu='nginx_preview'; uiComponent.main.showNginxButtonGroup=false;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="size-4">
@@ -191,7 +191,7 @@
                             </a>
                         </li>
                         <li>
-                            <a data-show-panel="nginx_log">
+                            <a @click="uiComponent.main.selectedMenu='nginx_log'; uiComponent.main.showNginxButtonGroup=false;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="size-4">
@@ -231,7 +231,7 @@
                     </summary>
                     <ul>
                         <li>
-                            <a data-show-panel="logrotate">
+                            <a @click="uiComponent.main.selectedMenu='logrotate'; uiComponent.main.showNginxButtonGroup=false;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="size-4">
@@ -246,7 +246,7 @@
                 </details>
             </li>
             <li>
-                <a data-show-panel="document">
+                <a @click="uiComponent.main.selectedMenu='document'; uiComponent.main.showNginxButtonGroup=false;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         class="text-purple-400 size-5">
@@ -284,7 +284,7 @@
             <ul class="flex items-center">
                 <li class="mr-2 ml-auto">Theme: </li>
                 <li class="mr-4">
-                    <select data-choose-theme class="select select-sm">
+                    <select class="select select-sm" x-model="uiComponent.main.theme" @change="onChangeThemeSelect()">
                         <option value="">auto</option>
                         <option value="autumn">[light] autumn (default)</option>
                         <option value="caramellatte">[light] caramellatte</option>
@@ -358,39 +358,37 @@
             </ul>
         </header>
 
-        <div class="main-contents prose max-w-none p-6 w-full">
-            <div class="hidden" data-section="dashboard"></div>
+        <div x-ref="sectionContainer" class="main-contents prose max-w-none p-6 w-full">
+            <div data-section-name="dashboard" x-show="uiComponent.main.selectedMenu == 'dashboard'"></div>
 
-            <div class="hidden" data-section="nginx_common"></div>
-            <div class="hidden" data-section="nginx_upstream"></div>
-            <div class="hidden" data-section="nginx_server"></div>
-            <div class="hidden" data-section="nginx_preview"></div>
-            <div class="hidden" data-section="nginx_log"></div>
+            <div data-section-name="nginx_common" x-show="uiComponent.main.selectedMenu == 'nginx_common'"></div>
+            <div data-section-name="nginx_upstream" x-show="uiComponent.main.selectedMenu == 'nginx_upstream'"></div>
+            <div data-section-name="nginx_server" x-show="uiComponent.main.selectedMenu == 'nginx_server'"></div>
+            <div data-section-name="nginx_preview" x-show="uiComponent.main.selectedMenu == 'nginx_preview'"></div>
+            <div data-section-name="nginx_log" x-show="uiComponent.main.selectedMenu == 'nginx_log'"></div>
 
-            <div class="hidden" data-section="cert"></div>
-            <div class="hidden" data-section="cert_upload"></div>
+            <div data-section-name="cert" x-show="uiComponent.main.selectedMenu == 'cert'"></div>
+            <div data-section-name="cert_upload" x-show="uiComponent.main.selectedMenu == 'cert_upload'"></div>
 
-            <div class="hidden" data-section="logrotate"></div>
-            <div class="hidden" data-section="document"></div>
+            <div data-section-name="logrotate" x-show="uiComponent.main.selectedMenu == 'logrotate'"></div>
+            <div data-section-name="document" x-show="uiComponent.main.selectedMenu == 'document'"></div>
         </div>
     </main>
 
     <!-- +++++++++++++++++++++++++++++++++++++++ templates below +++++++++++++++++++++++++++++++++++++++ -->
     <!-- save/test/apply button groups -->
-    <div class="template-hidden">
-        <div class="fixed bottom-8 right-8 bg-neutral shadow-lg rounded-xl p-6 flex flex-col gap-2 z-50"
-            data-save-test-apply-button-group-template>
-            <div class="text-center text-info">Nginx Apply Buttons</div>
-            <button class="btn btn-success" data-click-function="saveConfig">
-                1. All save to disk
-            </button>
-            <button class="btn btn-warning" data-click-function="testConfig">
-                2. Test nginx config
-            </button>
-            <button class="btn btn-error" data-click-function="applyConfig">
-                3. Apply nginx config
-            </button>
-        </div>
+    <div class="fixed bottom-8 right-8 bg-neutral shadow-lg rounded-xl p-6 flex flex-col gap-2 z-50"
+        x-show="uiComponent.main.showNginxButtonGroup">
+        <div class="text-center text-info">Nginx Apply Buttons</div>
+        <button class="btn btn-success" @click="saveConfig()">
+            1. All save to disk
+        </button>
+        <button class="btn btn-warning" @click="testConfig()">
+            2. Test nginx config
+        </button>
+        <button class="btn btn-error" @click="applyConfig()">
+            3. Apply nginx config
+        </button>
     </div>
 </body>
 

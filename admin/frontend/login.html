@@ -14,7 +14,7 @@
 
 </head>
 
-<body id="body-login" x-data="app">
+<body x-data="app" x-init="initLoginPage()">
     <form id="form-login">
         <div class="flex justify-center">
             <div class="card w-96 bg-base-100 shadow-xl mt-20 mb-20">
@@ -29,7 +29,7 @@
                                 <circle cx="12" cy="10" r="4" />
                                 <circle cx="12" cy="12" r="10" />
                             </svg>
-                            <input type="text" id="user" name="user" class="grow pb-1" value="administrator" />
+                            <input type="text" class="grow pb-1" x-model="uiComponent.login.user" />
                         </label>
                         <label class="input input-bordered flex items-center gap-2 mb-2 w-full">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -39,17 +39,20 @@
                                 <rect x="3" y="10" width="18" height="12" rx="2" />
                                 <path d="M7 10V7a5 5 0 0 1 10 0v3" />
                             </svg>
-                            <input type="password" id="password" name="password" class="grow" value="" autofocus />
-                            <svg id="eye-open" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" class="cursor-pointer">
+                            <input :type="uiComponent.login.showPassword ? 'text' : 'password'" class="grow" autofocus
+                                x-model="uiComponent.login.password" @keyup.enter="login()" />
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="cursor-pointer" x-show="!uiComponent.login.showPassword"
+                                @click="uiComponent.login.showPassword = true">
                                 <path
                                     d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
                                 <circle cx="12" cy="12" r="3" />
                             </svg>
-                            <svg id="eye-closed" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" class="cursor-pointer hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="cursor-pointer" x-show="uiComponent.login.showPassword"
+                                @click="uiComponent.login.showPassword = false">
                                 <path
                                     d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" />
                                 <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" />
@@ -60,7 +63,7 @@
                         </label>
                     </div>
                     <div class="card-actions justify-end">
-                        <button type="submit" class="btn btn-primary w-full" id="button-signin">Login</button>
+                        <button type="button" class="btn btn-primary w-full" @click="login()">Login</button>
                     </div>
                 </div>
             </div>

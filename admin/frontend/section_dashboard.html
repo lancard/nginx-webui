@@ -16,7 +16,7 @@
                 </svg>
             </div>
             <div class="stat-title">Accept Requests</div>
-            <div class="stat-value text-primary" id="acceptRequests">-</div>
+            <div class="stat-value text-primary" x-text="uiComponent.main.nginxStatus.acceptRequests">-</div>
             <div class="stat-desc">nginx accept requests count</div>
         </div>
 
@@ -33,7 +33,7 @@
                 </svg>
             </div>
             <div class="stat-title">Handled Requests</div>
-            <div class="stat-value text-secondary" id="handledRequests">-</div>
+            <div class="stat-value text-secondary" x-text="uiComponent.main.nginxStatus.handledRequests">-</div>
             <div class="stat-desc">nginx handled requests count</div>
         </div>
 
@@ -47,7 +47,7 @@
                 </svg>
             </div>
             <div class="stat-title">Total Requests</div>
-            <div class="stat-value text-warning" id="totalRequests">-</div>
+            <div class="stat-value text-warning" x-text="uiComponent.main.nginxStatus.totalRequests">-</div>
             <div class="stat-desc">nginx total requests count</div>
         </div>
 
@@ -61,12 +61,12 @@
                 </svg>
             </div>
             <div class="stat-title">Active Connections</div>
-            <div class="stat-value text-success" id="activeConnections">-</div>
+            <div class="stat-value text-success" x-text="uiComponent.main.nginxStatus.activeConnections"></div>
             <div class="stat-desc">nginx active connections count</div>
         </div>
     </div>
 
-    <div class="flex my-4">
+    <div class="flex my-4" x-ignore>
         <div class="w-1/3 h-[250px]">
             <canvas id="readingConnectionsChart"></canvas>
         </div>
@@ -80,6 +80,24 @@
 
 
     <h6 class="m-0 mt-4 text-base-content/50">OS Network Connections</h6>
-    <pre id="osConnections" class="bg-dark text-white" style="height: 200px; margin-top: 0px !important;"></pre>
-
+    <table>
+        <thead>
+            <tr>
+                <th>local address:port</th>
+                <th>peer address:prt</th>
+                <th>process(pid)</th>
+                <th>state</th>
+            </tr>
+        </thead>
+        <tbody>
+            <template x-for="item in uiComponent.main.connectionList">
+                <tr>
+                    <td x-text="`${item.localAddress}:${item.localPort}`"></td>
+                    <td x-text="`${item.peerAddress}:${item.peerPort}`"></td>
+                    <td x-text="item.process ? `${item.process}(${item.pid})` : '-'"></td>
+                    <td x-text="item.state"></td>
+                </tr>
+            </template>
+        </tbody>
+    </table>
 </div>

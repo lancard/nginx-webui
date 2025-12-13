@@ -1,19 +1,9 @@
 import dayjs from 'dayjs';
-import cloneDeep from 'lodash/cloneDeep';
 import Alpine from 'alpinejs';
 import Sortable from 'sortablejs';
 import { themeChange } from 'theme-change'
-import {
-    Chart,
-    LineController,
-    LineElement,
-    PointElement,
-    LinearScale,
-    Tooltip,
-    Title,
-    Legend,
-    CategoryScale,
-} from 'chart.js';
+
+import chartHandler from './modules/chart-handler.js';
 
 const defaultServerDirective = `listen 443 ssl;
 listen [::]:443 ssl;
@@ -58,12 +48,45 @@ send_timeout 900;
 # add_header X-CACHE-STATUS $upstream_cache_status;
 `;
 
-
 class FrontendApp {
-    config = {};
-    readingConnectionsChart = null;
-    writingConnectionsChart = null;
-    waitingConnectionsChart = null;
+    constructor() {
+        themeChange();
+
+        this.uiComponent = {};
+
+        // for login page
+        this.uiComponent.login = {
+            user: 'administrator',
+            password: '',
+            showPassword: false
+        }
+
+        // for main data
+        this.main = {
+            logrotate: '',
+            nginx: {
+                common: '',
+                cert: [],
+                upstream: [],
+                site: []
+            },
+        };
+
+        // for main ui component
+        this.uiComponent.main = {
+            theme: '',
+            selectedMenu: 'dashboard',
+            showNginxButtonGroup: false,
+            connectionList: [],
+            nginxPreview: {
+                current: '',
+                preview: ''
+            },
+            nginxStatus: {},
+            certRefreshing: false
+        }
+
+    }
 
     handleAjaxError(jqxhr, textStatus, errorThrown) {
         console.dir("error : ", jqxhr, textStatus, errorThrown);
@@ -73,181 +96,33 @@ class FrontendApp {
         }
     }
 
-    createChart() {
-        const defaultOptions = {
-            maintainAspectRatio: false,
-            layout: {
-                padding: {
-                    left: 10,
-                    right: 25,
-                    top: 25,
-                    bottom: 0
-                }
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        maxTicksLimit: 10
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1
-                    }
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    backgroundColor: "rgb(255,255,255)",
-                    bodyColor: "#858796",
-                    titleMarginBottom: 10,
-                    titleColor: '#6e707e',
-                    titleFont: {
-                        size: 14
-                    },
-                    borderColor: '#dddfeb',
-                    borderWidth: 1,
-                    padding: 15,
-                    displayColors: false,
-                    intersect: false,
-                    mode: 'index',
-                    caretPadding: 10
-                },
-                title: {
-                    display: true,
-                    text: 'Connections',
-                    font: {
-                        size: 18
-                    },
-                    padding: {
-                        top: 10,
-                        bottom: 30
-                    },
-                    align: 'center'         // center / start / end
-                }
-            }
-        };
 
-        const readingOption = cloneDeep(defaultOptions);
-        readingOption.plugins.title.text = 'Reading Connections';
-        this.readingConnectionsChart = new Chart(document.getElementById("readingConnectionsChart"), {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: "Reading Connections",
-                    lineTension: 0.3,
-                    backgroundColor: "rgba(78, 115, 223, 0.05)",
-                    borderColor: "rgba(78, 115, 223, 1)",
-                    pointRadius: 3,
-                    pointBackgroundColor: "rgba(78, 115, 223, 1)",
-                    pointBorderColor: "rgba(78, 115, 223, 1)",
-                    pointHoverRadius: 3,
-                    pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-                    pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-                    pointHitRadius: 10,
-                    pointBorderWidth: 2,
-                    data: [],
-                }],
-            },
-            options: readingOption
-        });
-
-        const writingOption = cloneDeep(defaultOptions);
-        writingOption.plugins.title.text = 'Writing Connections';
-        this.writingConnectionsChart = new Chart(document.getElementById("writingConnectionsChart"), {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: "Reading Connections",
-                    lineTension: 0.3,
-                    backgroundColor: "rgba(78, 115, 223, 0.05)",
-                    borderColor: "rgba(78, 115, 223, 1)",
-                    pointRadius: 3,
-                    pointBackgroundColor: "rgba(78, 115, 223, 1)",
-                    pointBorderColor: "rgba(78, 115, 223, 1)",
-                    pointHoverRadius: 3,
-                    pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-                    pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-                    pointHitRadius: 10,
-                    pointBorderWidth: 2,
-                    data: [],
-                }],
-            },
-            options: writingOption
-        });
-
-        const waitingOption = cloneDeep(defaultOptions);
-        waitingOption.plugins.title.text = 'Waiting Connections';
-        this.waitingConnectionsChart = new Chart(document.getElementById("waitingConnectionsChart"), {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: "Reading Connections",
-                    lineTension: 0.3,
-                    backgroundColor: "rgba(78, 115, 223, 0.05)",
-                    borderColor: "rgba(78, 115, 223, 1)",
-                    pointRadius: 3,
-                    pointBackgroundColor: "rgba(78, 115, 223, 1)",
-                    pointBorderColor: "rgba(78, 115, 223, 1)",
-                    pointHoverRadius: 3,
-                    pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-                    pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-                    pointHitRadius: 10,
-                    pointBorderWidth: 2,
-                    data: [],
-                }],
-            },
-            options: waitingOption
-        });
-    }
-
-    addData(chart, label, data) {
-        chart.data.labels.push(label);
-        chart.data.datasets.forEach((dataset) => {
-            dataset.data.push(data);
-        });
-        chart.update();
-    }
-
-    removeData(chart) {
-        chart.data.labels.pop();
-        chart.data.datasets.forEach((dataset) => {
-            dataset.data.pop();
-        });
-        chart.update();
+    showError(error) {
+        alert("error : " + error.toString());
     }
 
     login() {
         fetch('/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ user: $("#user").val(), password: $("#password").val() })
+            body: new URLSearchParams({ user: this.uiComponent.login.user, password: this.uiComponent.login.password })
         })
-            .then(res => res.text())
+            .then(res => res.json())
             .then(ret => {
-                if (ret == "OK") {
+                if (ret.success) {
                     location.href = './index.html';
                     return;
                 }
 
-                alert(ret);
+                alert(ret.errorMessage);
             })
-            .catch(err => console.error(err));
-
-        return false;
+            .catch(this.showError);
     }
 
     logout() {
         fetch('/api/logout', { method: 'POST' })
             .then(() => { location.href = 'login.html'; })
-            .catch(err => console.error(err));
+            .catch(this.showError);
     }
 
     changePassword() {
@@ -268,19 +143,12 @@ class FrontendApp {
             .catch(err => console.error(err));
     }
 
-    addCertRecord(domain, email, renewal, wildcard) {
-        let $clonedObject = $("tr[cert-template]").clone();
-        $clonedObject.find('[cert-domain]').text(domain);
-        $clonedObject.find('[cert-admin-email]').text(email);
-        $clonedObject.find('[cert-auto-renewal]').val(renewal == "true" ? "true" : "false");
-        $clonedObject.find('[cert-wildcard]').val(wildcard == "true" ? "true" : "false");
-        $clonedObject.removeAttr('cert-template').appendTo("tbody[cert-body]");
-    }
-
     addCertRecordFromUI() {
         var domain = prompt('enter domain name', 'test.com');
-        if (!domain || domain == '')
+        if (!domain || domain == '') {
+            alert('aborted');
             return;
+        }
 
         if (domain.indexOf("*") >= 0) {
             alert("not allow *.domain (use wildcard option)");
@@ -288,10 +156,12 @@ class FrontendApp {
         }
 
         var adminEmail = prompt('enter admin email', 'admin@test.com');
-        if (!adminEmail || adminEmail == '')
+        if (!adminEmail || adminEmail == '') {
+            alert('aborted');
             return;
+        }
 
-        this.addCertRecord(domain, adminEmail, "false");
+        this.main.nginx.cert.push({ domain: domain, adminEmail: adminEmail, autoRenewal: "false", wildcard: "false" });
     }
 
 
@@ -478,6 +348,7 @@ class FrontendApp {
         $(element).parents("[site-node-div]").find('[site-node-address]').text(locationName);
     }
 
+    /*
     convertDomToConfig() {
         var returnConfig = {};
 
@@ -601,6 +472,7 @@ class FrontendApp {
             });
         }
     }
+    */
 
     viewNginxLog() {
         $("#nginxAccessLog,#nginxErrorLog").val("Loading...");
@@ -626,7 +498,7 @@ class FrontendApp {
     loadLogrotate() {
         fetch('/api/getLogrotate')
             .then(res => res.text())
-            .then(ret => { $("#logrotate").val(ret); })
+            .then(ret => { this.main.logrotate = ret; })
             .catch(err => console.error(err));
     }
 
@@ -634,7 +506,7 @@ class FrontendApp {
         fetch('/api/saveLogrotate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ logrotate: $("#logrotate").val() })
+            body: new URLSearchParams({ logrotate: this.main.logrotate })
         })
             .then(res => res.text())
             .then(ret => alert(ret))
@@ -646,43 +518,50 @@ class FrontendApp {
         fetch('/api/previewConfig', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ config: JSON.stringify(this.convertDomToConfig()) })
+            body: new URLSearchParams({ config: JSON.stringify(this.main.nginx) })
         })
             .then(res => res.json())
             .then(ret => {
-                $("#nginxPreviewConfig").val(ret.preview);
-                $("#nginxCurrentConfig").val(ret.current);
+                this.uiComponent.main.nginxPreview = ret;
             })
             .catch(err => console.error(err));
+    }
+
+    async loadConfig() {
+        return fetch('/api/getConfig')
+            .then(res => {
+                if (res.status === 401) {
+                    this.handleAjaxError(res, 'error', null);
+                    throw new Error('unauthorized');
+                }
+                return res.json();
+            });
     }
 
     saveConfig() {
         // check auto renewal for already generated cert
         let checkFailed = false;
-        $("[cert-body] tr").each((idx, element) => {
-            if ($(element).find("[cert-auto-renewal]").val() == "true" &&
-                $(element).find("[cert-registered-datetime]").text() == "-") {
-                alert('Only previously issued certificates are eligible for auto renewal.');
+        this.main.nginx.cert.forEach(cert => {
+            if (cert.autoRenewal == "true" &&
+                (cert.created == null || !cert.created || cert.created == "")) {
+                alert('Only previously issued certificates are eligible for auto renewal: ' + cert.domain);
                 checkFailed = true;
             }
-        })
+        });
 
         if (checkFailed) {
             alert('abort save.');
             return;
         }
 
-        // write to back config
-        this.config = this.convertDomToConfig();
-
         fetch('/api/saveConfig', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ config: JSON.stringify(this.config, null, '\t') })
+            body: new URLSearchParams({ config: JSON.stringify(this.uiComponent.main.nginx, null, '\t') })
         })
-            .then(res => res.text())
+            .then(res => res.json())
             .then(ret => {
-                if (ret == "OK") {
+                if (ret.success) {
                     alert("save success. you can preview config in 'Preview nginx.conf' menu.");
                     this.updatePreviewConfig();
                 }
@@ -691,22 +570,6 @@ class FrontendApp {
                 }
             })
             .catch(err => console.error(err));
-    }
-
-    loadConfig(callback) {
-        fetch('/api/getConfig')
-            .then(res => {
-                if (res.status === 401) {
-                    this.handleAjaxError(res, 'error', null);
-                    throw new Error('unauthorized');
-                }
-                return res.json();
-            })
-            .then(ret => {
-                this.config = ret;
-                callback();
-            })
-            .catch(err => { if (err.message !== 'unauthorized') this.handleAjaxError(err, 'error', null); });
     }
 
     testConfig() {
@@ -733,110 +596,128 @@ class FrontendApp {
             .catch(err => console.error(err));
     }
 
-    renewCertHTTP(elem) {
-        var domain = $(elem).parents("tr").find("[cert-domain]").text();
-        var email = $(elem).parents("tr").find("[cert-admin-email]").text();
+    renewCertHTTP(item) {
+        if (item.domain == 'localhost_nginx_webui') {
+            alert("localhost_nginx_webui certificate cannot be renewed.");
+            return;
+        }
 
         if (!confirm('Are you sure you want to do HTTP-challenge?'))
             return;
 
         alert("When the certificate issuance/renewal is completed by Let's Encrypt, it will be automatically update renewal date column.");
 
-        $("#alert-challenge").removeClass("hidden");
+        this.uiComponent.main.certRefreshing = true;
 
         fetch('/api/renewCertHTTP', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ domain, email })
+            body: new URLSearchParams({ domain: item.domain, email: item.adminEmail })
         })
             .then(res => res.text())
             .then(ret => {
-                $("#alert-challenge").addClass("hidden");
                 alert(ret);
+                this.uiComponent.main.certRefreshing = false;
             })
             .catch(err => console.error(err));
     }
 
-    renewCertDNS(elem) {
-        var domain = $(elem).parents("tr").find("[cert-domain]").text();
-        var email = $(elem).parents("tr").find("[cert-admin-email]").text();
-        var wildcard = $(elem).parents("tr").find("[cert-wildcard]").val();
+    renewCertDNS(item) {
+        if (item.domain == 'localhost_nginx_webui') {
+            alert("localhost_nginx_webui certificate cannot be renewed.");
+            return;
+        }
 
         if (!confirm("Are you sure you want to do DNS-challenge?\n(It is recommended that you be prepared to change your DNS '_acme-challenge' TXT record.)"))
             return;
 
         alert("When the certificate issuance/renewal is completed by Let's Encrypt, it will be automatically update renewal date column.");
 
-        $("#alert-challenge").removeClass("hidden");
+        this.uiComponent.main.certRefreshing = true;
 
         fetch('/api/renewCertDNS', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ domain, email, wildcard })
+            body: new URLSearchParams({ domain: item.domain, email: item.adminEmail, wildcard: item.wildcard })
         })
             .then(res => res.text())
             .then(ret => {
-                $("#alert-challenge").addClass("hidden");
-
                 if (ret == null || ret.trim() == "") {
                     alert("certificate not yet due for renewal or error occurred.");
                     return;
                 }
                 prompt("paste below text to DNS TXT record", ret);
                 alert("request sent. If your request is successful, the cert list below will be updated within a few minutes.");
+                this.uiComponent.main.certRefreshing = false;
             })
             .catch(err => console.error(err));
     }
 
-    changeCertEmail(element) {
+    changeCertEmail(item) {
         var newEmail = prompt('enter admin email', 'test@test.com');
-        if (!newEmail || newEmail == '')
+        if (!newEmail || newEmail == '') {
+            alert('aborted');
             return;
+        }
 
-        $(element).parents("tr").find('[cert-admin-email]').text(newEmail);
+        item.adminEmail = newEmail;
     }
 
-    loadCertList() {
+    updateCertListFromFileStatus() {
         fetch('/api/getCertList')
             .then(res => res.json())
             .then((ret) => {
-                var text = "";
+                // update cert list
+                this.main.nginx.cert.forEach(cert => {
+                    ret.forEach(status => {
+                        if (cert.domain == status.domain) {
+                            cert.created = status.created;
+                            cert.modified = status.modified;
+                        }
+                    });
+                });
 
-                // for each site ssl exist status update
-                ret.forEach(cert => {
+                // add new cert from file status
+                ret.forEach(status => {
                     let found = false;
-                    $("tbody[cert-body] tr").each((index, element) => {
-                        if ($(element).find("[cert-domain]").text() == cert.domain) {
+                    this.main.nginx.cert.forEach(cert => {
+                        if (cert.domain == status.domain) {
                             found = true;
-                            $(element).find("[cert-registered-datetime]").text(cert.created);
-                            $(element).find("[cert-renewal-datetime]").text(cert.modified);
                         }
                     });
 
                     if (!found) {
-                        this.addCertRecord(cert.domain, "notfound@notfound.com");
+                        this.main.nginx.cert.push({
+                            domain: status.domain,
+                            adminEmail: 'notfound@notfound.com',
+                            autoRenewal: 'false',
+                            wildcard: 'false',
+                            created: status.created,
+                            modified: status.modified
+                        });
                     }
                 });
             })
             .catch(err => console.error(err));
     }
 
-    deleteCert(elem) {
-        var domain = $(elem).parents("tr").find("[cert-domain]").text();
-
+    deleteCert(item) {
         if (!confirm('Are you sure you want to delete? (Also Filesystem directory will be removed)'))
             return;
 
         fetch('/api/deleteCert', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ domain })
+            body: new URLSearchParams({ domain: item.domain })
         })
-            .then(res => res.text())
+            .then(res => res.json())
             .then(ret => {
-                $(elem).parents("tr").remove();
-                this.loadCertList();
-                alert(ret);
+                if (ret.success) {
+                    // delete item from list
+                    this.main.nginx.cert = this.main.nginx.cert.filter(e => e.domain != item.domain);
+                    this.updateCertListFromFileStatus();
+                    alert('deleted');
+                }
             })
             .catch(err => console.error(err));
     }
@@ -852,18 +733,11 @@ class FrontendApp {
         })
             .then(res => res.text())
             .then(ret => {
-                this.loadCertList();
+                this.updateCertListFromFileStatus();
                 alert(ret);
-                this.showPanel('cert');
+                this.uiComponent.main.selectedMenu = 'cert';
             })
             .catch(err => console.error(err));
-    }
-
-    showPanel(selectedId) {
-        $('[data-show-panel]').removeClass("menu-active");
-        $(`[data-show-panel="${selectedId}"]`).addClass("menu-active");
-        $("[data-section]").addClass("hidden");
-        $(`[data-section="${selectedId}"]`).removeClass("hidden");
     }
 
     updateStatus() {
@@ -871,7 +745,7 @@ class FrontendApp {
             .then(res => res.text())
             .then(ret => {
                 ret = ret.split("\n");
-                const status = {
+                this.uiComponent.main.nginxStatus = {
                     activeConnections: +ret[0].split("Active connections: ").join(""),
                     acceptRequests: +ret[2].split(" ")[1],
                     handledRequests: +ret[2].split(" ")[2],
@@ -879,22 +753,17 @@ class FrontendApp {
                     readingConnections: +ret[3].split(" ")[1],
                     writingConnections: +ret[3].split(" ")[3],
                     waitingConnections: +ret[3].split(" ")[5]
-                }
-
-                $("#acceptRequests").text(status.acceptRequests);
-                $("#handledRequests").text(status.handledRequests);
-                $("#totalRequests").text(status.totalRequests);
-                $("#activeConnections").text(status.activeConnections);
+                };
 
                 var now = dayjs().format("HH:mm:ss");
 
-                this.addData(this.readingConnectionsChart, now, status.readingConnections);
-                this.addData(this.writingConnectionsChart, now, status.writingConnections);
-                this.addData(this.waitingConnectionsChart, now, status.waitingConnections);
+                chartHandler.addChartData("readingConnectionsChart", now, this.uiComponent.main.nginxStatus.readingConnections);
+                chartHandler.addChartData("writingConnectionsChart", now, this.uiComponent.main.nginxStatus.writingConnections);
+                chartHandler.addChartData("waitingConnectionsChart", now, this.uiComponent.main.nginxStatus.waitingConnections);
             })
             .catch(err => console.error(err));
 
-        this.loadCertList();
+        this.updateCertListFromFileStatus();
 
         fetch('/api/getSystemInformation')
             .then(res => {
@@ -905,111 +774,59 @@ class FrontendApp {
                 return res.json();
             })
             .then((ret) => {
-                var arr = ret.filter(e => e.protocol == "tcp");
-                arr = arr.filter(e => e.state != "LISTEN");
-                arr = arr.filter(e => e.localPort == "80" || e.localPort == "443");
-
-                var retLine = [];
-                arr.forEach(e => {
-                    retLine.push(`${e.peerAddress}:${e.peerPort} - ${e.state}`);
-                })
-
-                if (retLine.length == 0) {
-                    $("#osConnections").text("No Connection.");
-                }
-                else {
-                    $("#osConnections").text(retLine.join("\n"));
-                }
+                let arr = ret.filter(e => e.protocol == "tcp");
+                arr = arr.filter(e => e.state != "LISTEN" && e.state != "TIME_WAIT");
+                // arr = arr.filter(e => e.localPort == "8080" || e.localPort == "443");
+                this.uiComponent.main.connectionList = arr;
             })
             .catch(err => { if (err.message !== 'unauthorized') this.handleAjaxError(err, 'error', null); });
     }
 
+    // login.html
+    initLoginPage() {
+        fetch('/api/checkLogin', { method: 'POST' })
+            .then(res => res.text())
+            .then(ret => {
+                if ("" + ret == "true") {
+                    location.href = './index.html';
+                }
+            })
+            .catch(err => console.error(err));
+    }
+
+    onChangeThemeSelect() {
+        if (this.uiComponent.theme == '') {
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.removeItem('theme');
+        }
+    }
+
+    loadSections() {
+        const promises = [];
+
+        for (const section of this.$refs.sectionContainer.children) {
+            const name = section.dataset.sectionName;
+
+            promises.push(
+                fetch(`section_${name}.html`)
+                    .then(res => res.text())
+                    .then(html => { section.innerHTML = html; Alpine.initTree(section); })
+                    .catch(() => { section.innerHTML = '<div style="color:red;">failed to load</div>'; })
+            );
+        };
+
+        return Promise.all(promises);
+    }
+
     init() {
-
-
-        // login.html
-        if ($("#body-login").length > 0) {
-            // binding
-            $('#form-login').on('submit', function (e) {
-                e.preventDefault();
-                instance.login();
-            });
-
-            $('#eye-open,#eye-closed').on('click', function () {
-                const $input = $('#password');
-                const $eyeOpen = $('#eye-open');
-                const $eyeClosed = $('#eye-closed');
-
-                const isVisible = $input.attr('type') === 'text';
-                $input.attr('type', isVisible ? 'password' : 'text');
-
-                $eyeOpen.toggleClass('hidden', !isVisible);
-                $eyeClosed.toggleClass('hidden', isVisible);
-            });
-
-            fetch('/api/checkLogin', { method: 'POST' })
-                .then(res => res.text())
-                .then(ret => {
-                    if ("" + ret == "true") {
-                        location.href = './index.html';
-                    }
-                })
-                .catch(err => console.error(err));
-            fetch('/api/checkLogin', { method: 'POST' })
-                .then(res => res.text())
-                .then(ret => {
-                    if ("" + ret == "true") {
-                        location.href = './index.html';
-                    }
-                })
-                .catch(err => console.error(err));
+        if (location.pathname.endsWith('login.html')) {
+            return;
         }
 
-        // index.html
-        if ($("#body-index").length > 0) {
-            // reset theme for auto
-            $("select[data-choose-theme]").on('change', function () {
-                const theme = $(this).val();
-                if (theme == '') {
-                    document.documentElement.removeAttribute('data-theme');
-                    localStorage.removeItem('theme');
-                }
-            });
-
-            // load sections
-            const $sections = $('[data-section]');
-            const promises = $sections.map(function () {
-                const $el = $(this);
-                const name = $el.data('section');
-                return fetch(`section_${name}.html`)
-                    .then(res => res.text())
-                    .then(html => { $el.html(html); })
-                    .catch(() => { $el.html('<div style="color:red;">failed to load</div>'); });
-            }).get();
-
-            $.when(...promises).done(function () {
-                // insert save/test/apply button
-                const $template = $('.template-hidden [data-save-test-apply-button-group-template]').clone();
-                $('[data-save-test-apply-button-location]').html($template);
-
-                instance.showPanel('dashboard');
-
-                // binding
-                $(document).on('click', '[data-show-panel]', function (e) {
-                    const panel = $(this).data('show-panel');
-                    instance.showPanel(panel);
-                });
-                $(document).on('click', '[data-click-function]', function (e) {
-                    const func = $(this).data('click-function');
-                    instance[func](this);
-                });
-
-                // copy template script to textarea
-                $('[data-text-type]').each(function () {
-                    const domId = $(this).data('text-type');
-                    $("#" + domId).val($(this).text().trim());
-                });
-
+        // load sections
+        this.$nextTick(() => {
+            this.loadSections().then(() => {
+                /*
                 // init for api key
                 $('#showAuthKeyModal').on('show.bs.modal', function (event) {
                     window.authKeyTarget = event.relatedTarget;
@@ -1024,42 +841,31 @@ class FrontendApp {
                         modal.find('.modal-body [modal-key]').text(key);
                     }
                 });
+                */
 
-                instance.loadLogrotate();
+                this.loadLogrotate();
 
-                instance.loadConfig(() => {
-                    instance.convertConfigToDom(instance.config);
-                    instance.updateStatus();
-                    setInterval(() => instance.updateStatus(), 5000);
-                    instance.updatePreviewConfig();
+                this.loadConfig().then((config) => {
+                    this.main.nginx = config;
+                    this.updateStatus();
+                    setInterval(() => this.updateStatus(), 5000);
+                    this.updatePreviewConfig();
+                    /*
                     $("[upstream-body]").each(function () { Sortable.create(this, { handle: ".reorder-list-upstream" }); });
                     $("[site-body]").each(function () { Sortable.create(this, { handle: ".reorder-list-site" }); });
                     $("[site-node-body]").each(function () { Sortable.create(this, { handle: ".reorder-list-site-node" }); });
                     $("[cert-body]").each(function () { Sortable.create(this, { handle: ".reorder-list-cert" }); });
-                });
+                    */
 
-                instance.createChart();
+                    chartHandler.initCharts();
+                });
             });
-        }
+        });
     }
 }
 
 
 // global initialize -------------------------------------------------
-themeChange();
-
-Chart.register(
-    LineController,
-    LineElement,
-    PointElement,
-    LinearScale,
-    Tooltip,
-    Title,
-    Legend,
-    CategoryScale,
-);
-
-const app = new FrontendApp();
-
 window.Alpine = Alpine;
+Alpine.data('app', () => { return new FrontendApp(); });
 Alpine.start();

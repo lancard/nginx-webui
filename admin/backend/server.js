@@ -132,7 +132,7 @@ class Server {
             const errorMessage = loginHandler.tryCheckPassword(req.body.user, req.body.password);
 
             if (errorMessage != "") {
-                res.send(errorMessage);
+                res.json({ success: false, errorMessage });
                 return;
             }
 
@@ -144,16 +144,16 @@ class Server {
                 sameSite: 'Strict'
             });
 
-            res.send("OK");
+            res.json({ success: true });
         });
 
         app.post('/api/checkLogin', (req, res) => {
             if (!req.loginInfo || !req.loginInfo.user != 'administrator') {
-                res.send(false);
+                res.json({ success: false });
                 return;
             }
 
-            res.send(true);
+            res.json({ success: true });
             return;
         });
 
@@ -236,7 +236,7 @@ class Server {
 
         app.post('/api/saveLogrotate', (req, res) => {
             logrotateHandler.saveLogrotate(req.body.logrotate);
-            res.send('OK');
+            res.json({ success: true });
         });
 
         app.get('/api/getConfig', (req, res) => res.json(nginxHandler.loadConfig()));
@@ -244,7 +244,7 @@ class Server {
         app.post('/api/saveConfig', (req, res) => {
             if (!req.body.config) { res.sendStatus(500); return; }
             nginxHandler.saveConfig(req.body.config);
-            res.send("OK");
+            res.json({ success: true });
         });
 
         app.post('/api/previewConfig', (req, res) => {
