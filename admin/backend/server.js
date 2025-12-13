@@ -191,12 +191,12 @@ class Server {
 
         app.post('/api/uploadCert', (req, res) => {
             certHandler.uploadCert(req.body.domain, req.body.cert, req.body.key);
-            res.end('Upload OK');
+            res.json({ success: true });
         });
 
         app.post('/api/deleteCert', (req, res) => {
             certHandler.deleteCert(req.body.domain);
-            res.end('Delete OK');
+            res.json({ success: true });
         });
 
         app.post('/api/renewCertHTTP', (req, res) => {
