@@ -161,12 +161,12 @@ class Server {
 
         app.post('/api/logout', (req, res) => {
             res.clearCookie(cookieTokenName);
-            res.send("OK");
+            res.json({ success: true });
         });
 
         app.post('/api/changePassword', (req, res) => {
             loginHandler.changePassword(req.body.user, req.body.password);
-            res.send("OK");
+            res.json({ success: true });
         });
 
         app.get('/api/getNginxStatus', (req, res) => {

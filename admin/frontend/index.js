@@ -88,12 +88,17 @@ class FrontendApp {
         this.uiComponent.main = {
             theme: '',
             selectedMenu: 'dashboard',
+            changePassword: {
+                password: '',
+                passwordConfirm: ''
+            },
             showNginxButtonGroup: false,
             connectionList: [],
             nginxPreview: {
                 current: '',
                 preview: ''
             },
+            backendServerStatus: {},
             nginxStatus: {},
             certRefreshing: false,
             certUpload: {
@@ -143,20 +148,24 @@ class FrontendApp {
     }
 
     changePassword() {
-        password_modal.close();
-
-        if ($("#password_new").val() != $("#password_confirm").val()) {
+        if (this.uiComponent.main.changePassword.password != this.uiComponent.main.changePassword.passwordConfirm) {
             alert('password different.');
             return;
         }
 
+        password_modal.close();
+
         fetch('/api/changePassword', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ user: 'administrator', password: $("#password_new").val() })
+            body: new URLSearchParams({ user: 'administrator', password: this.uiComponent.main.changePassword.password })
         })
-            .then(res => res.text())
-            .then(ret => alert(ret))
+            .then(res => res.json())
+            .then(ret => {
+                this.uiComponent.main.changePassword.password = '';
+                this.uiComponent.main.changePassword.passwordConfirm = '';
+                alert('changed.');
+            })
             .catch(err => console.error(err));
     }
 
@@ -195,69 +204,52 @@ class FrontendApp {
         return hex;
     }
 
-    generateKey(elem) {
-        var modal = $(elem).parents("dialog");
-        var targetUpstream = $(elem).parents("[upstream-service]");
-        var key = this.generateRandomString(32);
-        modal.find('[modal-remark]').text("You should click save button.");
-        modal.find('[modal-key]').text(key);
+    generateKey(upstream) {
+        upstream.upstreamAuthKey = this.generateRandomString(32);
     }
 
-    copyKey(elem) {
-        var modal = $(elem).parents("dialog");
-        var targetUpstream = $(elem).parents("[upstream-service]");
-        var key = this.generateRandomString(32);
-        navigator.clipboard.writeText(modal.find('[modal-key]').text()).then(() => { alert('copied!'); });
+    copyKey(upstream) {
+        navigator.clipboard.writeText(upstream.upstreamAuthKey).then(() => { alert('copied!'); });
     }
 
-    saveKey(elem) {
-        var modal = $(elem).parents("dialog");
-        var targetUpstream = $(elem).parents("[upstream-service]");
-        targetUpstream.data("upstream-auth-key", modal.find('[modal-key]').text());
-        modal[0].close();
-        $(elem).parents("details.dropdown").prop("open", false);
-        alert('click below save button to activate');
+    confirmKey(elem) {
+        alert('click green save button to save changes.');
+        // find dialog parents
+        elem.closest('dialog').close();
     }
 
     openKeyDialog(elem) {
-        var dialog = elem.nextElementSibling;
-        var targetUpstream = $(elem).parents("[upstream-service]");
-        var key = targetUpstream.data("upstream-auth-key");
-        $(dialog).find("[modal-key]").text(key ? key : "(NOT EXIST, CLICK GENERATE BUTTON)");
         elem.nextElementSibling.showModal();
     }
 
     addUpstreamService() {
         var serviceName = prompt('enter backend server group(service) name', 'test_service');
-        if (!serviceName || serviceName == '')
+        if (!serviceName || serviceName == '') {
+            alert('aborted');
             return;
-
-        let $clonedObject = $(".template-hidden [upstream-service]").clone();
-        $clonedObject.find('[upstream-service-name]').text(serviceName);
-        $clonedObject.appendTo("[upstream-body]");
+        }
+        this.main.nginx.upstream.push({ upstreamName: serviceName, upstreamAuthKey: '', nodes: [] });
     }
 
-    deleteUpstreamService(element) {
+    deleteUpstreamService(upstream) {
         if (!confirm('delete?'))
             return;
 
-        $(element).parents("[upstream-service]").remove();
+        this.main.nginx.upstream = this.main.nginx.upstream.filter(e => e != upstream);
     }
 
-    renameUpstreamService(element) {
+    renameUpstreamService(upstream) {
         var serviceName = prompt('enter new backend server group(service) name', 'test_service');
-        if (!serviceName || serviceName == '')
+        if (!serviceName || serviceName == '') {
+            alert('aborted');
             return;
+        }
 
-        $(element).parents("[upstream-service]").find('[upstream-service-name]').text(serviceName);
+        upstream.upstreamName = serviceName;
     }
 
-    checkBackendServerStatus(element) {
-        let backendServer = $(element).parents("[upstream-node]").find('[upstream-node-address]').text();
-
-        $(element).parents("[upstream-node]").find('[upstream-node-status]').removeClass('status-success');
-        $(element).parents("[upstream-node]").find('[upstream-node-status]').removeClass('status-error');
-        $(element).parents("[upstream-node]").find('[upstream-node-status]').addClass('status-warning');
+    checkBackendServerStatus(backendServer) {
+        this.uiComponent.main.backendServerStatus[backendServer] = 'CHECKING';
 
         fetch('/api/checkServerStatus', {
             method: 'POST',
@@ -266,33 +258,30 @@ class FrontendApp {
         })
             .then(res => res.json())
             .then(ret => {
-                $(element).parents("[upstream-node]").find('[upstream-node-status]').removeClass('status-warning');
-
                 if (ret && ret.success) {
-                    $(element).parents("[upstream-node]").find('[upstream-node-status]').addClass('status-success');
+                    this.uiComponent.main.backendServerStatus[backendServer] = 'SUCCESS';
                 }
                 else {
-                    $(element).parents("[upstream-node]").find('[upstream-node-status]').addClass('status-error');
+                    this.uiComponent.main.backendServerStatus[backendServer] = 'FAILED';
                 }
             })
             .catch(err => console.error(err));
     }
 
-    addBackendServer(element) {
+    addBackendServer(upstream) {
         var backendServer = prompt('enter backend server address:port', '127.0.0.1:8080');
-        if (!backendServer || backendServer == '')
+        if (!backendServer || backendServer == '') {
+            alert('aborted');
             return;
-
-        let $clonedObject = $(".template-hidden [upstream-node]").clone();
-        $clonedObject.find('[upstream-node-address]').text(backendServer);
-        $clonedObject.appendTo($(element).parents("[upstream-service]").find("[upstream-node-body]"));
+        }
+        upstream.nodes.push({ address: backendServer, weight: 1, maxFails: 3, failTimeout: 30, backup: false, disable: false });
     }
 
-    deleteBackendServer(element) {
+    deleteBackendServer(upstream, backendServer) {
         if (!confirm('delete?'))
             return;
 
-        $(element).parents("[upstream-node]").remove();
+        upstream.nodes = upstream.nodes.filter(e => e != backendServer);
     }
 
     // sites
@@ -574,7 +563,7 @@ class FrontendApp {
         fetch('/api/saveConfig', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ config: JSON.stringify(this.uiComponent.main.nginx, null, '\t') })
+            body: new URLSearchParams({ config: JSON.stringify(this.main.nginx, null, '\t') })
         })
             .then(res => res.json())
             .then(ret => {
@@ -852,23 +841,6 @@ class FrontendApp {
         // load sections
         this.$nextTick(() => {
             this.loadSections().then(() => {
-                /*
-                // init for api key
-                $('#showAuthKeyModal').on('show.bs.modal', function (event) {
-                    window.authKeyTarget = event.relatedTarget;
-                    var modal = $(this);
-                    var targetUpstream = $(window.authKeyTarget).parents("[upstream-service]");
-                    var key = targetUpstream.find("[upstream-auth-key]").val();
-                    modal.find('.modal-body [modal-remark]').text("");
-                    if (key == "") {
-                        modal.find('.modal-body [modal-key]').text("(NOT EXIST, CLICK GENERATE BUTTON)");
-                    }
-                    else {
-                        modal.find('.modal-body [modal-key]').text(key);
-                    }
-                });
-                */
-
                 this.loadLogrotate();
 
                 this.loadConfig().then((config) => {
@@ -876,14 +848,22 @@ class FrontendApp {
                     this.updateStatus();
                     setInterval(() => this.updateStatus(), 5000);
                     this.updatePreviewConfig();
-                    /*
-                    $("[upstream-body]").each(function () { Sortable.create(this, { handle: ".reorder-list-upstream" }); });
-                    $("[site-body]").each(function () { Sortable.create(this, { handle: ".reorder-list-site" }); });
-                    $("[site-node-body]").each(function () { Sortable.create(this, { handle: ".reorder-list-site-node" }); });
-                    $("[cert-body]").each(function () { Sortable.create(this, { handle: ".reorder-list-cert" }); });
-                    */
-
                     chartHandler.initCharts();
+
+                    this.$nextTick(() => {
+                        document.querySelectorAll('.reorder-list-upstream').forEach((el) => {
+                            Sortable.create(el, { handle: '.reorder-list-upstream-handle' });
+                        });
+                        document.querySelectorAll('.reorder-list-site').forEach((el) => {
+                            Sortable.create(el, { handle: '.reorder-list-site-handle' });
+                        });
+                        document.querySelectorAll('.reorder-list-site-node').forEach((el) => {
+                            Sortable.create(el, { handle: '.reorder-list-site-node-handle' });
+                        });
+                        document.querySelectorAll('.reorder-list-cert').forEach((el) => {
+                            Sortable.create(el, { handle: '.reorder-list-cert-handle' });
+                        });
+                    });
                 });
             });
         });

@@ -306,7 +306,7 @@
                         </summary>
                         <ul class="menu dropdown-content">
                             <li>
-                                <a onclick="password_modal.showModal()">
+                                <a @click="password_modal.showModal()">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round" class="size-4">
@@ -322,26 +322,26 @@
                                     <div class="modal-box w-96">
                                         <h3 class="font-bold text-lg">Change password</h3>
 
-                                        <form id="password_form" method="dialog" class="space-y-3 mt-4">
-                                            <input type="password" id="password_new" name="password_new"
+                                        <form method="dialog" class="space-y-3 mt-4">
+                                            <input type="password" x-model="uiComponent.main.changePassword.password"
                                                 placeholder="New Password" class="input input-bordered w-full"
                                                 required />
-                                            <input type="password" id="password_confirm" name="password_confirm"
+                                            <input type="password" x-model="uiComponent.main.changePassword.passwordConfirm"
                                                 placeholder="Confirm Password" class="input input-bordered w-full"
                                                 required />
 
                                             <div class="modal-action justify-end">
                                                 <button type="button" class="btn btn-outline"
-                                                    onclick="password_modal.close()">Cancel</button>
+                                                    @click="password_modal.close()">Cancel</button>
                                                 <button type="button" class="btn btn-primary"
-                                                    data-click-function="changePassword">Save</button>
+                                                    @click="changePassword()">Save</button>
                                             </div>
                                         </form>
                                     </div>
                                 </dialog>
                             </li>
                             <li>
-                                <a data-click-function="logout">
+                                <a @click="logout()">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round" class="size-4">
