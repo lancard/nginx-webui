@@ -78,7 +78,9 @@ class Server {
             if (renewExist) {
                 setTimeout(() => {
                     nginxHandler.reloadNginx((error, stdout, stderr) => {
-                        logger.info([error, stdout, stderr]);
+                        logger.info(error);
+                        logger.info(stdout)
+                        logger.info(stderr);
                     });
                 }, 60 * 1000);
             }

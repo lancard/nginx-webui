@@ -48,6 +48,18 @@ send_timeout 900;
 # add_header X-CACHE-STATUS $upstream_cache_status;
 `;
 
+const sampleCert = `-----BEGIN CERTIFICATE-----
+ABCDEFGSAMPLE...
+-----END CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
+ABCDEFGSAMPLE...
+-----END CERTIFICATE-----`;
+
+const sampleKey = `-----BEGIN PRIVATE KEY-----
+ABCDEFGSAMPLE...
+-----END PRIVATE KEY-----`;
+
+
 class FrontendApp {
     constructor() {
         themeChange();
@@ -83,7 +95,12 @@ class FrontendApp {
                 preview: ''
             },
             nginxStatus: {},
-            certRefreshing: false
+            certRefreshing: false,
+            certUpload: {
+                domain: 'test.com',
+                cert: sampleCert,
+                key: sampleKey
+            }
         }
 
     }
@@ -729,13 +746,19 @@ class FrontendApp {
         fetch('/api/uploadCert', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ domain: $("#domainName").val(), cert: $("#certFile").val(), key: $("#keyFile").val() })
+            body: new URLSearchParams({
+                domain: this.uiComponent.main.certUpload.domain,
+                cert: this.uiComponent.main.certUpload.cert,
+                key: this.uiComponent.main.certUpload.key
+            })
         })
-            .then(res => res.text())
+            .then(res => res.json())
             .then(ret => {
-                this.updateCertListFromFileStatus();
-                alert(ret);
-                this.uiComponent.main.selectedMenu = 'cert';
+                if (ret.success) {
+                    this.updateCertListFromFileStatus();
+                    alert('upload success');
+                    this.uiComponent.main.selectedMenu = 'cert';
+                }
             })
             .catch(err => console.error(err));
     }
@@ -795,9 +818,12 @@ class FrontendApp {
     }
 
     onChangeThemeSelect() {
-        if (this.uiComponent.theme == '') {
-            document.documentElement.removeAttribute('data-theme');
-            localStorage.removeItem('theme');
+        if (this.uiComponent.main.theme == '') {
+            this.$nextTick(() => {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.removeItem('theme');
+                console.log('ok');
+            });
         }
     }
 
