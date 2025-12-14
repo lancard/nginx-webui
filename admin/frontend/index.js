@@ -7,8 +7,8 @@ import chartHandler from './modules/chart-handler.js';
 
 const defaultServerDirective = `listen 443 ssl;
 listen [::]:443 ssl;
-ssl_certificate /etc/letsencrypt/live/(domain_name)/fullchain.pem;
-ssl_certificate_key /etc/letsencrypt/live/(domain_name)/privkey.pem;
+ssl_certificate /etc/letsencrypt/live/test.com/fullchain.pem;
+ssl_certificate_key /etc/letsencrypt/live/test.com/privkey.pem;
 `;
 
 const defaultServerLocation = `# To enable Anubis, please remove the commented lines below.
@@ -286,22 +286,23 @@ class FrontendApp {
 
     // sites
     addSite() {
-        var siteName = prompt('enter site name', 'test_site');
-        if (!siteName || siteName == '')
+        var siteName = prompt('enter site name', 'test_site_https');
+        if (!siteName || siteName == '') {
+            alert('aborted');
             return;
+        }
 
         var answer = confirm("Is this an HTTPS site running on port 443?\n(If you select 'Yes', we will generate example code of reverse proxy)");
 
-        let $clonedObject = $(".template-hidden [site-service]").clone();
-        $clonedObject.find('[site-service-name]').text(siteName);
-        $clonedObject.find('[site-config]').val(answer ? defaultServerDirective : 'listen 80;\nlisten [::]:80;\n');
-        $clonedObject.appendTo("[site-body]");
-
-        // add root
-        let $clonedObject2 = $(".template-hidden [site-node-div]").clone();
-        $clonedObject2.find('[site-node-address]').text('/');
-        $clonedObject2.find('[site-node-config]').val(answer ? defaultServerLocation : '# Moved Permanently\nreturn 301 https://$host$request_uri;\n');
-        $clonedObject2.appendTo($clonedObject.find("[site-node-body]"));
+        this.main.nginx.site.push({
+            siteName: siteName,
+            serverName: 'test.com',
+            siteConfig: answer ? defaultServerDirective : 'listen 80;\nlisten [::]:80;\n',
+            locations: [{
+                address: '/',
+                config: answer ? defaultServerLocation : '# Moved Permanently\nreturn 301 https://$host$request_uri;\n'
+            }]
+        });
 
         if (answer) {
             alert("generated 443 port (SSL/HTTPS) default proxy site.\nif you need, change '(domain_name)' in server directive.");
@@ -311,192 +312,66 @@ class FrontendApp {
         }
     }
 
-    renameSite(element) {
+    renameSite(site) {
         var siteName = prompt('enter new domain handler name', 'test_site_http');
-        if (!siteName || siteName == '')
+        if (!siteName || siteName == '') {
+            alert('aborted');
             return;
+        }
 
-        $(element).parents("[site-service]").find('[site-service-name]').text(siteName);
+        site.siteName = siteName;
     }
 
-    deleteSite(element) {
+    deleteSite(site) {
         if (!confirm('delete?'))
             return;
 
-        $(element).parents("[site-service]").remove();
+        this.main.nginx.site = this.main.nginx.site.filter(e => e != site);
     }
 
-    addLocation(element) {
+    addLocation(site) {
         var locationDirective = prompt('enter location', '/api');
-        if (!locationDirective || locationDirective == '')
+        if (!locationDirective || locationDirective == '') {
+            alert('aborted');
             return;
+        }
 
-        let $clonedObject = $(".template-hidden [site-node-div]").clone();
-        $clonedObject.find('[site-node-address]').text(locationDirective);
-        $clonedObject.find('[site-node-config]').val(defaultServerLocation);
-        $clonedObject.appendTo($(element).parents("[site-service]").find("[site-node-body]"));
+        site.locations.push({ address: locationDirective, config: defaultServerLocation });
     }
 
-    deleteLocation(element) {
+    deleteLocation(site, node) {
         if (!confirm('delete?'))
             return;
 
-        $(element).parents("[site-node-div]").remove();
+        site.locations = site.locations.filter(e => e != node);
     }
 
-    renameLocation(element) {
-        const originalName = $(element).parents("[site-node-div]").find('[site-node-address]').text();
-
-        var locationName = prompt('enter new name (rule)', originalName);
-        if (!locationName || locationName == '')
+    renameLocation(node) {
+        var locationName = prompt('enter new name (rule)', node.address);
+        if (!locationName || locationName == '') {
+            alert('aborted');
             return;
-
-        $(element).parents("[site-node-div]").find('[site-node-address]').text(locationName);
-    }
-
-    /*
-    convertDomToConfig() {
-        var returnConfig = {};
-
-        // common
-        returnConfig.common = $("#commonTextarea").val();
-
-        // cert
-        var cert = [];
-        $("[cert-body] tr").each((idx, e) => {
-            cert.push({
-                domain: $(e).find("[cert-domain]").text(),
-                adminEmail: $(e).find("[cert-admin-email]").text(),
-                autoRenewal: $(e).find("[cert-auto-renewal]").val(),
-                wildcard: $(e).find("[cert-wildcard]").val()
-            });
-        });
-        returnConfig.cert = cert;
-
-        // upstream
-        var upstream = [];
-        $("[upstream-body] [upstream-service]").each((idx, e) => {
-            var obj = {
-                upstreamName: $(e).find("[upstream-service-name]").text(),
-                upstreamAuthKey: $(e).data("upstream-auth-key"),
-                nodes: []
-            };
-
-            $(e).find("[upstream-node").each((i, el) => {
-                obj.nodes.push({
-                    address: $(el).find("[upstream-node-address]").text(),
-                    weight: +$(el).find("[upstream-node-weight]").val(),
-                    maxFails: +$(el).find("[upstream-node-maxfails]").val(),
-                    failTimeout: +$(el).find("[upstream-node-failtimeout]").val(),
-                    backup: $(el).find("[upstream-node-backup]").is(":checked"),
-                    disable: $(el).find("[upstream-node-disable]").is(":checked")
-                });
-            });
-
-            upstream.push(obj);
-        });
-        returnConfig.upstream = upstream;
-
-        // sites
-        var site = [];
-        $("[site-body] [site-service]").each((idx, e) => {
-            var obj = {
-                siteName: $(e).find("[site-service-name]").text(),
-                siteConfig: $(e).find("[site-config]").val(),
-                serverName: $(e).find("[site-server-name]").val(),
-                locations: []
-            };
-
-            $(e).find("[site-node-div").each((i, el) => {
-                obj.locations.push({
-                    address: $(el).find("[site-node-address]").text(),
-                    config: $(el).find("[site-node-config]").val()
-                });
-            });
-
-            site.push(obj);
-        });
-        returnConfig.site = site;
-
-        return returnConfig;
-    }
-
-    convertConfigToDom(config) {
-        // common
-        $("#commonTextarea").val(config.common);
-
-        // cert
-        $("[cert-body]").empty();
-        if (config.cert) {
-            config.cert.forEach(e => {
-                this.addCertRecord(e.domain, e.adminEmail, e.autoRenewal, e.wildcard);
-            });
         }
 
-        // upstream
-        $("[upstream-body]").empty();
-        if (config.upstream) {
-            config.upstream.forEach(e => {
-                let $clonedObject = $(".template-hidden [upstream-service]").clone();
-                $clonedObject.find('[upstream-service-name]').text(e.upstreamName);
-                $clonedObject.data('upstream-auth-key', e.upstreamAuthKey);
-                $clonedObject.appendTo("[upstream-body]");
-
-                e.nodes.forEach(ee => {
-                    let $clonedObjectNode = $(".template-hidden [upstream-node]").clone();
-                    $clonedObjectNode.find('[upstream-node-address]').text(ee.address);
-                    $clonedObjectNode.find('[upstream-node-weight]').val(ee.weight);
-                    $clonedObjectNode.find('[upstream-node-maxfails]').val(ee.maxFails);
-                    $clonedObjectNode.find('[upstream-node-failtimeout]').val(ee.failTimeout);
-                    if (ee.backup) {
-                        $clonedObjectNode.find('[upstream-node-backup]').attr('checked', 'true');
-                    }
-                    if (ee.disable) {
-                        $clonedObjectNode.find('[upstream-node-disable]').attr('checked', 'true');
-                    }
-                    $clonedObjectNode.appendTo($clonedObject.find("[upstream-node-body]"));
-                });
-            });
-        }
-
-        // sites
-        $("[site-body]").empty();
-        if (config.site) {
-            config.site.forEach(e => {
-                let $clonedObject = $(".template-hidden [site-service]").clone();
-                $clonedObject.find('[site-service-name]').text(e.siteName);
-                $clonedObject.find('[site-server-name]').val(e.serverName);
-                $clonedObject.find('[site-config]').val(e.siteConfig);
-                $clonedObject.appendTo("[site-body]");
-
-                e.locations.forEach(ee => {
-                    let $clonedObjectNode = $(".template-hidden [site-node-div]").clone();
-                    $clonedObjectNode.find('[site-node-address]').text(ee.address);
-                    $clonedObjectNode.find('[site-node-config]').val(ee.config);
-                    $clonedObjectNode.appendTo($clonedObject.find("[site-node-body]"));
-                });
-            });
-        }
+        node.address = locationName;
     }
-    */
 
     viewNginxLog() {
-        $("#nginxAccessLog,#nginxErrorLog").val("Loading...");
+        nginxAccessLog.value = "Loading...";
+        nginxErrorLog.value = "Loading...";
 
         fetch('/api/getNginxAccessLog')
             .then(res => res.text())
             .then(ret => {
-                let $textarea = $("#nginxAccessLog");
-                $textarea.val(ret);
-                $textarea.scrollTop($textarea[0].scrollHeight);
+                nginxAccessLog.value = ret;
+                nginxAccessLog.scrollTop = nginxAccessLog.scrollHeight;
             })
             .catch(err => console.error(err));
         fetch('/api/getNginxErrorLog')
             .then(res => res.text())
             .then(ret => {
-                let $textarea = $("#nginxErrorLog");
-                $textarea.val(ret);
-                $textarea.scrollTop($textarea[0].scrollHeight);
+                nginxErrorLog.value = ret;
+                nginxErrorLog.scrollTop = nginxErrorLog.scrollHeight;
             })
             .catch(err => console.error(err));
     }
@@ -514,8 +389,8 @@ class FrontendApp {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams({ logrotate: this.main.logrotate })
         })
-            .then(res => res.text())
-            .then(ret => alert(ret))
+            .then(res => res.json())
+            .then(ret => alert("saved."))
             .catch(err => console.error(err));
     }
 

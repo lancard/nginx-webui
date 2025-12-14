@@ -3,13 +3,13 @@
     <span class="desc-text">Global logrotate setting</span>
 </h1>
 
-<textarea id="logrotate" class="textarea w-full p-4" rows="20"></textarea>
+<textarea class="textarea w-full p-4" rows="20" x-model="main.logrotate"></textarea>
 
 <div class="text-end p-4">
     <span class="text-error mr-4">
         will save to '/etc/logrotate.d/nginx' and will be overwritten if exist.
     </span>
-    <button type="button" data-click-function="saveLogrotate" class="btn btn-primary">
+    <button type="button" @click="saveLogrotate()" class="btn btn-primary">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 3v12" />
