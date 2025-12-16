@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import Alpine from 'alpinejs';
-import Sortable from 'sortablejs';
+import sort from '@alpinejs/sort'
 import { themeChange } from 'theme-change'
 
 import chartHandler from './modules/chart-handler.js';
@@ -708,6 +708,17 @@ class FrontendApp {
         return Promise.all(promises);
     }
 
+    onSorted(itemIndexPlusOne, position, container, key) {
+        const list = container[key];
+        container[key] = [];
+        const itemIndex = itemIndexPlusOne - 1;
+        const [item] = list.splice(itemIndex, 1);
+        list.splice(position, 0, item);
+        this.$nextTick(() => {
+            container[key] = list;
+        });
+    }
+
     init() {
         if (location.pathname.endsWith('login.html')) {
             return;
@@ -724,21 +735,6 @@ class FrontendApp {
                     setInterval(() => this.updateStatus(), 5000);
                     this.updatePreviewConfig();
                     chartHandler.initCharts();
-
-                    this.$nextTick(() => {
-                        document.querySelectorAll('.reorder-list-upstream').forEach((el) => {
-                            Sortable.create(el, { handle: '.reorder-list-upstream-handle' });
-                        });
-                        document.querySelectorAll('.reorder-list-site').forEach((el) => {
-                            Sortable.create(el, { handle: '.reorder-list-site-handle' });
-                        });
-                        document.querySelectorAll('.reorder-list-site-node').forEach((el) => {
-                            Sortable.create(el, { handle: '.reorder-list-site-node-handle' });
-                        });
-                        document.querySelectorAll('.reorder-list-cert').forEach((el) => {
-                            Sortable.create(el, { handle: '.reorder-list-cert-handle' });
-                        });
-                    });
                 });
             });
         });
@@ -748,5 +744,6 @@ class FrontendApp {
 
 // global initialize -------------------------------------------------
 window.Alpine = Alpine;
+Alpine.plugin(sort);
 Alpine.data('app', () => { return new FrontendApp(); });
 Alpine.start();

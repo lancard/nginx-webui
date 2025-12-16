@@ -17,14 +17,14 @@
     </button>
 </div>
 
-<ul class="not-prose reorder-list-upstream">
-    <template x-for="upstream in main.nginx.upstream">
-        <li>
+<ul class="not-prose" x-sort="onSorted($item, $position, main.nginx, 'upstream')">
+    <template x-for="(upstream, index) in main.nginx.upstream">
+        <li x-sort:item="index+1">
             <div class="card shadow mt-4 not-prose">
                 <div class="card-header bg-base-300 pl-4 flex w-full items-center py-1">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="reorder-list-upstream-handle mr-2 text-warning cursor-move">
+                        class="mr-2 text-warning cursor-move" x-sort:handle>
                         <path d="m3 16 4 4 4-4" />
                         <path d="M7 20V4" />
                         <path d="m21 8-4-4-4 4" />

@@ -28,5 +28,8 @@
   "bugs": {
     "url": "https://github.com/lancard/nginx-webui/issues"
   },
-  "homepage": "https://github.com/lancard/nginx-webui#readme"
+  "homepage": "https://github.com/lancard/nginx-webui#readme",
+  "dependencies": {
+    "sortablejs": "^1.15.6"
+  }
 }
