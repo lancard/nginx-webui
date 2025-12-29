@@ -5,7 +5,7 @@
     "frontend"
   ],
   "name": "nginx-webui",
-  "version": "1.5.11",
+  "version": "1.5.12",
   "description": "nginx webui",
   "scripts": {
     "password": "cd backend && node --input-type=module -e \"import lh from './modules/login-handler.js'; lh.resetPassword('administrator');\"",

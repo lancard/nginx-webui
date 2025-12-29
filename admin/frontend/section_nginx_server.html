@@ -17,14 +17,14 @@
     </button>
 </div>
 
-<ul class="not-prose" x-sort="onSorted($item, $position, main.nginx, 'site')">
+<ul class="not-prose" x-sort="onSorted($item, $position, main.nginx, 'site')" x-sort:config="{handle: '.drag-handle'}">
     <template x-for="(site, index) in main.nginx.site">
         <li x-sort:item="index+1">
             <div class="card shadow mt-4 not-prose bg-info-content/50 border border-info">
                 <div class="card-header bg-base-300 pl-4 flex w-full items-center py-1 bg-info/50 rounded-box">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="mr-2 text-warning cursor-move" x-sort:handle>
+                        class="mr-2 text-warning cursor-move drag-handle" x-sort:handle>
                         <path d="m3 16 4 4 4-4" />
                         <path d="M7 20V4" />
                         <path d="m21 8-4-4-4 4" />
@@ -80,7 +80,7 @@
                         </fieldset>
                     </div>
                     <div class="w-1/2">
-                        <ul x-sort="onSorted($item, $position, site, 'locations')">
+                        <ul x-sort="onSorted($item, $position, site, 'locations')" x-sort:config="{handle: '.drag-handle'}">
                             <template x-for="(item, index) in site.locations">
                                 <li x-sort:item="index+1">
                                     <div class="card border border-info/70 mt-2">
@@ -88,7 +88,7 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                                 stroke-linecap="round" stroke-linejoin="round"
-                                                class="mr-4 text-warning cursor-move" x-sort:handle>
+                                                class="mr-4 text-warning cursor-move drag-handle" x-sort:handle>
                                                 <path d="m3 16 4 4 4-4" />
                                                 <path d="M7 20V4" />
                                                 <path d="m21 8-4-4-4 4" />
@@ -130,7 +130,8 @@
                                                 <legend class="fieldset-legend p-0 text-base-content/50">URL
                                                     Path(Location) Configuration
                                                 </legend>
-                                                <textarea class="textarea w-full" rows="10" x-model="item.config"></textarea>
+                                                <textarea class="textarea w-full" rows="10"
+                                                    x-model="item.config"></textarea>
                                             </fieldset>
                                         </div>
                                     </div>
