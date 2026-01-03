@@ -88,12 +88,10 @@ services:
     volumes:
       - nginx-webui-data:/data
       - nginx-webui-log:/var/log/nginx
-      - nginx-webui-logrotate-config:/etc/logrotate.d
 
 volumes:
   nginx-webui-data:
   nginx-webui-log:
-  nginx-webui-logrotate-config:
 ```
 
 3. Set environment variable if you need (it not set, nginx-webui will generate keys automatically and you can find keys in docker logs)
