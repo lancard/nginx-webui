@@ -7,8 +7,8 @@ import chartHandler from './modules/chart-handler.js';
 
 const defaultServerDirective = `listen 443 ssl;
 listen [::]:443 ssl;
-ssl_certificate /etc/letsencrypt/live/test.com/fullchain.pem;
-ssl_certificate_key /etc/letsencrypt/live/test.com/privkey.pem;
+ssl_certificate /data/cert/test.com/fullchain.pem;
+ssl_certificate_key /data/cert/test.com/privkey.pem;
 `;
 
 const defaultServerLocation = `# To enable Anubis, please remove the commented lines below.

@@ -87,7 +87,6 @@ services:
       - 443:443
     volumes:
       - nginx-webui-data:/data
-      - nginx-webui-cert:/etc/letsencrypt
       - nginx-webui-log:/var/log/nginx
       - nginx-webui-logrotate-config:/etc/logrotate.d
 

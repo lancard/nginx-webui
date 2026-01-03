@@ -35,7 +35,7 @@
                 {
                         "siteName": "test_site",
                         "serverName": "test.com",
-                        "siteConfig": "listen 80;\n# listen 443 ssl;\n# ssl_certificate /etc/letsencrypt/live/test.com/fullchain.pem;\n# ssl_certificate_key /etc/letsencrypt/live/test.com/privkey.pem;\n",
+                        "siteConfig": "listen 80;\n# listen 443 ssl;\n# ssl_certificate /data/cert/test.com/fullchain.pem;\n# ssl_certificate_key /data/cert/test.com/privkey.pem;\n",
                         "locations": [
                                 {
                                         "address": "/",
@@ -54,7 +54,7 @@
                 {
                         "siteName": "test_site2",
                         "serverName": "test2.com",
-                        "siteConfig": "listen 80;\n# listen 443 ssl;\n# ssl_certificate /etc/letsencrypt/live/test2.com/fullchain.pem;\n# ssl_certificate_key /etc/letsencrypt/live/test2.com/privkey.pem;\n",
+                        "siteConfig": "listen 80;\n# listen 443 ssl;\n# ssl_certificate /data/cert/test2.com/fullchain.pem;\n# ssl_certificate_key /data/cert/test2.com/privkey.pem;\n",
                         "locations": [
                                 {
                                         "address": "/",

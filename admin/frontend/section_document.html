@@ -80,8 +80,8 @@ listen 443 ssl http2;
 listen [::]:443 ssl http2;
 
 # cert location
-ssl_certificate /etc/letsencrypt/live/test.com/fullchain.pem;
-ssl_certificate_key /etc/letsencrypt/live/test.com/privkey.pem;
+ssl_certificate /data/cert/test.com/fullchain.pem;
+ssl_certificate_key /data/cert/test.com/privkey.pem;
 
 # security headers
 add_header X-XSS-Protection          "1; mode=block" always;

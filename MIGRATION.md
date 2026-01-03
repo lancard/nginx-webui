@@ -8,7 +8,12 @@
 - check cert menu and re-issue cert if you need.
 - that's all!
 
-## 1.3.X to 1.4.X
+## 1.3.X to 1.4.X or 1.5.X
 - pull image and recreate.
 - if you need, add anubis rule to your location config.
 - that's all!
+
+## 1.5.X to 1.6.X
+- pull image and recreate.
+- renew all certs in cert menu.
+- change cert directory to '/data/cert/(domain)' in Domain/URL Handlers
