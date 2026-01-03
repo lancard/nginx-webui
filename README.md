@@ -92,7 +92,6 @@ services:
 
 volumes:
   nginx-webui-data:
-  nginx-webui-cert:
   nginx-webui-log:
   nginx-webui-logrotate-config:
 ```
