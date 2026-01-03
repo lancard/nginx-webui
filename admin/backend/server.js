@@ -216,10 +216,13 @@ class Server {
         app.post('/api/renewCertDNS', (req, res) => {
             const domain = req.body.domain;
             const email = req.body.email;
-            const wildcard = req.body.wildcard;
-            certHandler.renewCertDNS(domain, email, wildcard)
+            const wildcard = req.body.wildcard == 'true' ? true : false;
+            certHandler.renewCertDNS(domain, email, wildcard, (cert) => { res.json(cert); })
                 .then(() => {
-                    res.end("success");
+                    // check response closed
+                    if (!res.writableEnded) {
+                        res.json({ success: true });
+                    }
                 });
         });
 

@@ -100,7 +100,6 @@ class FrontendApp {
             },
             backendServerStatus: {},
             nginxStatus: {},
-            certRefreshing: false,
             certUpload: {
                 domain: 'test.com',
                 cert: sampleCert,
@@ -177,7 +176,7 @@ class FrontendApp {
         }
 
         if (domain.indexOf("*") >= 0) {
-            alert("not allow *.domain (use wildcard option)");
+            alert("not allow *.domain (use wildcard button)");
             return;
         }
 
@@ -187,7 +186,7 @@ class FrontendApp {
             return;
         }
 
-        this.main.nginx.cert.push({ domain: domain, adminEmail: adminEmail, autoRenewal: "false", wildcard: "false" });
+        this.main.nginx.cert.push({ domain: domain, adminEmail: adminEmail, autoRenewal: "false" });
     }
 
 
@@ -486,9 +485,8 @@ class FrontendApp {
         if (!confirm('Are you sure you want to do HTTP-challenge?'))
             return;
 
-        alert("When the certificate issuance/renewal is completed by Let's Encrypt, it will be automatically update renewal date column.");
-
-        this.uiComponent.main.certRefreshing = true;
+        item.renewing = true;
+        item.renewingMethod = 'HTTP';
 
         fetch('/api/renewCertHTTP', {
             method: 'POST',
@@ -498,12 +496,13 @@ class FrontendApp {
             .then(res => res.text())
             .then(ret => {
                 alert(ret);
-                this.uiComponent.main.certRefreshing = false;
+                delete item.renewing;
+                delete item.renewingMethod;
             })
             .catch(err => console.error(err));
     }
 
-    renewCertDNS(item) {
+    renewCertDNS(item, wildcard) {
         if (item.domain == 'localhost_nginx_webui') {
             alert("localhost_nginx_webui certificate cannot be renewed.");
             return;
@@ -512,24 +511,33 @@ class FrontendApp {
         if (!confirm("Are you sure you want to do DNS-challenge?\n(It is recommended that you be prepared to change your DNS '_acme-challenge' TXT record.)"))
             return;
 
-        alert("When the certificate issuance/renewal is completed by Let's Encrypt, it will be automatically update renewal date column.");
-
-        this.uiComponent.main.certRefreshing = true;
+        item.renewing = true;
+        item.renewingMethod = 'DNS';
 
         fetch('/api/renewCertDNS', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ domain: item.domain, email: item.adminEmail, wildcard: item.wildcard })
+            body: new URLSearchParams({ domain: item.domain, email: item.adminEmail, wildcard: wildcard })
         })
-            .then(res => res.text())
+            .then(res => res.json())
             .then(ret => {
-                if (ret == null || ret.trim() == "") {
-                    alert("certificate not yet due for renewal or error occurred.");
+                delete item.renewing;
+                delete item.renewingMethod;
+
+                if(ret.success) {
+                    alert('success (not due date)');
                     return;
                 }
-                prompt("paste below text to DNS TXT record", ret);
-                alert("request sent. If your request is successful, the cert list below will be updated within a few minutes.");
-                this.uiComponent.main.certRefreshing = false;
+
+                if(wildcard) {
+                    prompt("please add DNS TXT record (1/2) - You need to enter both.", ret[0]);
+                    prompt("please add DNS TXT record (2/2) - You need to enter both.", ret[1]);
+                }
+                else {
+                    prompt("please add DNS TXT record", ret[0]);
+                }
+
+                alert("request sent. If your request is successful, the cert list renewal time will be updated within a few minutes.");
             })
             .catch(err => console.error(err));
     }
@@ -572,7 +580,7 @@ class FrontendApp {
                             domain: status.domain,
                             adminEmail: 'notfound@notfound.com',
                             autoRenewal: 'false',
-                            wildcard: 'false',
+                            wildcard: status.wildcard,
                             created: status.created,
                             modified: status.modified
                         });

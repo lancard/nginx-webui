@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import logger from './logger.js';
 import validator from 'validator';
+import { X509Certificate } from 'node:crypto';
 import { execFile, exec } from 'child_process';
 import * as acme from 'acme-client';
 import * as writeFileAtomic from 'write-file-atomic';
@@ -14,7 +15,7 @@ class CertHandler {
         this._getAcmePrivateKey().then(key => {
             this.accountKey = key;
             this.client = new acme.Client({
-                directoryUrl: acme.directory.letsencrypt.staging,
+                directoryUrl: acme.directory.letsencrypt.production,
                 accountKey: this.accountKey
             });
             logger.info('ACME client initialized');
@@ -48,6 +49,16 @@ class CertHandler {
         return null;
     }
 
+    isWildcardCertFile(filepath) {
+        if (!fs.existsSync(filepath)) {
+            return false;
+        }
+        const certData = fs.readFileSync(filepath, 'utf8');
+        const x509 = new X509Certificate(certData);
+        const altNames = x509.subjectAltName;
+        return altNames.includes('*.');        
+    }
+
     getCertList() {
         const arr = fs.readdirSync(this.certRoot);
         const ret = [];
@@ -57,11 +68,12 @@ class CertHandler {
             if (!stat.isDirectory()) return;
 
             const dirPath = path.join(this.certRoot, e);
-            const keyPath = path.join(this.certRoot, e, 'privkey.pem');
+            const keyPath = path.join(this.certRoot, e, 'fullchain.pem');            
             ret.push({
                 domain: e,
                 created: fs.statSync(dirPath).mtime,
-                modified: fs.existsSync(keyPath) ? fs.statSync(keyPath).mtime : null
+                modified: fs.existsSync(keyPath) ? fs.statSync(keyPath).mtime : null,
+                wildcard: this.isWildcardCertFile(keyPath)
             });
         });
         return ret;
@@ -90,7 +102,7 @@ class CertHandler {
         }
     }
 
-    async renewCertHTTP(domain, email) {
+    async renewCertHTTP(domain, email, callback = null) {
         if (!validator.isFQDN(domain, { require_tld: false }) || !validator.isEmail(email)) {
             new Error('Invalid domain or email');
         }
@@ -114,6 +126,7 @@ class CertHandler {
             challengeCreateFn: async (authz, challenge, keyAuthorization) => {
                 const challengePath = path.join(this.challengeDir, challenge.token);
                 await writeFileAtomic.sync(challengePath, keyAuthorization);
+                if(callback) callback(keyAuthorization);
             },
             challengeRemoveFn: async (authz, challenge, keyAuthorization) => {
                 const challengePath = path.join(this.challengeDir, challenge.token);
@@ -128,7 +141,7 @@ class CertHandler {
         logger.info(`Certificate for ${domain} renewed successfully`);
     }
 
-    async renewCertDNS(domain, email, wildcard) {
+    async renewCertDNS(domain, email, wildcard, callback = null) {
         if (!validator.isFQDN(domain, { require_tld: false }) || !validator.isEmail(email)) {
             new Error('Invalid domain or email');
         }
@@ -138,6 +151,8 @@ class CertHandler {
             termsOfServiceAgreed: true,
             contact: [`mailto:${email}`]
         });
+
+        const queueForWildcard = [];
 
         // create private key
         const privateKey = await acme.crypto.createPrivateKey();
@@ -150,8 +165,11 @@ class CertHandler {
             termsOfServiceAgreed: true,
             challengePriority: ['dns-01'],
             challengeCreateFn: async (authz, challenge, keyAuthorization) => {
-                const recordValue = acme.crypto.createHash('sha256', keyAuthorization).toString('base64url');
-                console.log(recordValue);
+                queueForWildcard.push(keyAuthorization);
+                if(wildcard && queueForWildcard.length < 2) {
+                    return;
+                }
+                if(callback) callback(queueForWildcard);
             },
             challengeRemoveFn: async (authz, challenge, keyAuthorization) => {
                 // No action needed for DNS cleanup in this example
