@@ -56,7 +56,7 @@ class CertHandler {
         const certData = fs.readFileSync(filepath, 'utf8');
         const x509 = new X509Certificate(certData);
         const altNames = x509.subjectAltName;
-        return altNames.includes('*.');        
+        return altNames.indexOf('*.') >= 0;
     }
 
     getCertList() {
@@ -183,4 +183,5 @@ class CertHandler {
 }
 
 const defaultHandler = new CertHandler();
+
 export default defaultHandler;
