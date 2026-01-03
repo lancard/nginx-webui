@@ -40,6 +40,15 @@ else
     cp /default_config/default_anubis.yaml /data/anubis.yaml
 fi
 
+# copy logrotate config data (for update engine)
+if [ -f /data/logrotate.conf ]
+then
+    echo "already have logrotate config. skipping copy."
+else
+    # copy default logrotate config
+    cp /etc/logrotate.d/nginx /data/logrotate.conf
+fi
+
 if [ -f /root/.ssh/id_rsa.pub ]; then
     echo "id_rsa.pub detected."
 

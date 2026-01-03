@@ -5,14 +5,12 @@ import * as writeFileAtomic from 'write-file-atomic';
 
 class LogrotateHandler {
     constructor(options = {}) {
-        this.configPath = options.configPath || '/etc/logrotate.d/nginx';
+        this.configPath = options.configPath || '/data/logrotate.conf';
     }
 
     rotateLog() {
-        logger.info("log rotation start");
-
         try {
-            exec("/etc/cron.daily/logrotate", (error, stdout, stderr) => {
+            exec("/usr/sbin/logrotate /data/logrotate.conf", (error, stdout, stderr) => {
                 // logger.info(["result", error, stdout, stderr]);
                 logger.info("log rotation executed");
             });
@@ -20,8 +18,6 @@ class LogrotateHandler {
         catch (e) {
             logger.error(e);
         }
-
-        logger.info("log rotation end");
     }
 
     getLogrotate() {
