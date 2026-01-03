@@ -7,20 +7,17 @@ class Logger {
 
     #createPino() {
         const level = "info";
-        const isProd = process.env.NODE_ENV === 'production';
 
-        if (!isProd) {
-            const transport = pino.transport({
-                target: 'pino-pretty',
-                options: {
-                    colorize: true,
-                    translateTime: 'SYS:yyyy-mm-dd HH:MM:ss.l',
-                    ignore: 'pid,hostname'
-                }
-            });
-            return pino({ level, base: null, timestamp: pino.stdTimeFunctions.isoTime }, transport);
-        }
-        return pino({ level, base: null, timestamp: pino.stdTimeFunctions.isoTime });
+        const transport = pino.transport({
+            target: 'pino-pretty',
+            options: {
+                colorize: true,
+                translateTime: 'SYS:yyyy-mm-dd HH:MM:ss.l',
+                ignore: 'pid,hostname'
+            }
+        });
+        
+        return pino({ level, base: null, timestamp: pino.stdTimeFunctions.isoTime }, transport);
     }
 
     info(message, meta = {}) { this.core.info({ ...meta }, String(message)); }
