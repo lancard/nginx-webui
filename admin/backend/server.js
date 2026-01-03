@@ -78,9 +78,12 @@ class Server {
             if (renewExist) {
                 setTimeout(() => {
                     nginxHandler.reloadNginx((error, stdout, stderr) => {
+                        logger.info("Reloaded nginx after cert renewal");
+                        /*
                         logger.info(error);
                         logger.info(stdout)
                         logger.info(stderr);
+                        */
                     });
                 }, 60 * 1000);
             }
@@ -204,18 +207,20 @@ class Server {
         app.post('/api/renewCertHTTP', (req, res) => {
             const domain = req.body.domain;
             const email = req.body.email;
-            certHandler.renewCertHTTP(domain, email, (error, stdout, stderr) => {
-                res.end(stdout);
-            });
+            certHandler.renewCertHTTP(domain, email)
+                .then(() => {
+                    res.end("success");
+                });
         });
 
         app.post('/api/renewCertDNS', (req, res) => {
             const domain = req.body.domain;
             const email = req.body.email;
             const wildcard = req.body.wildcard;
-            certHandler.renewCertDNS(domain, email, wildcard, (error, stdout, stderr) => {
-                res.end(stdout);
-            });
+            certHandler.renewCertDNS(domain, email, wildcard)
+                .then(() => {
+                    res.end("success");
+                });
         });
 
         app.get('/api/getSystemInformation', (req, res) => {
@@ -324,8 +329,9 @@ class Server {
         });
     }
 
-    registerInterval(interval, task) {
-        task();
+    registerInterval(interval, task, runAtStart = true) {
+        if (runAtStart)
+            task();
         setInterval(() => {
             try {
                 task();
@@ -337,7 +343,7 @@ class Server {
 
     start() {
         this.app.listen(this.port, () => logger.info(`listening on port ${this.port}`));
-        this.registerInterval(7 * 60 * 60 * 1000, () => { this.renewalCert(); }); // check cert renewal every 7 hours
+        this.registerInterval(7 * 60 * 60 * 1000, () => { this.renewalCert(); }, false); // check cert renewal every 7 hours
         this.registerInterval(24 * 60 * 60 * 1000, () => { logrotateHandler.rotateLog() }); // run daily
     }
 }

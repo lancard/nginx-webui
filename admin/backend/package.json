@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "acme-client": "^5.4.0",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "dayjs": "^1.11.19",

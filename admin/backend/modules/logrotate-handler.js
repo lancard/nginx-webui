@@ -13,7 +13,8 @@ class LogrotateHandler {
 
         try {
             exec("/etc/cron.daily/logrotate", (error, stdout, stderr) => {
-                logger.info(["result", error, stdout, stderr]);
+                // logger.info(["result", error, stdout, stderr]);
+                logger.info("log rotation executed");
             });
         }
         catch (e) {

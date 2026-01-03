@@ -4,7 +4,7 @@ EXPOSE 80
 EXPOSE 443
 
 # install modules
-RUN apt-get update && apt-get install certbot python3-certbot-nginx npm nodejs net-tools cron logrotate dnsutils procps -y && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install npm nodejs net-tools cron logrotate dnsutils procps -y && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # install anubis
 WORKDIR /tmp
@@ -24,7 +24,7 @@ RUN cp /default_config/default_nginx.conf /etc/nginx/nginx.conf
 COPY admin /admin
 COPY container_files/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-RUN mkdir -p /data
+RUN mkdir -p /data/cert
 RUN rm -f /var/log/nginx/*
 
 # change to node folder
