@@ -74,7 +74,13 @@ class Server {
                     return;
 
                 renewExist = true;
-                certHandler.renewCertHTTP(cert.domain, cert.adminEmail);
+                certHandler.renewCertHTTP(cert.domain, cert.adminEmail)
+                    .then(() => {
+                        res.end("success");
+                    })
+                    .catch(e => {
+                        logger.error("Auto renewal failed for domain " + cert.domain + ": " + e);
+                    });
             });
 
             if (renewExist) {
