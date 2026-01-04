@@ -30,7 +30,7 @@
                         ]
                 }
         ],
-        "common": "# http section setting\nclient_max_body_size 10G;\nresolver 127.0.0.11 valid=1s;\n\n# proxy_cache_path /var/cache/nginx keys_zone=nginxcache:10m max_size=10g min_free=1g use_temp_path=off;\n",
+        "common": "# http section setting\nclient_max_body_size 10G;\nresolver 127.0.0.11 valid=1s;\n\n# proxy_cache_path /var/cache/nginx keys_zone=nginxcache:10m max_size=10g min_free=1g use_temp_path=off;\n# limit_req_zone $binary_remote_addr zone=req_per_ip:20m rate=100r/s;\n# limit_conn_zone $binary_remote_addr zone=conn_per_ip:20m;\n",
         "site": [
                 {
                         "siteName": "test_site",
