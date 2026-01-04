@@ -2,8 +2,9 @@ import dayjs from 'dayjs';
 import Alpine from 'alpinejs';
 import sort from '@alpinejs/sort'
 import { themeChange } from 'theme-change'
+import { ChartHandler } from './modules/chart-handler.js';
 
-import chartHandler from './modules/chart-handler.js';
+const chartInstanceMap = {};
 
 const defaultServerDirective = `listen 443 ssl;
 listen [::]:443 ssl;
@@ -526,12 +527,12 @@ class FrontendApp {
                 delete item.renewing;
                 delete item.renewingMethod;
 
-                if(ret.success) {
+                if (ret.success) {
                     alert('success (not due date)');
                     return;
                 }
 
-                if(wildcard) {
+                if (wildcard) {
                     prompt("please add DNS TXT record (1/2) - You need to enter both.", ret[0]);
                     prompt("please add DNS TXT record (2/2) - You need to enter both.", ret[1]);
                 }
@@ -638,6 +639,23 @@ class FrontendApp {
     }
 
     updateStatus() {
+        fetch('/api/getCurrentLoad')
+            .then(res => {
+                if (res.status === 401) {
+                    this.handleAjaxError(res, 'error', null);
+                    throw new Error('unauthorized');
+                }
+                return res.json();
+            })
+            .then((ret) => {
+                var now = dayjs().format("HH:mm:ss");
+
+                chartInstanceMap['cpuLoad'].addChartData(now, ret.cpuLoad);
+                chartInstanceMap['memLoad'].addChartData(now, ret.memLoad);
+                chartInstanceMap['diskLoad'].addChartData(now, ret.diskLoad);
+            })
+            .catch(err => { if (err.message !== 'unauthorized') this.handleAjaxError(err, 'error', null); });
+
         fetch('/api/getNginxStatus')
             .then(res => res.text())
             .then(ret => {
@@ -654,15 +672,15 @@ class FrontendApp {
 
                 var now = dayjs().format("HH:mm:ss");
 
-                chartHandler.addChartData("readingConnectionsChart", now, this.uiComponent.main.nginxStatus.readingConnections);
-                chartHandler.addChartData("writingConnectionsChart", now, this.uiComponent.main.nginxStatus.writingConnections);
-                chartHandler.addChartData("waitingConnectionsChart", now, this.uiComponent.main.nginxStatus.waitingConnections);
+                chartInstanceMap['readingConnectionsChart'].addChartData(now, this.uiComponent.main.nginxStatus.readingConnections);
+                chartInstanceMap['writingConnectionsChart'].addChartData(now, this.uiComponent.main.nginxStatus.writingConnections);
+                chartInstanceMap['waitingConnectionsChart'].addChartData(now, this.uiComponent.main.nginxStatus.waitingConnections);
             })
             .catch(err => console.error(err));
 
         this.updateCertListFromFileStatus();
 
-        fetch('/api/getSystemInformation')
+        fetch('/api/getNetworkConnections')
             .then(res => {
                 if (res.status === 401) {
                     this.handleAjaxError(res, 'error', null);
@@ -744,7 +762,12 @@ class FrontendApp {
                     this.updateStatus();
                     setInterval(() => this.updateStatus(), 5000);
                     this.updatePreviewConfig();
-                    chartHandler.initCharts();
+                    chartInstanceMap['cpuLoad'] = new ChartHandler('CPU Load (%)', document.getElementById('cpuLoad'), 0, 100);
+                    chartInstanceMap['memLoad'] = new ChartHandler('Memory Usage (%)', document.getElementById('memLoad'), 0, 100);
+                    chartInstanceMap['diskLoad'] = new ChartHandler('Disk Load (%)', document.getElementById('diskLoad'), 0, 100);
+                    chartInstanceMap['readingConnectionsChart'] = new ChartHandler('Reading Connections', document.getElementById('readingConnectionsChart'));
+                    chartInstanceMap['writingConnectionsChart'] = new ChartHandler('Writing Connections', document.getElementById('writingConnectionsChart'));
+                    chartInstanceMap['waitingConnectionsChart'] = new ChartHandler('Waiting Connections', document.getElementById('waitingConnectionsChart'));
                 });
             });
         });

@@ -17,6 +17,9 @@ import loginHandler from './modules/login-handler.js';
 import nginxHandler from './modules/nginx-handler.js';
 import logrotateHandler from './modules/logrotate-handler.js';
 
+let previousDiskIOMs = 0;
+let previousDiskIOTime = dayjs();
+
 process.once('SIGTERM', (code) => {
     process.exit(0);
 });
@@ -234,9 +237,29 @@ class Server {
                 });
         });
 
-        app.get('/api/getSystemInformation', (req, res) => {
+        app.get('/api/getNetworkConnections', (req, res) => {
             si.networkConnections()
                 .then(data => res.json(data));
+        });
+
+        app.get('/api/getCurrentLoad', (req, res) => {
+            Promise.all([si.currentLoad(), si.mem(), si.disksIO()])
+                .then(([cpuData, memData, diskData]) => {
+                    let usagePercent = 0;
+                    const currentTime = dayjs();
+
+                    if (previousDiskIOMs != 0) {
+                        const deltaBusyMs = diskData.ms - previousDiskIOMs;
+                        const deltaTimeMs = currentTime.diff(previousDiskIOTime, 'millisecond');
+                        usagePercent = (deltaBusyMs / deltaTimeMs) * 100;
+                        usagePercent = Math.min(Math.max(usagePercent, 0), 100);
+                    }
+
+                    previousDiskIOMs = diskData.ms;
+                    previousDiskIOTime = currentTime;
+
+                    res.json({ cpuLoad: cpuData.currentLoad, memLoad: memData.used / memData.total * 100, diskLoad: usagePercent });
+                });
         });
 
         app.get('/api/getNginxAccessLog', (req, res) => {

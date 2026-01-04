@@ -1,4 +1,3 @@
-import cloneDeep from 'lodash/cloneDeep';
 import {
     Chart,
     LineController,
@@ -11,25 +10,19 @@ import {
     CategoryScale,
 } from 'chart.js';
 
-class ChartHandler {
-    constructor() {
-        Chart.register(
-            LineController,
-            LineElement,
-            PointElement,
-            LinearScale,
-            Tooltip,
-            Title,
-            Legend,
-            CategoryScale,
-        );
+Chart.register(
+    LineController,
+    LineElement,
+    PointElement,
+    LinearScale,
+    Tooltip,
+    Title,
+    Legend,
+    CategoryScale,
+);
 
-        this.readingConnectionsChart = null;
-        this.writingConnectionsChart = null;
-        this.waitingConnectionsChart = null;
-    }
-
-    initCharts() {
+export class ChartHandler {
+    constructor(title, domElement, minValue = undefined, maxValue = undefined) {
         const defaultOptions = {
             maintainAspectRatio: false,
             layout: {
@@ -47,6 +40,8 @@ class ChartHandler {
                     }
                 },
                 y: {
+                    min: minValue,
+                    max: maxValue,
                     beginAtZero: true,
                     ticks: {
                         stepSize: 1
@@ -88,9 +83,8 @@ class ChartHandler {
             }
         };
 
-        const readingOption = cloneDeep(defaultOptions);
-        readingOption.plugins.title.text = 'Reading Connections';
-        this.readingConnectionsChart = new Chart(document.getElementById("readingConnectionsChart"), {
+        defaultOptions.plugins.title.text = title;
+        this.chart = new Chart(domElement, {
             type: 'line',
             data: {
                 labels: [],
@@ -110,62 +104,12 @@ class ChartHandler {
                     data: [],
                 }],
             },
-            options: readingOption
-        });
-
-        const writingOption = cloneDeep(defaultOptions);
-        writingOption.plugins.title.text = 'Writing Connections';
-        this.writingConnectionsChart = new Chart(document.getElementById("writingConnectionsChart"), {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: "Reading Connections",
-                    lineTension: 0.3,
-                    backgroundColor: "rgba(78, 115, 223, 0.05)",
-                    borderColor: "rgba(78, 115, 223, 1)",
-                    pointRadius: 3,
-                    pointBackgroundColor: "rgba(78, 115, 223, 1)",
-                    pointBorderColor: "rgba(78, 115, 223, 1)",
-                    pointHoverRadius: 3,
-                    pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-                    pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-                    pointHitRadius: 10,
-                    pointBorderWidth: 2,
-                    data: [],
-                }],
-            },
-            options: writingOption
-        });
-
-        const waitingOption = cloneDeep(defaultOptions);
-        waitingOption.plugins.title.text = 'Waiting Connections';
-        this.waitingConnectionsChart = new Chart(document.getElementById("waitingConnectionsChart"), {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: "Reading Connections",
-                    lineTension: 0.3,
-                    backgroundColor: "rgba(78, 115, 223, 0.05)",
-                    borderColor: "rgba(78, 115, 223, 1)",
-                    pointRadius: 3,
-                    pointBackgroundColor: "rgba(78, 115, 223, 1)",
-                    pointBorderColor: "rgba(78, 115, 223, 1)",
-                    pointHoverRadius: 3,
-                    pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-                    pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-                    pointHitRadius: 10,
-                    pointBorderWidth: 2,
-                    data: [],
-                }],
-            },
-            options: waitingOption
+            options: defaultOptions
         });
     }
 
-    addChartData(chartName, label, data) {
-        const chart = this[chartName];
+    addChartData(label, data) {
+        const chart = this.chart;
         chart.data.labels.push(label);
         chart.data.datasets.forEach((dataset) => {
             dataset.data.push(data);
@@ -173,8 +117,8 @@ class ChartHandler {
         chart.update();
     }
 
-    trimChartData(chartName) {
-        const chart = this[chartName];
+    trimChartData() {
+        const chart = this.chart;
         chart.data.labels.pop();
         chart.data.datasets.forEach((dataset) => {
             dataset.data.pop();
@@ -182,6 +126,3 @@ class ChartHandler {
         chart.update();
     }
 }
-
-const chartHandler = new ChartHandler();
-export default chartHandler;

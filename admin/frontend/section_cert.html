@@ -31,10 +31,9 @@
             </th>
             <th>DOMAIN</th>
             <th>ADMIN EMAIL</th>
-            <th>AUTO RENEWAL</th>
+            <th>AUTO RENEWAL<br>(HTTP method only)</th>
             <th>STATUS</th>
-            <th>REGISTERED TIME</th>
-            <th>RECENT RENEWAL TIME</th>
+            <th>REGISTERED TIME<br>RECENT RENEWAL TIME</th>
             <th>(RE)NEWAL TOOLS<br>(Let's Encrypt)</th>
             <th>DELETE</th>
         </tr>
@@ -72,8 +71,10 @@
                     </select>
                 </td>
                 <td><span class="loading loading-spinner loading-sm" x-show="item.renewing"></span><span x-show="!item.renewing">OK</span></td>
-                <td x-text="item.created"></td>
-                <td x-text="item.modified"></td>
+                <td>
+                    <span x-text="item.created"></span><br>
+                    <span x-text="item.modified"></span>
+                </td>
                 <td>
                     <button class="btn btn-xs btn-soft btn-success" @click="renewCertHTTP(item)">
                         by HTTP
