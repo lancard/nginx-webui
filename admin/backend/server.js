@@ -57,6 +57,8 @@ class Server {
         try {
             let renewExist = false;
             config.cert.forEach(cert => {
+                if (cert.domain == "localhost_nginx_webui") return;
+
                 const filename = certHandler.getFullChainPath(cert.domain);
 
                 let lastTime = dayjs('1900-01-01', 'YYYY-MM-DD');
