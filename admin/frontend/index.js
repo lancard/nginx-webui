@@ -9,8 +9,8 @@ const defaultServerDirective = `listen 443 ssl;
 listen [::]:443 ssl;
 ssl_certificate /data/cert/test.com/fullchain.pem;
 ssl_certificate_key /data/cert/test.com/privkey.pem;
-# limit_req zone=req_per_ip burst=20 nodelay;
-# limit_conn conn_per_ip 20;
+# limit_req zone=req_per_ip burst=1000 nodelay;
+# limit_conn conn_per_ip 1000;
 `;
 
 const defaultServerLocation = `# To enable Anubis, please remove the commented lines below.
