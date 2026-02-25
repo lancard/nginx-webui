@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "@alpinejs/sort": "^3.15.3",
-    "alpinejs": "^3.15.3",
+    "@alpinejs/sort": "^3.15.8",
+    "alpinejs": "^3.15.8",
     "chart.js": "^4.5.1",
     "dayjs": "^1.11.19",
     "theme-change": "^2.5.0"
@@ -9,13 +9,13 @@
   "type": "module",
   "main": "index.js",
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.18",
+    "@tailwindcss/postcss": "^4.2.1",
     "@tailwindcss/typography": "^0.5.19",
-    "autoprefixer": "^10.4.23",
-    "daisyui": "^5.5.14",
-    "esbuild": "^0.27.2",
+    "autoprefixer": "^10.4.24",
+    "daisyui": "^5.5.19",
+    "esbuild": "^0.27.3",
     "postcss": "^8.5.6",
     "postcss-cli": "^11.0.1",
-    "tailwindcss": "^4.1.18"
+    "tailwindcss": "^4.2.1"
   }
 }

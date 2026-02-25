@@ -5,7 +5,7 @@
     "frontend"
   ],
   "name": "nginx-webui",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "nginx webui",
   "scripts": {
     "password": "cd backend && node --input-type=module -e \"import lh from './modules/login-handler.js'; lh.resetPassword('administrator');\"",
@@ -30,6 +30,6 @@
   },
   "homepage": "https://github.com/lancard/nginx-webui#readme",
   "dependencies": {
-    "sortablejs": "^1.15.6"
+    "sortablejs": "^1.15.7"
   }
 }
