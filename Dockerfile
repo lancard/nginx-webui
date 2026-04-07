@@ -8,9 +8,9 @@ RUN apt-get update && apt-get install npm nodejs net-tools cron logrotate dnsuti
 
 # install anubis
 WORKDIR /tmp
-RUN curl -L -O https://github.com/TecharoHQ/anubis/releases/download/v1.21.3/anubis_1.21.3_amd64.deb
-RUN apt-get install ./anubis_1.21.3_amd64.deb -y
-RUN rm anubis_1.21.3_amd64.deb
+RUN curl -L -O https://github.com/TecharoHQ/anubis/releases/download/v1.25.0/anubis_1.25.0_amd64.deb
+RUN apt-get install ./anubis_1.25.0_amd64.deb -y
+RUN rm anubis_1.25.0_amd64.deb
 
 # system configuration
 RUN echo "net.ipv4.tcp_fin_timeout=3" >> /etc/sysctl.conf
