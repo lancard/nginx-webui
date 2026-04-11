@@ -54,13 +54,13 @@
 ## Video Tutorials
 
 - **Install & Load-Balancer Setup**  
-  [![Install and Setup](https://img.youtube.com/vi/3SEdU_Jj5IM/0.jpg)](https://www.youtube.com/watch?v=3SEdU_Jj5IM)
+  [![Install and Setup](https://img.youtube.com/vi/3SEdU_Jj5IM/mqdefault.jpg)](https://www.youtube.com/watch?v=3SEdU_Jj5IM)
   
 - **CI/CD + Non-disruptive Deployment**  
-  [![Jenkins Integration](https://img.youtube.com/vi/UaJF-s2AuZo/0.jpg)](https://www.youtube.com/watch?v=UaJF-s2AuZo)
+  [![Jenkins Integration](https://img.youtube.com/vi/UaJF-s2AuZo/mqdefault.jpg)](https://www.youtube.com/watch?v=UaJF-s2AuZo)
 
 - **Let's Encrypt Certificate Renewal**  
-  [![Cert Renewal](https://img.youtube.com/vi/O12f2PYPCpU/0.jpg)](https://www.youtube.com/watch?v=O12f2PYPCpU)
+  [![Cert Renewal](https://img.youtube.com/vi/O12f2PYPCpU/mqdefault.jpg)](https://www.youtube.com/watch?v=O12f2PYPCpU)
 
 ## Quick Setup
 
