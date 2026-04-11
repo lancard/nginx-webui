@@ -496,9 +496,15 @@ class FrontendApp {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams({ domain: item.domain, email: item.adminEmail })
         })
-            .then(res => res.text())
+            .then(res => res.json())
             .then(ret => {
-                alert(ret);
+                if (ret.success) {
+                    alert('success');
+                    return;
+                }
+                else {
+                    alert(ret.message || 'failed');
+                }
                 delete item.renewing;
                 delete item.renewingMethod;
             })

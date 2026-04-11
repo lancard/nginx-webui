@@ -220,9 +220,9 @@ class Server {
             const email = req.body.email;
             certHandler.renewCertHTTP(domain, email)
                 .then(() => {
-                    res.end("success");
+                    res.json({ success: true });
                 }).catch(e => {
-                    res.end("failed: " + e);
+                    res.json({ success: false, message: e.toString() });
                     logger.error("renewal failed for domain " + domain + ": " + e);
                 });
         });
@@ -237,6 +237,9 @@ class Server {
                     if (!res.writableEnded) {
                         res.json({ success: true });
                     }
+                }).catch(e => {
+                    res.json({ success: false, message: e.toString() });
+                    logger.error("renewal failed for domain " + domain + ": " + e);
                 });
         });
 
