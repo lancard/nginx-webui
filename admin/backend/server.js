@@ -221,6 +221,9 @@ class Server {
             certHandler.renewCertHTTP(domain, email)
                 .then(() => {
                     res.end("success");
+                }).catch(e => {
+                    res.end("failed: " + e);
+                    logger.error("renewal failed for domain " + domain + ": " + e);
                 });
         });
 

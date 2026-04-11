@@ -9,6 +9,8 @@ import * as writeFileAtomic from 'write-file-atomic';
 
 class CertHandler {
     constructor(options = {}) {
+        acme.axios.defaults.acmeSettings.retryMaxAttempts = 0;
+
         this.challengeDir = options.challengeDir || '/usr/share/nginx/html/.well-known/acme-challenge';
         this.acmeKeyPath = options.acmeKeyPath || '/data/cert/acme-account-key.pem';
         this.certRoot = options.certRoot || '/data/cert';
