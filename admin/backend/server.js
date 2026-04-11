@@ -248,6 +248,11 @@ class Server {
                 .then(data => res.json(data));
         });
 
+        app.get('/api/getNetworkBytes', (req, res) => {
+            si.networkStats()
+                .then(data => { res.json({ rx: data[0].rx_sec, tx: data[0].tx_sec }); });
+        });
+
         app.get('/api/getCurrentLoad', (req, res) => {
             Promise.all([si.currentLoad(), si.mem(), si.disksIO()])
                 .then(([cpuData, memData, diskData]) => {

@@ -662,6 +662,22 @@ class FrontendApp {
             })
             .catch(err => { if (err.message !== 'unauthorized') this.handleAjaxError(err, 'error', null); });
 
+        fetch('/api/getNetworkBytes')
+            .then(res => {
+                if (res.status === 401) {
+                    this.handleAjaxError(res, 'error', null);
+                    throw new Error('unauthorized');
+                }
+                return res.json();
+            })
+            .then((ret) => {
+                var now = dayjs().format("HH:mm:ss");
+
+                chartInstanceMap['readingBytesChart'].addChartData(now, ret.rx * 8 / 1024 / 1024);
+                chartInstanceMap['writingBytesChart'].addChartData(now, ret.tx * 8 / 1024 / 1024);
+            })
+            .catch(err => { if (err.message !== 'unauthorized') this.handleAjaxError(err, 'error', null); });
+
         fetch('/api/getNginxStatus')
             .then(res => res.text())
             .then(ret => {
@@ -701,6 +717,7 @@ class FrontendApp {
                 this.uiComponent.main.connectionList = arr;
             })
             .catch(err => { if (err.message !== 'unauthorized') this.handleAjaxError(err, 'error', null); });
+
     }
 
     // login.html
@@ -771,6 +788,8 @@ class FrontendApp {
                     chartInstanceMap['cpuLoad'] = new ChartHandler('CPU Load (%)', document.getElementById('cpuLoad'), 0, 100);
                     chartInstanceMap['memLoad'] = new ChartHandler('Memory Usage (%)', document.getElementById('memLoad'), 0, 100);
                     chartInstanceMap['diskLoad'] = new ChartHandler('Disk Load (%)', document.getElementById('diskLoad'), 0, 100);
+                    chartInstanceMap['readingBytesChart'] = new ChartHandler('Reading Mbps/sec', document.getElementById('readingBytesChart'));
+                    chartInstanceMap['writingBytesChart'] = new ChartHandler('Writing Mbps/sec', document.getElementById('writingBytesChart'));
                     chartInstanceMap['readingConnectionsChart'] = new ChartHandler('Reading Connections', document.getElementById('readingConnectionsChart'));
                     chartInstanceMap['writingConnectionsChart'] = new ChartHandler('Writing Connections', document.getElementById('writingConnectionsChart'));
                     chartInstanceMap['waitingConnectionsChart'] = new ChartHandler('Waiting Connections', document.getElementById('waitingConnectionsChart'));
