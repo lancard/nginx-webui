@@ -113,10 +113,8 @@ class CertHandler {
             contact: [`mailto:${email}`]
         });
 
-        // create private key
-        const privateKey = await acme.crypto.createPrivateKey();
         // create csr
-        const [key, csr] = await acme.crypto.createCsr({ commonName: domain }, privateKey);
+        const [key, csr] = await acme.crypto.createCsr({ commonName: domain });
         // get certificate
         const cert = await this.client.auto({
             csr,
@@ -154,10 +152,8 @@ class CertHandler {
 
         const queueForWildcard = [];
 
-        // create private key
-        const privateKey = await acme.crypto.createPrivateKey();
         // create csr
-        const [key, csr] = await acme.crypto.createCsr({ commonName: domain, altNames: (wildcard ? [`*.${domain}`] : []) }, privateKey);
+        const [key, csr] = await acme.crypto.createCsr({ commonName: domain, altNames: (wildcard ? [`*.${domain}`] : []) });
         // get certificate
         const cert = await this.client.auto({
             csr,
