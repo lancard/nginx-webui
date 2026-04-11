@@ -37,28 +37,30 @@
 - **Backend Health Check**: Ping and verify backend server availability.
 - Nginx access / error log display.
 
----
-
 ## Screenshots
 
-| UI Overview | Cert Management | Backend Server | Domain/URL |
-|------------|----------------|----------------|-----------|
-| ![](./screenshot/screenshot1.png) | ![](./screenshot/screenshot2.png) | ![](./screenshot/screenshot3.png) | ![](./screenshot/screenshot4.png) |
+- UI Overview
+  ![](./screenshot/screenshot1.png)
+  
+- Cert Management
+  ![](./screenshot/screenshot2.png)
 
----
+- Backend Server
+  ![](./screenshot/screenshot3.png)
+
+- Domain / URL
+  ![](./screenshot/screenshot4.png)
 
 ## Video Tutorials
 
 - **Install & Load-Balancer Setup**  
   [![Install and Setup](https://img.youtube.com/vi/3SEdU_Jj5IM/0.jpg)](https://www.youtube.com/watch?v=3SEdU_Jj5IM)
-
+  
 - **CI/CD + Non-disruptive Deployment**  
   [![Jenkins Integration](https://img.youtube.com/vi/UaJF-s2AuZo/0.jpg)](https://www.youtube.com/watch?v=UaJF-s2AuZo)
 
 - **Let's Encrypt Certificate Renewal**  
   [![Cert Renewal](https://img.youtube.com/vi/O12f2PYPCpU/0.jpg)](https://www.youtube.com/watch?v=O12f2PYPCpU)
-
----
 
 ## Quick Setup
 
@@ -138,8 +140,6 @@ curl --insecure -H "Authorization: Bearer ${token}" "https://localhost:81/api/up
 curl --insecure -H "Authorization: Bearer ${token}" "https://localhost:81/api/upstream/${upstream-name}/${backend-address}/disable"
 ```
 
----
-
 ## Reset password
 
 ```
@@ -147,13 +147,9 @@ cd /admin
 npm run password
 ```
 
----
-
 ## Migration Guide
 
 If you're upgrading from a previous version, please refer to the [MIGRATION.md](./MIGRATION.md) for detailed steps and compatibility notes.
-
----
 
 ## Install sshd for development (for contribution)
 
@@ -163,14 +159,10 @@ If you're upgrading from a previous version, please refer to the [MIGRATION.md](
 - execute 'npm run watch'
 - it will open 7777 port
 
----
-
 ## Built With
 
 - server side: npm, nodejs, express
 - client side: daisyui, tailwind, esbuild, jquery, dayjs, chart.js
-
----
 
 ## Contributing
 
@@ -183,13 +175,9 @@ Don't forget to give the project a star! Thank you!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
----
-
 ## Contributor License Agreement
 
 For easy license management and legal dispute avoidance, the contributing codes are attributed to the author and all rights are attributed to the author. In addition, the MIT license is maintained. If you don't want it, please don't make PR.
-
----
 
 ## License
 
