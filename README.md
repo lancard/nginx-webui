@@ -161,8 +161,8 @@ If you're upgrading from a previous version, please refer to the [MIGRATION.md](
 
 ## Built With
 
-- server side: npm, nodejs, express
-- client side: daisyui, tailwind, esbuild, jquery, dayjs, chart.js
+- server side (backend): npm, nodejs, express
+- client side (frontend): alpinejs, daisyui, tailwind, esbuild, dayjs, chart.js
 
 ## Contributing
 
