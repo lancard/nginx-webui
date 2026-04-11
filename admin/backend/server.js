@@ -261,7 +261,7 @@ class Server {
                     previousDiskIOMs = diskData.ms;
                     previousDiskIOTime = currentTime;
 
-                    res.json({ cpuLoad: cpuData.currentLoad, memLoad: memData.used / memData.total * 100, diskLoad: usagePercent });
+                    res.json({ cpuLoad: cpuData.currentLoad, memLoad: (memData.total - memData.available) / memData.total * 100, diskLoad: usagePercent });
                 });
         });
 
