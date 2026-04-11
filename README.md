@@ -8,7 +8,7 @@
 ![Docker Image Size](https://img.shields.io/docker/image-size/lancard/nginx-webui)
 
 > **Manage NGINX like a pro, without touching the terminal.**  
-> Simple, safe, and production-ready NGINX management UI with Anubis / Let's Encrypt integration.
+> Simple, Safe, Lightweight and Production-ready NGINX management UI with Anubis / Let's Encrypt integration.
 
 ![](./screenshot/nginx-webui-character.png)
 
