@@ -79,6 +79,7 @@ class FrontendApp {
         // for main data
         this.main = {
             logrotate: '',
+            anubisConfig: '',
             nginx: {
                 common: '',
                 cert: [],
@@ -398,6 +399,24 @@ class FrontendApp {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams({ logrotate: this.main.logrotate })
+        })
+            .then(res => res.json())
+            .then(ret => alert("saved."))
+            .catch(err => console.error(err));
+    }
+
+    loadAnubisConfig() {
+        fetch('/api/getAnubisConfig')
+            .then(res => res.text())
+            .then(ret => { this.main.anubisConfig = ret; })
+            .catch(err => console.error(err));
+    }
+
+    saveAnubisConfig() {
+        fetch('/api/saveAnubisConfig', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ anubisConfig: this.main.anubisConfig })
         })
             .then(res => res.json())
             .then(ret => alert("saved."))
@@ -789,6 +808,7 @@ class FrontendApp {
                 this.loadVersion();
 
                 this.loadLogrotate();
+                this.loadAnubisConfig();
 
                 this.loadConfig().then((config) => {
                     this.main.nginx = config;

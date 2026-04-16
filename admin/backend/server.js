@@ -1,7 +1,9 @@
+import fs from 'fs';
 import dayjs from 'dayjs';
 import si from 'systeminformation';
 import validator from 'validator';
 import isPortReachable from 'is-port-reachable';
+import * as writeFileAtomic from 'write-file-atomic';
 
 // web related imports
 import express from 'express';
@@ -297,6 +299,15 @@ class Server {
 
         app.post('/api/saveLogrotate', (req, res) => {
             logrotateHandler.saveLogrotate(req.body.logrotate);
+            res.json({ success: true });
+        });
+
+        app.get('/api/getAnubisConfig', (req, res) => {
+            res.send(fs.readFileSync("/data/anubis.yaml").toString());
+        });
+
+        app.post('/api/saveAnubisConfig', (req, res) => {
+            writeFileAtomic.sync("/data/anubis.yaml", req.body.anubisConfig);
             res.json({ success: true });
         });
 

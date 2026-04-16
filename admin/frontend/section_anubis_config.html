@@ -1,0 +1,21 @@
+<h1>
+    Anubis
+    <span class="desc-text">Anubis Config file (anubis.yaml)</span>
+</h1>
+
+<textarea class="textarea w-full p-4" rows="20" x-model="main.anubisConfig"></textarea>
+
+<div class="text-end p-4">
+    <span class="text-error mr-4">
+        will save to '/data/anubis.yaml' (container restart required)
+    </span>
+    <button type="button" @click="saveAnubisConfig()" class="btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v12" />
+            <path d="m17 8-5-5-5 5" />
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        </svg>
+        <p>Save</p>
+    </button>
+</div>
