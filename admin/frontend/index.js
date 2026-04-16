@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import Alpine from 'alpinejs';
+import Alpine, { version } from 'alpinejs';
 import sort from '@alpinejs/sort'
 import { themeChange } from 'theme-change'
 import { ChartHandler } from './modules/chart-handler.js';
@@ -90,6 +90,7 @@ class FrontendApp {
         // for main ui component
         this.uiComponent.main = {
             theme: '',
+            version: '',
             selectedMenu: 'dashboard',
             changePassword: {
                 password: '',
@@ -375,6 +376,13 @@ class FrontendApp {
                 nginxErrorLog.value = ret;
                 nginxErrorLog.scrollTop = nginxErrorLog.scrollHeight;
             })
+            .catch(err => console.error(err));
+    }
+
+    loadVersion() {
+        fetch('/api/getVersion')
+            .then(res => res.text())
+            .then(ret => { this.uiComponent.main.version = ret; })
             .catch(err => console.error(err));
     }
 
@@ -778,6 +786,8 @@ class FrontendApp {
         // load sections
         this.$nextTick(() => {
             this.loadSections().then(() => {
+                this.loadVersion();
+
                 this.loadLogrotate();
 
                 this.loadConfig().then((config) => {

@@ -17,6 +17,9 @@ import loginHandler from './modules/login-handler.js';
 import nginxHandler from './modules/nginx-handler.js';
 import logrotateHandler from './modules/logrotate-handler.js';
 
+// import version string
+const version = (await import('../package.json', { assert: { type: 'json' } })).default.version;
+
 let previousDiskIOMs = 0;
 let previousDiskIOTime = dayjs();
 
@@ -26,6 +29,8 @@ process.once('SIGTERM', (code) => {
 
 class Server {
     constructor() {
+        logger.info("Starting nginx-webui backend server... - Version: " + version);
+
         const isProd = process.env.NODE_ENV === 'production';
 
         this.devMode = !isProd;
@@ -143,6 +148,10 @@ class Server {
         });
 
         app.get('/', (req, res) => res.redirect('/static/login.html'));
+
+        app.get('/api/getVersion', (req, res) => {
+            res.send(version);
+        });
 
         app.post('/api/login', (req, res) => {
             const errorMessage = loginHandler.tryCheckPassword(req.body.user, req.body.password);
