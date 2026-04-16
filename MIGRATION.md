@@ -1,4 +1,4 @@
-# migration guid
+# migration guide
 
 ## 1.1.X to 1.3.X
 - pull image and recreate.
