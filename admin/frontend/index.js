@@ -525,6 +525,9 @@ class FrontendApp {
         })
             .then(res => res.json())
             .then(ret => {
+                delete item.renewing;
+                delete item.renewingMethod;
+                
                 if (ret.success) {
                     alert('success');
                     return;
@@ -532,8 +535,6 @@ class FrontendApp {
                 else {
                     alert(ret.message || 'failed');
                 }
-                delete item.renewing;
-                delete item.renewingMethod;
             })
             .catch(err => console.error(err));
     }
