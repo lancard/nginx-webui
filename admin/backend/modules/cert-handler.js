@@ -70,7 +70,7 @@ class CertHandler {
             if (!stat.isDirectory()) return;
 
             const dirPath = path.join(this.certRoot, e);
-            const keyPath = path.join(this.certRoot, e, 'fullchain.pem');            
+            const keyPath = path.join(this.certRoot, e, 'fullchain.pem');
             ret.push({
                 domain: e,
                 created: fs.statSync(dirPath).mtime,
@@ -115,8 +115,9 @@ class CertHandler {
             contact: [`mailto:${email}`]
         });
 
+        const privateKey = await acme.crypto.createPrivateKey();
         // create csr
-        const [key, csr] = await acme.crypto.createCsr({ commonName: domain });
+        const [key, csr] = await acme.crypto.createCsr({ commonName: domain }, privateKey);
         // get certificate
         const cert = await this.client.auto({
             csr,
@@ -126,7 +127,7 @@ class CertHandler {
             challengeCreateFn: async (authz, challenge, keyAuthorization) => {
                 const challengePath = path.join(this.challengeDir, challenge.token);
                 await writeFileAtomic.sync(challengePath, keyAuthorization);
-                if(callback) callback(keyAuthorization);
+                if (callback) callback(keyAuthorization);
             },
             challengeRemoveFn: async (authz, challenge, keyAuthorization) => {
                 const challengePath = path.join(this.challengeDir, challenge.token);
@@ -154,8 +155,9 @@ class CertHandler {
 
         const queueForWildcard = [];
 
+        const privateKey = await acme.crypto.createPrivateKey();
         // create csr
-        const [key, csr] = await acme.crypto.createCsr({ commonName: domain, altNames: (wildcard ? [`*.${domain}`] : []) });
+        const [key, csr] = await acme.crypto.createCsr({ commonName: domain, altNames: (wildcard ? [`*.${domain}`] : []) }, privateKey);
         // get certificate
         const cert = await this.client.auto({
             csr,
@@ -164,10 +166,10 @@ class CertHandler {
             challengePriority: ['dns-01'],
             challengeCreateFn: async (authz, challenge, keyAuthorization) => {
                 queueForWildcard.push(keyAuthorization);
-                if(wildcard && queueForWildcard.length < 2) {
+                if (wildcard && queueForWildcard.length < 2) {
                     return;
                 }
-                if(callback) callback(queueForWildcard);
+                if (callback) callback(queueForWildcard);
             },
             challengeRemoveFn: async (authz, challenge, keyAuthorization) => {
                 // No action needed for DNS cleanup in this example
