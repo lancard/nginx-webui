@@ -21,6 +21,7 @@ jobs:
           npm version patch
           ncu -ws -u
           npm install
+          npm ls --all
 
       - name: Commit changes
         run: |
