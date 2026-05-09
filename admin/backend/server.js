@@ -249,7 +249,9 @@ class Server {
                         res.json({ success: true });
                     }
                 }).catch(e => {
-                    res.json({ success: false, message: e.toString() });
+                    if (!res.writableEnded) {
+                        res.json({ success: false, message: e.toString() });
+                    }
                     logger.error("renewal failed for domain " + domain + ": " + e);
                 });
         });

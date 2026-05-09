@@ -527,7 +527,7 @@ class FrontendApp {
             .then(ret => {
                 delete item.renewing;
                 delete item.renewingMethod;
-                
+
                 if (ret.success) {
                     alert('success');
                     return;
@@ -561,20 +561,29 @@ class FrontendApp {
                 delete item.renewing;
                 delete item.renewingMethod;
 
+                // challenge
+                if (Array.isArray(ret)) {
+                    if (wildcard) {
+                        prompt("please add DNS TXT(_acme-challenge) record (1/2) - You need to enter both.", ret[0]);
+                        prompt("please add DNS TXT(_acme-challenge) record (2/2) - You need to enter both.", ret[1]);
+                    }
+                    else {
+                        prompt("please add DNS TXT(_acme-challenge) record", ret[0]);
+                    }
+
+                    alert("request sent. If your request is successful, the cert list renewal time will be updated within a few minutes.");
+                    return;
+                }
+
                 if (ret.success) {
                     alert('success (not due date)');
                     return;
                 }
 
-                if (wildcard) {
-                    prompt("please add DNS TXT record (1/2) - You need to enter both.", ret[0]);
-                    prompt("please add DNS TXT record (2/2) - You need to enter both.", ret[1]);
+                if (!ret.success) {
+                    alert(ret.message || 'failed');
+                    return;
                 }
-                else {
-                    prompt("please add DNS TXT record", ret[0]);
-                }
-
-                alert("request sent. If your request is successful, the cert list renewal time will be updated within a few minutes.");
             })
             .catch(err => console.error(err));
     }

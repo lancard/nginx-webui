@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import dns from 'node:dns/promises';
 import { execFileSync } from 'node:child_process';
 import * as writeFileAtomic from 'write-file-atomic';
 
@@ -177,6 +178,30 @@ class ACMEClient {
         }
     }
 
+    async waitDnsResolve(name, expected, retry = 6 * 10) { // 10 min limit
+        for (let i = 0; i < retry; i++) {
+            try {
+                const records =
+                    await dns.resolveTxt(name);
+
+                const flat =
+                    records.map(v => v.join(''));
+
+                if (
+                    flat.includes(expected)
+                ) {
+                    return;
+                }
+            } catch { }
+
+            await sleep(10 * 1000);
+        }
+
+        throw new Error(
+            `DNS record ${name} with value ${expected} not found after retrying for a while`
+        );
+    }
+
     createPrivateKey() {
         const { privateKey } =
             crypto.generateKeyPairSync(
@@ -246,14 +271,18 @@ class ACMEClient {
 
         const order = await this.createOrder([domain]);
 
-        for (const authUrl of order.authorizations) {
-            const authRes =
-                await this.signedRequest(
-                    authUrl
-                );
+        if (!order.authorizations) {
+            throw new Error(order.detail);
+        }
 
-            const auth =
-                await authRes.json();
+        for (const authUrl of order.authorizations) {
+            const authRes = await this.signedRequest(authUrl);
+
+            const auth = await authRes.json();
+
+            if (auth.status === 'valid') {
+                continue;
+            }
 
             const challenge =
                 auth.challenges.find(
@@ -332,14 +361,18 @@ class ACMEClient {
 
         const order = await this.createOrder(domains);
 
-        for (const authUrl of order.authorizations) {
-            const authRes =
-                await this.signedRequest(
-                    authUrl
-                );
+        if (!order.authorizations) {
+            throw new Error(order.detail);
+        }
 
-            const auth =
-                await authRes.json();
+        for (const authUrl of order.authorizations) {
+            const authRes = await this.signedRequest(authUrl);
+
+            const auth = await authRes.json();
+
+            if (auth.status === 'valid') {
+                continue;
+            }
 
             const challenge =
                 auth.challenges.find(
@@ -364,6 +397,12 @@ class ACMEClient {
                     `_acme-challenge.${auth.identifier.value}`,
                 txtValue: dnsValue
             });
+
+            // user may need some time to create the txt record, so we wait a bit before requesting validation
+            await this.waitDnsResolve(
+                `_acme-challenge.${auth.identifier.value}`,
+                dnsValue
+            );
 
             await this.signedRequest(
                 challenge.url,

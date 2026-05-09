@@ -155,10 +155,7 @@ class CertHandler {
                         txtValue
                     }) => {
                         if (callback) {
-                            callback({
-                                txtName,
-                                txtValue
-                            });
+                            callback([`${txtName}=${txtValue}`]);
                         }
                     }
             });
