@@ -4,22 +4,23 @@ import logger from './logger.js';
 import validator from 'validator';
 import { X509Certificate } from 'node:crypto';
 import { execFile, exec } from 'child_process';
-import * as acme from 'acme-client';
+import ACMEClient from './acme-client.js';
 import * as writeFileAtomic from 'write-file-atomic';
 
 class CertHandler {
     constructor(options = {}) {
-        acme.axios.defaults.acmeSettings.retryMaxAttempts = 0;
-
         this.challengeDir = options.challengeDir || '/usr/share/nginx/html/.well-known/acme-challenge';
         this.acmeKeyPath = options.acmeKeyPath || '/data/cert/acme-account-key.pem';
         this.certRoot = options.certRoot || '/data/cert';
         this._getAcmePrivateKey().then(key => {
             this.accountKey = key;
-            this.client = new acme.Client({
-                directoryUrl: acme.directory.letsencrypt.production,
-                accountKey: this.accountKey
+            this.client = new ACMEClient({
+                directoryUrl:
+                    'https://acme-v02.api.letsencrypt.org/directory',
+                accountKeyPem: this.accountKey
             });
+
+            await this.client.init();
             logger.info('ACME client initialized');
         });
 
@@ -109,75 +110,90 @@ class CertHandler {
             new Error('Invalid domain or email');
         }
 
-        // Ensure account is created
-        await this.client.createAccount({
-            termsOfServiceAgreed: true,
-            contact: [`mailto:${email}`]
-        });
+        const { cert, privateKey } =
+            await this.client.renewCertByHTTP01({
+                domain,
+                email,
 
-        const privateKey = await acme.crypto.createPrivateKey();
-        // create csr
-        const [key, csr] = await acme.crypto.createCsr({ commonName: domain }, privateKey);
-        // get certificate
-        const cert = await this.client.auto({
-            csr,
-            email,
-            termsOfServiceAgreed: true,
-            challengePriority: ['http-01'],
-            challengeCreateFn: async (authz, challenge, keyAuthorization) => {
-                const challengePath = path.join(this.challengeDir, challenge.token);
-                await writeFileAtomic.sync(challengePath, keyAuthorization);
-                if (callback) callback(keyAuthorization);
-            },
-            challengeRemoveFn: async (authz, challenge, keyAuthorization) => {
-                const challengePath = path.join(this.challengeDir, challenge.token);
-                if (fs.existsSync(challengePath)) {
-                    fs.unlinkSync(challengePath);
+                challengeCreateFn: async ({
+                    token,
+                    keyAuthorization
+                }) => {
+                    const challengePath =
+                        path.join(
+                            this.challengeDir,
+                            token
+                        );
+
+                    writeFileAtomic.sync(
+                        challengePath,
+                        keyAuthorization
+                    );
+                },
+
+                challengeRemoveFn: async ({
+                    token
+                }) => {
+                    const challengePath =
+                        path.join(
+                            this.challengeDir,
+                            token
+                        );
+
+                    if (
+                        fs.existsSync(
+                            challengePath
+                        )
+                    ) {
+                        fs.unlinkSync(
+                            challengePath
+                        );
+                    }
                 }
-            }
-        });
+            });
 
-        // store certificate
-        this.uploadCert(domain, cert, privateKey);
+        this.uploadCert(
+            domain,
+            cert,
+            privateKey
+        );
         logger.info(`Certificate for ${domain} renewed successfully`);
     }
 
     async renewCertDNS(domain, email, wildcard, callback = null) {
         if (!validator.isFQDN(domain, { require_tld: false }) || !validator.isEmail(email)) {
-            new Error('Invalid domain or email');
+            throw new Error('Invalid domain or email');
         }
 
-        // Ensure account is created
-        await this.client.createAccount({
-            termsOfServiceAgreed: true,
-            contact: [`mailto:${email}`]
-        });
+        const {
+            cert,
+            privateKey
+        } =
+            await this.client
+                .renewCertByDNS01({
+                    domain,
+                    email,
+                    wildcard,
 
-        const queueForWildcard = [];
+                    challengeCreateFn:
+                        async ({
+                            txtName,
+                            txtValue
+                        }) => {
+                            if (callback) {
+                                callback({
+                                    txtName,
+                                    txtValue
+                                });
+                            }
+                        }
+                });
 
-        const privateKey = await acme.crypto.createPrivateKey();
-        // create csr
-        const [key, csr] = await acme.crypto.createCsr({ commonName: domain, altNames: (wildcard ? [`*.${domain}`] : []) }, privateKey);
-        // get certificate
-        const cert = await this.client.auto({
-            csr,
-            email,
-            termsOfServiceAgreed: true,
-            challengePriority: ['dns-01'],
-            challengeCreateFn: async (authz, challenge, keyAuthorization) => {
-                queueForWildcard.push(keyAuthorization);
-                if (wildcard && queueForWildcard.length < 2) {
-                    return;
-                }
-                if (callback) callback(queueForWildcard);
-            },
-            challengeRemoveFn: async (authz, challenge, keyAuthorization) => {
-                // No action needed for DNS cleanup in this example
-            }
-        });
-
-        // store certificate
-        this.uploadCert(domain, cert, privateKey);
+        this.uploadCert(
+            domain,
+            cert,
+            privateKey
+        );
         logger.info(`Certificate for ${domain} renewed successfully`);
     }
 }
