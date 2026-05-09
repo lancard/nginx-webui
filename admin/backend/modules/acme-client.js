@@ -20,6 +20,7 @@ function sleep(ms) {
 
 class ACMEClient {
     constructor() {
+        this.dnsServers = ["1.1.1.1", "8.8.8.8"];
         this.directoryUrl = 'https://acme-v02.api.letsencrypt.org/directory';
         fetch(this.directoryUrl).then(r => r.json()).then(data => {
             this.directory = data;
@@ -159,8 +160,7 @@ class ACMEClient {
 
     async waitValid(url) {
         while (true) {
-            const r =
-                await this.signedRequest(url);
+            const r = await this.signedRequest(url);
 
             const data = await r.json();
 
@@ -178,18 +178,27 @@ class ACMEClient {
         }
     }
 
-    async waitDnsResolve(name, expected, retry = 6 * 10) { // 10 min limit
+    async waitDnsResolve(name, expectedArray, retry = 6 * 10) { // 10 min limit
+        const resolver = new dns.Resolver();
+        resolver.setServers(this.dnsServers);
+
         for (let i = 0; i < retry; i++) {
             try {
-                const records =
-                    await dns.resolveTxt(name);
+                const records = await resolver.resolveTxt(name);
 
                 const flat =
                     records.map(v => v.join(''));
 
-                if (
-                    flat.includes(expected)
-                ) {
+                let allFound = true;
+                for (const expected of expectedArray) {
+                    if (flat.includes(expected.dnsValue)) {
+                        continue;
+                    }
+                    allFound = false;
+                    break;
+                }
+
+                if (allFound) {
                     return;
                 }
             } catch { }
@@ -217,7 +226,7 @@ class ACMEClient {
         });
     }
 
-    createCSR(domain, privateKeyPem) {
+    createCSR(domain, wildcard, privateKeyPem) {
         const tmpDir =
             fs.mkdtempSync(
                 path.join(
@@ -226,32 +235,63 @@ class ACMEClient {
                 )
             );
 
-        const keyPath =
-            path.join(tmpDir, 'key.pem');
+        try {
+            const keyPath =
+                path.join(tmpDir, 'key.pem');
 
-        const csrPath =
-            path.join(tmpDir, 'csr.der');
+            const csrPath =
+                path.join(tmpDir, 'csr.der');
 
-        fs.writeFileSync(
-            keyPath,
-            privateKeyPem
-        );
+            fs.writeFileSync(
+                keyPath,
+                privateKeyPem,
+                { mode: 0o600 }
+            );
 
-        execFileSync('openssl', [
-            'req',
-            '-new',
-            '-sha256',
-            '-key',
-            keyPath,
-            '-subj',
-            `/CN=${domain}`,
-            '-outform',
-            'DER',
-            '-out',
-            csrPath
-        ]);
+            if (wildcard) {
+                execFileSync('openssl', [
+                    'req',
+                    '-new',
+                    '-sha256',
+                    '-key',
+                    keyPath,
+                    '-subj',
+                    `/CN=${domain}`,
+                    '-addext',
+                    `subjectAltName=DNS:${domain},DNS:*.${domain}`,
+                    '-outform',
+                    'DER',
+                    '-out',
+                    csrPath
+                ]);
+            }
+            else {
+                execFileSync('openssl', [
+                    'req',
+                    '-new',
+                    '-sha256',
+                    '-key',
+                    keyPath,
+                    '-subj',
+                    `/CN=${domain}`,
+                    '-outform',
+                    'DER',
+                    '-out',
+                    csrPath
+                ]);
+            }
 
-        return fs.readFileSync(csrPath);
+            return fs.readFileSync(csrPath);
+        }
+        finally {
+            fs.rmSync(
+                tmpDir,
+                {
+                    recursive: true,
+                    force: true
+                }
+            );
+        }
     }
 
     async renewCertByHTTP01({
@@ -266,6 +306,7 @@ class ACMEClient {
         const csr =
             this.createCSR(
                 domain,
+                false,
                 privateKeyPem
             );
 
@@ -284,12 +325,7 @@ class ACMEClient {
                 continue;
             }
 
-            const challenge =
-                auth.challenges.find(
-                    v =>
-                        v.type ===
-                        'http-01'
-                );
+            const challenge = auth.challenges.find(v => v.type === 'http-01');
 
             const keyAuth =
                 `${challenge.token}.${this.jwkThumbprint()}`;
@@ -350,6 +386,7 @@ class ACMEClient {
         const csr =
             this.createCSR(
                 domain,
+                wildcard,
                 privateKeyPem
             );
 
@@ -365,6 +402,8 @@ class ACMEClient {
             throw new Error(order.detail);
         }
 
+        const challengeTargets = [];
+
         for (const authUrl of order.authorizations) {
             const authRes = await this.signedRequest(authUrl);
 
@@ -374,12 +413,7 @@ class ACMEClient {
                 continue;
             }
 
-            const challenge =
-                auth.challenges.find(
-                    v =>
-                        v.type ===
-                        'dns-01'
-                );
+            const challenge = auth.challenges.find(v => v.type === 'dns-01');
 
             const keyAuth =
                 `${challenge.token}.${this.jwkThumbprint()}`;
@@ -391,42 +425,45 @@ class ACMEClient {
                     .digest()
             );
 
+            challengeTargets.push({
+                url: challenge.url,
+                dnsValue
+            });
+        }
+
+        if (challengeTargets.length > 0) {
             await challengeCreateFn({
-                domain: auth.identifier.value,
-                txtName:
-                    `_acme-challenge.${auth.identifier.value}`,
-                txtValue: dnsValue
+                domain: domain,
+                txtValue: challengeTargets.map(e => e.dnsValue)
             });
 
             // user may need some time to create the txt record, so we wait a bit before requesting validation
             await this.waitDnsResolve(
-                `_acme-challenge.${auth.identifier.value}`,
-                dnsValue
-            );
-
-            await this.signedRequest(
-                challenge.url,
-                {}
-            );
-
-            await this.waitValid(
-                challenge.url
+                `_acme-challenge.${domain}`,
+                challengeTargets
             );
 
             await challengeRemoveFn({
-                domain: auth.identifier.value,
-                txtName:
-                    `_acme-challenge.${auth.identifier.value}`,
-                txtValue: dnsValue
+                domain: domain,
+                txtValue: challengeTargets.map(e => e.dnsValue)
             });
+
+            for (const target of challengeTargets) {
+                await this.signedRequest(target.url, {});
+
+                await this.waitValid(target.url);
+            }
         }
 
-        await this.signedRequest(
+        // finalize all challenges
+        const finalizeRes = await this.signedRequest(
             order.finalize,
             {
                 csr: base64url(csr)
             }
         );
+
+        const finalizeData = await finalizeRes.json();
 
         const validOrder =
             await this.waitValid(

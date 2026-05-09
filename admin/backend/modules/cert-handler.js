@@ -151,11 +151,11 @@ class CertHandler {
 
                 challengeCreateFn:
                     async ({
-                        txtName,
+                        domain,
                         txtValue
                     }) => {
                         if (callback) {
-                            callback([`${txtName}=${txtValue}`]);
+                            callback(txtValue);
                         }
                     }
             });
