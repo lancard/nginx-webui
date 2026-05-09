@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
+import * as writeFileAtomic from 'write-file-atomic';
 
 function base64url(input) {
     return Buffer.from(input)
@@ -19,16 +20,32 @@ function sleep(ms) {
 class ACMEClient {
     constructor() {
         this.directoryUrl = 'https://acme-v02.api.letsencrypt.org/directory';
-        this.directory = fetch(this.directoryUrl).then(r => r.json());
-        this.acmeKeyPath = '/data/cert/acme-account-key.pem';
+        fetch(this.directoryUrl).then(r => r.json()).then(data => {
+            this.directory = data;
 
-        if (fs.existsSync(this.acmeKeyPath)) {
-            return fs.readFileSync(this.acmeKeyPath, 'utf8');
-        }
+            this.acmeKeyPath = '/data/cert/acme-account-key.pem';
+            if (!fs.existsSync(this.acmeKeyPath)) {
+                const accountKey = this.createPrivateKey();
+                writeFileAtomic.sync(this.acmeKeyPath, accountKey);
+            }
 
-        const accountKey = this.createPrivateKey();
-        writeFileAtomic.sync(this.acmeKeyPath, accountKey);
+            this.accountKeyPem = fs.readFileSync(this.acmeKeyPath, 'utf8');
+            this.createAccount();
+        });
     }
+
+    async createAccount() {
+        const r = await this.signedRequest(
+            this.directory.newAccount,
+            {
+                termsOfServiceAgreed: true
+            }
+        );
+
+        this.kid =
+            r.headers.get('location');
+    }
+
 
     async getNonce() {
         const r = await fetch(
@@ -119,19 +136,6 @@ class ACMEClient {
                 signature: base64url(signature)
             })
         });
-    }
-
-    async createAccount(email) {
-        const r = await this.signedRequest(
-            this.directory.newAccount,
-            {
-                termsOfServiceAgreed: true,
-                contact: [`mailto:${email}`]
-            }
-        );
-
-        this.kid =
-            r.headers.get('location');
     }
 
     async createOrder(domains) {
@@ -231,7 +235,7 @@ class ACMEClient {
         challengeCreateFn,
         challengeRemoveFn
     }) {
-        await this.createAccount(email);
+        // await this.createAccount(email);
 
         const privateKeyPem =
             this.createPrivateKey();
@@ -242,10 +246,7 @@ class ACMEClient {
                 privateKeyPem
             );
 
-        const order =
-            await this.createOrder([
-                domain
-            ]);
+        const order = await this.createOrder([domain]);
 
         for (const authUrl of order.authorizations) {
             const authRes =
@@ -316,7 +317,7 @@ class ACMEClient {
         challengeCreateFn,
         challengeRemoveFn = async () => { }
     }) {
-        await this.createAccount(email);
+        // await this.createAccount(email);
 
         const privateKeyPem =
             this.createPrivateKey();
@@ -333,8 +334,7 @@ class ACMEClient {
             domains.push(`*.${domain}`);
         }
 
-        const order =
-            await this.createOrder(domains);
+        const order = await this.createOrder(domains);
 
         for (const authUrl of order.authorizations) {
             const authRes =
