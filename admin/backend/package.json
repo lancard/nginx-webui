@@ -14,7 +14,7 @@
     "read-last-lines": "^1.8.0",
     "systeminformation": "^5.31.6",
     "validator": "^13.15.35",
-    "write-file-atomic": "^7.0.1"
+    "write-file-atomic": "^8.0.0"
   },
   "type": "module",
   "main": "server.js"
