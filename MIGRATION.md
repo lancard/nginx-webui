@@ -17,3 +17,6 @@
 - pull image and recreate.
 - renew all certs in cert menu.
 - change cert directory to '/data/cert/(domain)' in Domain/URL Handlers
+
+## 1.6.X to 1.7.X
+- pull image and recreate.
