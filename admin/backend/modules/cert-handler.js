@@ -4,37 +4,15 @@ import logger from './logger.js';
 import validator from 'validator';
 import { X509Certificate } from 'node:crypto';
 import { execFile, exec } from 'child_process';
-import ACMEClient from './acme-client.js';
+import acmeClient from './acme-client.js';
 import * as writeFileAtomic from 'write-file-atomic';
 
 class CertHandler {
     constructor(options = {}) {
         this.challengeDir = options.challengeDir || '/usr/share/nginx/html/.well-known/acme-challenge';
-        this.acmeKeyPath = options.acmeKeyPath || '/data/cert/acme-account-key.pem';
         this.certRoot = options.certRoot || '/data/cert';
-        this._getAcmePrivateKey().then(key => {
-            this.accountKey = key;
-            this.client = new ACMEClient({
-                directoryUrl:
-                    'https://acme-v02.api.letsencrypt.org/directory',
-                accountKeyPem: this.accountKey
-            });
-
-            await this.client.init();
-            logger.info('ACME client initialized');
-        });
 
         if (!fs.existsSync(this.challengeDir)) fs.mkdirSync(this.challengeDir, { recursive: true });
-    }
-
-    async _getAcmePrivateKey() {
-        if (fs.existsSync(this.acmeKeyPath)) {
-            return fs.readFileSync(this.acmeKeyPath, 'utf8');
-        }
-
-        const accountKey = await acme.crypto.createPrivateKey();
-        writeFileAtomic.sync(this.acmeKeyPath, accountKey);
-        return accountKey;
     }
 
     _checkPathUnderRoot(rootPath, targetPath) {
@@ -111,7 +89,7 @@ class CertHandler {
         }
 
         const { cert, privateKey } =
-            await this.client.renewCertByHTTP01({
+            await acmeClient.renewCertByHTTP01({
                 domain,
                 email,
 
@@ -165,29 +143,25 @@ class CertHandler {
             throw new Error('Invalid domain or email');
         }
 
-        const {
-            cert,
-            privateKey
-        } =
-            await this.client
-                .renewCertByDNS01({
-                    domain,
-                    email,
-                    wildcard,
+        const { cert, privateKey } =
+            await acmeClient.renewCertByDNS01({
+                domain,
+                email,
+                wildcard,
 
-                    challengeCreateFn:
-                        async ({
-                            txtName,
-                            txtValue
-                        }) => {
-                            if (callback) {
-                                callback({
-                                    txtName,
-                                    txtValue
-                                });
-                            }
+                challengeCreateFn:
+                    async ({
+                        txtName,
+                        txtValue
+                    }) => {
+                        if (callback) {
+                            callback({
+                                txtName,
+                                txtValue
+                            });
                         }
-                });
+                    }
+            });
 
         this.uploadCert(
             domain,

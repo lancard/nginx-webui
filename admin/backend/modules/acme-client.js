@@ -16,18 +16,18 @@ function sleep(ms) {
     return new Promise(r => setTimeout(r, ms));
 }
 
-export default class ACMEClient {
-    constructor({
-        directoryUrl,
-        accountKeyPem
-    }) {
-        this.directoryUrl = directoryUrl;
-        this.accountKeyPem = accountKeyPem;
-    }
+class ACMEClient {
+    constructor() {
+        this.directoryUrl = 'https://acme-v02.api.letsencrypt.org/directory';
+        this.directory = fetch(this.directoryUrl).then(r => r.json());
+        this.acmeKeyPath = '/data/cert/acme-account-key.pem';
 
-    async init() {
-        this.directory = await fetch(this.directoryUrl)
-            .then(r => r.json());
+        if (fs.existsSync(this.acmeKeyPath)) {
+            return fs.readFileSync(this.acmeKeyPath, 'utf8');
+        }
+
+        const accountKey = this.createPrivateKey();
+        writeFileAtomic.sync(this.acmeKeyPath, accountKey);
     }
 
     async getNonce() {
@@ -307,7 +307,7 @@ export default class ACMEClient {
             privateKey: privateKeyPem
         };
     }
-    
+
     async renewCertByDNS01({
         domain,
         email,
@@ -408,3 +408,7 @@ export default class ACMEClient {
         };
     }
 }
+
+const defaultHandler = new ACMEClient();
+
+export default defaultHandler;
