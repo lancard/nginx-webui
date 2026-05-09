@@ -235,8 +235,6 @@ class ACMEClient {
         challengeCreateFn,
         challengeRemoveFn
     }) {
-        // await this.createAccount(email);
-
         const privateKeyPem =
             this.createPrivateKey();
 
@@ -317,8 +315,6 @@ class ACMEClient {
         challengeCreateFn,
         challengeRemoveFn = async () => { }
     }) {
-        // await this.createAccount(email);
-
         const privateKeyPem =
             this.createPrivateKey();
 
