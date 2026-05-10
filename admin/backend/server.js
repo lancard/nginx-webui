@@ -126,6 +126,14 @@ class Server {
         app.use('/static', express.static('../frontend'));
 
         app.use((req, res, next) => {
+            res.setHeader('X-Content-Type-Options', 'nosniff');
+            res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+            res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+            res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self';");
+            next();
+        });
+
+        app.use((req, res, next) => {
             if (req.path.startsWith('/static') || req.path.startsWith('/api/upstream/') || req.path === '/' || req.path === '/favicon.ico' || req.path === '/api/login' || req.path === '/api/checkLogin' || req.path === '/api/logout') {
                 return next();
             }
@@ -369,7 +377,9 @@ class Server {
                     }
                 }
 
-                if (!upstream.upstreamAuthKey || upstream.upstreamAuthKey != req.header("Authorization").split(" ")[1]) {
+                const authHeader = req.header("Authorization");
+                const providedKey = authHeader ? authHeader.split(" ")[1] : null;
+                if (!upstream.upstreamAuthKey || upstream.upstreamAuthKey !== providedKey) {
                     throw new Error('auth fail');
                 }
 
@@ -391,8 +401,14 @@ class Server {
 
                 nginxHandler.applyConfig(obj => res.json(obj));
             } catch (e) {
-                throw new Error("No such upstream or backend address / error occured: " + e);
+                logger.error("Upstream route error: " + e);
+                res.status(400).json({ error: "No such upstream or backend address" });
             }
+        });
+
+        app.use((err, req, res, next) => {
+            logger.error(err);
+            res.sendStatus(500);
         });
     }
 

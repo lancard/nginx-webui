@@ -25,6 +25,10 @@ class LogrotateHandler {
     }
 
     saveLogrotate(content) {
+        const dangerousDirectives = /\b(postrotate|prerotate|firstaction|lastaction|preremove)\b/i;
+        if (dangerousDirectives.test(content)) {
+            throw new Error('logrotate config contains script execution directives which are not allowed');
+        }
         writeFileAtomic.sync(this.configPath, content);
     }
 }
