@@ -86,7 +86,7 @@ class Server {
                 renewExist = true;
                 certHandler.renewCertHTTP(cert.domain, cert.adminEmail)
                     .then(() => {
-                        res.end("success");
+                        // logger.info("Auto renewal successful for domain " + cert.domain);                        
                     })
                     .catch(e => {
                         logger.error("Auto renewal failed for domain " + cert.domain + ": " + e);
@@ -175,7 +175,7 @@ class Server {
         });
 
         app.post('/api/checkLogin', (req, res) => {
-            if (!req.loginInfo || !req.loginInfo.user != 'administrator') {
+            if (!req.loginInfo || req.loginInfo.user != 'administrator') {
                 res.json({ success: false });
                 return;
             }

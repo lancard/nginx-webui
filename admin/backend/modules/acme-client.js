@@ -207,7 +207,7 @@ class ACMEClient {
         }
 
         throw new Error(
-            `DNS record ${name} with value ${expected} not found after retrying for a while`
+            `DNS record ${name} resolve failed after retrying for a while`
         );
     }
 

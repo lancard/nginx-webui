@@ -85,7 +85,7 @@ class CertHandler {
 
     async renewCertHTTP(domain, email, callback = null) {
         if (!validator.isFQDN(domain, { require_tld: false }) || !validator.isEmail(email)) {
-            new Error('Invalid domain or email');
+            throw new Error('Invalid domain or email');
         }
 
         const { cert, privateKey } =
