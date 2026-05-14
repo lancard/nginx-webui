@@ -178,7 +178,7 @@ class ACMEClient {
         }
     }
 
-    async waitDnsResolve(name, expectedArray, retry = 6 * 10) { // 10 min limit
+    async waitDnsResolve(name, expectedArray, retry = 6 * 30) { // 30 min limit
         const resolver = new dns.Resolver();
         resolver.setServers(this.dnsServers);
 
