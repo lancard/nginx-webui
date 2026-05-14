@@ -61,6 +61,9 @@ class CertHandler {
     }
 
     uploadCert(domain, cert, key) {
+        if (!validator.isFQDN(domain, { require_tld: false })) {
+            throw new Error('invalid domain');
+        }
         const dir = path.join(this.certRoot, domain);
         if (!this._checkPathUnderRoot(this.certRoot, dir)) {
             throw new Error('security');

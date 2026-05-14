@@ -13,28 +13,6 @@ class NginxHandler {
         this.configFile = options.configFile || '/data/config.json';
     }
 
-    _validateIdentifier(str, fieldName) {
-        if (typeof str !== 'string' || !/^[a-zA-Z0-9_-]+$/.test(str)) {
-            throw new Error(`Invalid ${fieldName}: only alphanumeric, underscore, and hyphen are allowed`);
-        }
-        return str;
-    }
-
-    _validateNumericField(val, fieldName) {
-        const n = parseInt(val, 10);
-        if (!Number.isFinite(n) || n < 0) {
-            throw new Error(`Invalid ${fieldName}: must be a non-negative integer`);
-        }
-        return n;
-    }
-
-    _validateUpstreamAddress(addr) {
-        if (typeof addr !== 'string' || !/^[a-zA-Z0-9_.:\-\/]+$/.test(addr.trim())) {
-            throw new Error(`Invalid upstream address: must be in host:port format`);
-        }
-        return addr.trim();
-    }
-
     loadConfig() {
         try {
             return JSON.parse(fs.readFileSync(this.configFile));
@@ -59,15 +37,10 @@ class NginxHandler {
         nginxConfig += `\n\n\n`;
 
         config.upstream.forEach(e => {
-            const upstreamName = this._validateIdentifier(e.upstreamName, 'upstream name');
-            nginxConfig += `upstream ${upstreamName} {\n`;
+            nginxConfig += `upstream ${e.upstreamName} {\n`;
 
             e.nodes.forEach(ee => {
-                const address = this._validateUpstreamAddress(ee.address);
-                const weight = this._validateNumericField(ee.weight, 'weight');
-                const maxFails = this._validateNumericField(ee.maxFails, 'max_fails');
-                const failTimeout = this._validateNumericField(ee.failTimeout, 'fail_timeout');
-                nginxConfig += `  server ${address} ${ee.backup ? "backup" : ""} ${ee.disable ? "down" : ""} weight=${weight} max_fails=${maxFails} fail_timeout=${failTimeout};\n`;
+                nginxConfig += `  server ${ee.address} ${ee.backup ? "backup" : ""} ${ee.disable ? "down" : ""} weight=${ee.weight} max_fails=${ee.maxFails} fail_timeout=${ee.failTimeout};\n`;
             });
 
             nginxConfig += `\n}\n`;
