@@ -9,13 +9,13 @@
   "type": "module",
   "main": "index.js",
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.3.4",
+    "@tailwindcss/postcss": "^4.3.5",
     "@tailwindcss/typography": "^0.5.20",
     "autoprefixer": "^10.6.2",
-    "daisyui": "^5.7.50",
+    "daisyui": "^5.8.1",
     "esbuild": "^0.28.2",
-    "postcss": "^8.5.32",
+    "postcss": "^8.5.33",
     "postcss-cli": "^12.0.0",
-    "tailwindcss": "^4.3.4"
+    "tailwindcss": "^4.3.5"
   }
 }
