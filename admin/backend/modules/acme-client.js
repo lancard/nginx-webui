@@ -33,6 +33,9 @@ class ACMEClient {
 
             this.accountKeyPem = fs.readFileSync(this.acmeKeyPath, 'utf8');
             this.createAccount();
+        }).catch(e => {
+            this.directory = {};
+            console.error(e);
         });
     }
 
