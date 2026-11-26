@@ -7,10 +7,11 @@ EXPOSE 443
 RUN apt-get update && apt-get install npm nodejs net-tools cron logrotate dnsutils procps -y && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # install anubis
+ARG ANUBIS_VERSION=1.28.2
 WORKDIR /tmp
-RUN curl -L -O https://github.com/TecharoHQ/anubis/releases/download/v1.25.0/anubis_1.28.2_amd64.deb
-RUN apt-get install ./anubis_1.28.2_amd64.deb -y
-RUN rm anubis_1.28.2_amd64.deb
+RUN curl -L -O https://github.com/TecharoHQ/anubis/releases/download/v${ANUBIS_VERSION}/anubis_${ANUBIS_VERSION}_amd64.deb
+RUN apt-get install ./anubis_${ANUBIS_VERSION}_amd64.deb -y
+RUN rm anubis_${ANUBIS_VERSION}_amd64.deb
 
 # system configuration
 RUN echo "net.ipv4.tcp_fin_timeout=3" >> /etc/sysctl.conf
